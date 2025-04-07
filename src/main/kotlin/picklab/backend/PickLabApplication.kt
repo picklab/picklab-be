@@ -1,4 +1,4 @@
-package ministory.picklab
+package picklab.backend
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
