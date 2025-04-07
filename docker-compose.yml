@@ -1,0 +1,10 @@
+services:
+  database:
+    container_name: picklab-db
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: picklab
+      TZ: Asia/Seoul
+    ports:
+      - "3310:3306"
