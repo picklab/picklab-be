@@ -19,10 +19,10 @@ abstract class BaseEntity(
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     @Comment("생성 시간")
-    var createdAt: LocalDateTime = LocalDateTime.MIN,
+    val createdAt: LocalDateTime = LocalDateTime.MIN,
 
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
     @Comment("수정 시간")
-    var updatedAt: LocalDateTime = LocalDateTime.MIN
+    val updatedAt: LocalDateTime = LocalDateTime.MIN
 )

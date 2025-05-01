@@ -14,19 +14,19 @@ class Member(
 
     @Column(name = "email", nullable = false)
     @Comment("회원 이메일")
-    val email: String,
+    var email: String,
 
     @Column(name = "company")
     @Comment("재직중인 회사")
-    val company: String = "",
+    var company: String = "",
 
     @Column(name = "school")
     @Comment("최종 학교")
-    val school: String = "",
+    var school: String = "",
 
     @Column(name = "department")
     @Comment("전공")
-    val department: String = "",
+    var department: String = "",
 
     @Column
     @Comment("생년월일")
