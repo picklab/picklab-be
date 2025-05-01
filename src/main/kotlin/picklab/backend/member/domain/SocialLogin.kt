@@ -12,10 +12,11 @@ class SocialLogin(
     val member: Member,
 
     @Column(nullable = false, length = 50)
+    @Enumerated(EnumType.STRING)
     @Comment("소셜 로그인 타입")
-    var socialType: String,
+    val socialType: SocialType,
 
     @Column(nullable = false, length = 100)
     @Comment("소셜 로그인 ID")
-    var socialId: String
+    val socialId: String
 ) : BaseEntity()
