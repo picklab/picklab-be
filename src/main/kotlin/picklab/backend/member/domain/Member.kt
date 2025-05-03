@@ -55,6 +55,6 @@ class Member(
     @OneToMany(mappedBy = "member", cascade = [CascadeType.PERSIST], fetch = FetchType.LAZY)
     val socialLogins: MutableList<SocialLogin> = mutableListOf(),
 
-    @OneToMany(mappedBy = "member", cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "member", cascade = [CascadeType.PERSIST], fetch = FetchType.LAZY)
     val interestedJobCategories: MutableList<InterestedJobCategory> = mutableListOf(),
 ) : SoftDeleteEntity()
