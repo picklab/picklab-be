@@ -10,8 +10,7 @@ class InterestedJobCategory(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     val member: Member,
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_category_id", nullable = false)
-    val jobCategory: JobCategory
+    val jobCategory: JobCategory,
 ) : BaseEntity()

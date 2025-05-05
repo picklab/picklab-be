@@ -2,7 +2,7 @@ package picklab.backend.job.domain
 
 enum class JobDetail(
     val group: JobGroup,
-    val label: String
+    val label: String,
 ) {
     // 기획
     SERVICE_PLANNING(JobGroup.PLANNING, "서비스 기획"),
@@ -40,5 +40,5 @@ enum class JobDetail(
     DEEP_LEARNING(JobGroup.AI, "딥러닝"),
     COMPUTER_VISION(JobGroup.AI, "컴퓨터 비전"),
     NLP(JobGroup.AI, "NLP"),
-    DATA_SCIENCE(JobGroup.AI, "데이터")
+    DATA_SCIENCE(JobGroup.AI, "데이터"),
 }

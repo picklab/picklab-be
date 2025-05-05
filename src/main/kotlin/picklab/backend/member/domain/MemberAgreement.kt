@@ -10,12 +10,10 @@ class MemberAgreement(
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     val member: Member,
-
     @Column(nullable = false)
     @Comment("이메일 수신 동의 여부")
     var emailAgreement: Boolean,
-
     @Column(nullable = false)
     @Comment("개인정보 수집 및 이용 동의 여부")
-    var privacyAgreement: Boolean
+    var privacyAgreement: Boolean,
 ) : BaseEntity()
