@@ -40,4 +40,4 @@ jobs:
           set -a
           source .env
           set +a
-          ./gradlew test -i
+          ./gradlew test
