@@ -46,4 +46,4 @@ jobs:
       - name: Run test
         env:
           SPRING_PROFILES_ACTIVE: test
-        run: ./gradlew test --stacktrace
+        run: ./gradlew test
