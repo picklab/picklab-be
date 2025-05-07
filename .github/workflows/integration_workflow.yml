@@ -39,4 +39,4 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run test with env
-        run: ./gradlew test -Dspring.profiles.active=test
+        run: ./gradlew test -i -Dspring.profiles.active=test
