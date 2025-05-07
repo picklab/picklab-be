@@ -16,11 +16,16 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: passsword
+          MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: testdb
           TZ: Asia/Seoul
         ports:
           - "3306:3306"
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
     steps:
       - name: Checkout repository with submodules
@@ -38,5 +43,17 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Clone private repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ secrets.PRIVATE_REPO }}
+          token: ${{ secrets.PRIVATE_REPO_TOKEN }}
+          path: .envs
+
+      - name: Copy env files
+        run: cp .envs/${{ secrets.PRIVATE_ENV_FILE }} .env
+
       - name: Run test with env
-        run: ./gradlew test -i -Dspring.profiles.active=test
+        env:
+          SPRING_PROFILES_ACTIVE: test
+        run: ./gradlew test --stacktrace
