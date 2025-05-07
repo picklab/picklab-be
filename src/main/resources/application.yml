@@ -45,4 +45,4 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/testdb
     username: root
-    password: passsword
+    password: password
