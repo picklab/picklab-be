@@ -1,0 +1,3 @@
+[submodule "src/main/resources/config-repo"]
+	path = src/main/resources/config-repo
+	url = https://github.com/picklab/config-repo
