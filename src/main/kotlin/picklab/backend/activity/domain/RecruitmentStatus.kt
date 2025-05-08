@@ -1,8 +1,8 @@
 package picklab.backend.activity.domain
 
-enum class ActivityStatus(
+enum class RecruitmentStatus(
     val label: String,
 ) {
     OPEN("모집 중"),
-    CLOSED("마감완료"),
+    CLOSED("모집 마감"),
 }

@@ -17,50 +17,50 @@ import java.time.LocalDateTime
 class Activity(
     @Column(name = "title", nullable = false, length = 50)
     @Comment("활동명")
-    var title: String = "",
-    @Column(name = "post_type", nullable = false, length = 50)
+    var title: String,
+    @Column(name = "activity_type", nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
-    @Comment("활동 유형 (대외활동, 공모전/해커톤, 세미나, 교육)")
-    val postType: PostType,
+    @Comment("활동 유형 (대외활동, 공모전/해커톤, 강연/세미나, 교육)")
+    val activityType: ActivityType,
     @Column(name = "organizer", nullable = false, length = 50)
     @Comment("주최 기관/단체명")
-    var organizer: String = "",
+    var organizer: String,
     @Column(name = "target_audience", nullable = false, length = 50)
     @Comment("참여대상")
-    var targetAudience: String = "",
+    var targetAudience: String,
     @Column(name = "location", nullable = false, length = 50)
     @Comment("모임지역")
-    var location: String = "",
+    var location: String,
     @Column(name = "recruitment_start_date", nullable = false)
     @Comment("모집 시작일")
-    var recruitmentStartDate: LocalDateTime = LocalDateTime.MIN,
+    var recruitmentStartDate: LocalDateTime,
     @Column(name = "recruitment_end_date", nullable = false)
     @Comment("모집 종료일")
-    var recruitmentEndDate: LocalDateTime = LocalDateTime.MIN,
+    var recruitmentEndDate: LocalDateTime,
     @Column(name = "start_date", nullable = false)
     @Comment("활동 시작일")
-    var startDate: LocalDateTime = LocalDateTime.MIN,
+    var startDate: LocalDateTime,
     @Column(name = "end_date", nullable = false)
     @Comment("활동 종료일")
-    var endDate: LocalDateTime = LocalDateTime.MIN,
+    var endDate: LocalDateTime,
     @Column(name = "status", nullable = false)
     @Comment("모집 상태(모집 중, 모집 마감)")
-    var status: ActivityStatus = ActivityStatus.CLOSED,
+    var status: RecruitmentStatus,
     @Column(name = "view_count", nullable = false)
     @Comment("조회수")
     var viewCount: Long = 0L,
-    @Column(name = "activity_field", nullable = false)
-    @Comment("대외활동 세부 분야")
-    var activityField: String = "",
+    @Column(name = "activity_field")
+    @Comment("활동 분야(대외활동)")
+    var activityField: String,
     @Column(name = "domain")
-    @Comment("공모전/해커톤 세부 영역")
-    var domain: String = "",
+    @Comment("도메인(공모전/해커톤)")
+    var domain: String,
     @Column(name = "cost")
-    @Comment("공모전(시상 규모), 교육(교육비용)")
+    @Comment("시상 규모(공모전/해커톤), 교육비용(교육)")
     var cost: Long? = null,
     @Column(name = "duration")
     @Comment("활동 기간(일)")
-    var duration: Int? = null,
+    var duration: Int? = 0,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "series_id", nullable = false)
     val activitySeries: ActivitySeries,

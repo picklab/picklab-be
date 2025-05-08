@@ -10,7 +10,7 @@ import picklab.backend.common.model.BaseEntity
 @Table(name = "activity_series")
 class ActivitySeries(
     @Column(name = "name", nullable = false)
-    @Comment("시리즈명")
+    @Comment("그룹명")
     var name: String = "",
     @Column(name = "description")
     @Comment("그룹 설명")
