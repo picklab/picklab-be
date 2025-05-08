@@ -9,6 +9,7 @@ enum class JobDetail(
     BUSINESS_DEVELOPMENT(JobGroup.PLANNING, "사업 개발"),
     DATA_ANALYSIS(JobGroup.PLANNING, "데이터 분석"),
     PM_PO(JobGroup.PLANNING, "PM/PO"),
+    PLANNING_ETC(JobGroup.PLANNING, "기타"),
 
     // 디자인
     UX_DESIGN(JobGroup.DESIGN, "UX 디자인"),
@@ -16,6 +17,7 @@ enum class JobDetail(
     WEB_DESIGN(JobGroup.DESIGN, "웹디자인"),
     GRAPHIC_DESIGN(JobGroup.DESIGN, "그래픽 디자인"),
     BRAND_DESIGN(JobGroup.DESIGN, "브랜드 디자인"),
+    DESIGN_ETC(JobGroup.DESIGN, "기타"),
 
     // 개발
     FRONTEND(JobGroup.DEVELOPMENT, "프론트엔드"),
@@ -27,6 +29,7 @@ enum class JobDetail(
     ANDROID(JobGroup.DEVELOPMENT, "안드로이드"),
     BLOCKCHAIN(JobGroup.DEVELOPMENT, "블록체인"),
     GAME(JobGroup.DEVELOPMENT, "게임"),
+    DEVELOPMENT_ETC(JobGroup.DEVELOPMENT, "기타"),
 
     // 마케팅
     BRAND_MARKETING(JobGroup.MARKETING, "브랜드 마케팅"),
@@ -34,6 +37,7 @@ enum class JobDetail(
     GROWTH_MARKETING(JobGroup.MARKETING, "그로스 마케팅"),
     PERFORMANCE_MARKETING(JobGroup.MARKETING, "퍼포먼스 마케팅"),
     PR(JobGroup.MARKETING, "PR"),
+    MARKETING_ETC(JobGroup.MARKETING, "기타"),
 
     // AI
     MACHINE_LEARNING(JobGroup.AI, "머신러닝"),
@@ -41,4 +45,5 @@ enum class JobDetail(
     COMPUTER_VISION(JobGroup.AI, "컴퓨터 비전"),
     NLP(JobGroup.AI, "NLP"),
     DATA_SCIENCE(JobGroup.AI, "데이터"),
+    AI_ETC(JobGroup.AI, "기타"),
 }
