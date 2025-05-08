@@ -23,14 +23,17 @@ class Activity(
     @Comment("활동 유형 (대외활동, 공모전/해커톤, 강연/세미나, 교육)")
     val activityType: ActivityType,
     @Column(name = "organizer", nullable = false, length = 50)
+    @Enumerated(EnumType.STRING)
     @Comment("주최 기관/단체명")
-    var organizer: String,
+    var organizer: OrganizerType,
     @Column(name = "target_audience", nullable = false, length = 50)
+    @Enumerated(EnumType.STRING)
     @Comment("참여대상")
-    var targetAudience: String,
+    var targetAudience: ParticipantType,
     @Column(name = "location", nullable = false, length = 50)
+    @Enumerated(EnumType.STRING)
     @Comment("모임지역")
-    var location: String,
+    var location: LocationType,
     @Column(name = "recruitment_start_date", nullable = false)
     @Comment("모집 시작일")
     var recruitmentStartDate: LocalDateTime,
@@ -44,17 +47,20 @@ class Activity(
     @Comment("활동 종료일")
     var endDate: LocalDateTime,
     @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
     @Comment("모집 상태(모집 중, 모집 마감)")
     var status: RecruitmentStatus,
     @Column(name = "view_count", nullable = false)
     @Comment("조회수")
     var viewCount: Long = 0L,
     @Column(name = "activity_field")
+    @Enumerated(EnumType.STRING)
     @Comment("활동 분야(대외활동)")
-    var activityField: String,
+    var activityField: ActivityFieldType,
     @Column(name = "domain")
+    @Enumerated(EnumType.STRING)
     @Comment("도메인(공모전/해커톤)")
-    var domain: String,
+    var domain: DomainType,
     @Column(name = "cost")
     @Comment("시상 규모(공모전/해커톤), 교육비용(교육)")
     var cost: Long? = null,
