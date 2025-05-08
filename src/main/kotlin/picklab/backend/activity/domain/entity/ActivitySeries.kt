@@ -1,4 +1,4 @@
-package picklab.backend.activity.domain
+package picklab.backend.activity.domain.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

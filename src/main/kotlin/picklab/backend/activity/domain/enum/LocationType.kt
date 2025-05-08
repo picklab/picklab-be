@@ -1,4 +1,4 @@
-package picklab.backend.activity.domain
+package picklab.backend.activity.domain.enum
 
 enum class LocationType(
     val label: String,

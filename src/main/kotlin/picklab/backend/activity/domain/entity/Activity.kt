@@ -1,4 +1,4 @@
-package picklab.backend.activity.domain
+package picklab.backend.activity.domain.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -9,6 +9,13 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.hibernate.annotations.Comment
+import picklab.backend.activity.domain.enum.ActivityFieldType
+import picklab.backend.activity.domain.enum.ActivityType
+import picklab.backend.activity.domain.enum.DomainType
+import picklab.backend.activity.domain.enum.LocationType
+import picklab.backend.activity.domain.enum.OrganizerType
+import picklab.backend.activity.domain.enum.ParticipantType
+import picklab.backend.activity.domain.enum.RecruitmentStatus
 import picklab.backend.common.model.SoftDeleteEntity
 import java.time.LocalDateTime
 
