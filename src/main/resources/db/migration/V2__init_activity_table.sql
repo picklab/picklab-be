@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS activity
 (
     id                      BIGINT      NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '활동 ID',
-    series_id               BIGINT      NOT NULL COMMENT '활동 그룹 ID',
+    group_id               BIGINT      NOT NULL COMMENT '활동 그룹 ID',
     title                   VARCHAR(50) NOT NULL COMMENT '활동명',
     activity_type           VARCHAR(50) NOT NULL COMMENT '활동 유형 (대외활동, 공모전/해커톤, 강연/세미나, 교육)',
     organizer               VARCHAR(50) NOT NULL COMMENT '주최 기관/단체명',
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS activity
 
 -- 활동 그룹 테이블 생성
 -- activity 테이블과 N(활동):1(활동 그룹) 관계
-CREATE TABLE IF NOT EXISTS activity_series
+CREATE TABLE IF NOT EXISTS activity_group
 (
     id          BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '활동 그룹 ID',
     name        VARCHAR(100) NOT NULL COMMENT '그룹명',

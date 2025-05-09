@@ -75,6 +75,6 @@ class Activity(
     @Comment("활동 기간(일)")
     var duration: Int? = -1, // -1: 무기한
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "series_id", nullable = false)
-    val activitySeries: ActivitySeries,
+    @JoinColumn(name = "group_id", nullable = false)
+    val activityGroup: ActivityGroup,
 ) : SoftDeleteEntity()
