@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS activity
     view_count              BIGINT      NOT NULL COMMENT '조회수',
     activity_field          VARCHAR(50) COMMENT '활동 분야(대외활동)',
     domain                  VARCHAR(50) COMMENT '도메인(공모전/해커톤)',
-    cost                    BIGINT      COMMENT '시상 규모(공모전/해커톤), 교육비용(교육)',
-    duration                INTEGER     COMMENT '활동 기간(일)',
+    cost                    BIGINT      NOT NULL COMMENT '시상 규모(공모전/해커톤), 교육비용(교육)',
+    duration                INTEGER     NOT NULL COMMENT '활동 기간(일)',
     created_at              DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
     updated_at              DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
     deleted_at              DATETIME    NULL COMMENT '삭제일'

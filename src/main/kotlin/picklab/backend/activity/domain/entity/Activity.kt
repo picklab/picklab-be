@@ -17,7 +17,7 @@ import picklab.backend.activity.domain.enum.OrganizerType
 import picklab.backend.activity.domain.enum.ParticipantType
 import picklab.backend.activity.domain.enum.RecruitmentStatus
 import picklab.backend.common.model.SoftDeleteEntity
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 @Entity
 @Table(name = "activity")
@@ -43,16 +43,16 @@ class Activity(
     var location: LocationType,
     @Column(name = "recruitment_start_date", nullable = false)
     @Comment("모집 시작일")
-    var recruitmentStartDate: LocalDateTime,
+    var recruitmentStartDate: LocalDate,
     @Column(name = "recruitment_end_date", nullable = false)
     @Comment("모집 종료일")
-    var recruitmentEndDate: LocalDateTime,
+    var recruitmentEndDate: LocalDate,
     @Column(name = "start_date", nullable = false)
     @Comment("활동 시작일")
-    var startDate: LocalDateTime,
+    var startDate: LocalDate,
     @Column(name = "end_date", nullable = false)
     @Comment("활동 종료일")
-    var endDate: LocalDateTime,
+    var endDate: LocalDate,
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     @Comment("모집 상태(모집 중, 모집 마감)")
@@ -68,12 +68,12 @@ class Activity(
     @Enumerated(EnumType.STRING)
     @Comment("도메인(공모전/해커톤)")
     var domain: DomainType,
-    @Column(name = "cost")
+    @Column(name = "cost", nullable = false)
     @Comment("시상 규모(공모전/해커톤), 교육비용(교육)")
-    var cost: Long? = null,
-    @Column(name = "duration")
+    var cost: Long = 0, // 0: 없음
+    @Column(name = "duration", nullable = false)
     @Comment("활동 기간(일)")
-    var duration: Int? = 0,
+    var duration: Int? = -1, // -1: 무기한
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "series_id", nullable = false)
     val activitySeries: ActivitySeries,
