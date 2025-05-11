@@ -26,7 +26,7 @@ import java.time.LocalDate
     discriminatorType = DiscriminatorType.STRING,
 )
 @Table(name = "activity")
-class Activity(
+abstract class Activity(
     @Column(name = "title", nullable = false, length = 50)
     @Comment("활동명")
     var title: String,
@@ -59,8 +59,12 @@ class Activity(
     var viewCount: Long = 0L,
     @Column(name = "duration", nullable = false)
     @Comment("활동 기간(일)")
-    var duration: Int? = -1, // -1: 무기한
+    var duration: Int = UNLIMITED_DURATION,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", nullable = false)
     val activityGroup: ActivityGroup,
-) : SoftDeleteEntity()
+) : SoftDeleteEntity() {
+    companion object {
+        const val UNLIMITED_DURATION = -1
+    }
+}

@@ -28,8 +28,8 @@ class ExternalActivity(
     startDate: LocalDate,
     endDate: LocalDate,
     status: RecruitmentStatus,
-    viewCount: Long = 0L,
-    duration: Int? = -1,
+    viewCount: Long,
+    duration: Int,
     activityGroup: ActivityGroup,
     @Column(name = "activity_field")
     @Enumerated(EnumType.STRING)

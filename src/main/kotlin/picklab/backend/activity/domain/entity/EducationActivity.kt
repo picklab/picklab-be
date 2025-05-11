@@ -27,12 +27,12 @@ class EducationActivity(
     startDate: LocalDate,
     endDate: LocalDate,
     status: RecruitmentStatus,
-    viewCount: Long = 0L,
-    duration: Int? = -1,
+    viewCount: Long,
+    duration: Int,
     activityGroup: ActivityGroup,
     @Column(name = "cost")
     @Comment("교육비용(교육)")
-    var cost: Long = 0,
+    var cost: Long,
 ) : Activity(
         title = title,
         organizer = organizer,

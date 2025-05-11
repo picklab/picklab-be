@@ -11,8 +11,8 @@ import picklab.backend.common.model.BaseEntity
 class ActivityGroup(
     @Column(name = "name", nullable = false)
     @Comment("그룹명")
-    var name: String = "",
+    var name: String,
     @Column(name = "description")
     @Comment("그룹 설명")
-    var description: String = "",
+    var description: String,
 ) : BaseEntity()

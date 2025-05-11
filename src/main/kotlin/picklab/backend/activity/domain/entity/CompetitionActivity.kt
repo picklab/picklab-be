@@ -23,8 +23,8 @@ class CompetitionActivity(
     startDate: LocalDate,
     endDate: LocalDate,
     status: RecruitmentStatus,
-    viewCount: Long = 0L,
-    duration: Int? = -1,
+    viewCount: Long,
+    duration: Int,
     activityGroup: ActivityGroup,
     @Column(name = "domain")
     @Enumerated(EnumType.STRING)
@@ -32,7 +32,7 @@ class CompetitionActivity(
     var domain: DomainType,
     @Column(name = "cost")
     @Comment("시상 규모")
-    var cost: Long = 0, // 0은 없음을 의미
+    var cost: Long,
 ) : Activity(
         title = title,
         organizer = organizer,
