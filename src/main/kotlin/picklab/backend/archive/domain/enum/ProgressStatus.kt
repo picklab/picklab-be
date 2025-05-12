@@ -1,4 +1,4 @@
-package picklab.backend.archive.domain
+package picklab.backend.archive.domain.enum
 
 enum class ProgressStatus(
     val label: String,
