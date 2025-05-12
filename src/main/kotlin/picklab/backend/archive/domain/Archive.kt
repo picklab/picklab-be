@@ -14,6 +14,7 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.Comment
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.activity.domain.enum.ActivityType
+import picklab.backend.archive.domain.enum.ProgressStatus
 import picklab.backend.common.model.SoftDeleteEntity
 import picklab.backend.job.domain.JobDetail
 import picklab.backend.job.domain.JobGroup
