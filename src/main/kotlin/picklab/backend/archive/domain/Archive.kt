@@ -1,7 +1,19 @@
 package picklab.backend.archive.domain
 
-import jakarta.persistence.*
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.Lob
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
+import jakarta.persistence.Table
 import org.hibernate.annotations.Comment
+import picklab.backend.activity.domain.entity.Activity
+import picklab.backend.activity.domain.enum.ActivityType
 import picklab.backend.common.model.SoftDeleteEntity
 import picklab.backend.job.domain.JobDetail
 import picklab.backend.job.domain.JobGroup
@@ -39,7 +51,7 @@ class Archive(
     @Column(name = "activity_type", length = 50, nullable = false)
     @Enumerated(EnumType.STRING)
     @Comment("활동 구분")
-    var activityType: String, // TODO Activity 엔티티 작업 완료시 관련 Enum 클래스로 매핑 예정(PostType)
+    var activityType: ActivityType,
     @Column(name = "activity_progress_status", length = 50, nullable = false)
     @Enumerated(EnumType.STRING)
     @Comment("활동 진행 상태")
@@ -49,7 +61,7 @@ class Archive(
     val member: Member,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "activity_id", nullable = false)
-    val activity: Activity, // TODO Activity 엔티티 작업 완료되면 의존성 추가
+    val activity: Activity,
     @OneToMany(mappedBy = "archive", cascade = [CascadeType.PERSIST], fetch = FetchType.LAZY)
     val archiveJobCategory: MutableList<ArchiveJobCategory> = mutableListOf(),
 ) : SoftDeleteEntity()

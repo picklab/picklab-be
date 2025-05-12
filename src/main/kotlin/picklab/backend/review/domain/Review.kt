@@ -1,7 +1,13 @@
 package picklab.backend.review.domain
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
 import org.hibernate.annotations.Comment
+import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.common.model.SoftDeleteEntity
 import picklab.backend.member.domain.Member
 
@@ -43,5 +49,5 @@ class Review(
     val member: Member,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "activity_id", nullable = false)
-    val activity: Activity, // TODO Activity 엔티티 작업 완료되면 의존성 추가
+    val activity: Activity,
 ) : SoftDeleteEntity()
