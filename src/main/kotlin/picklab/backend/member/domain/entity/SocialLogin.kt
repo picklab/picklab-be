@@ -1,8 +1,9 @@
-package picklab.backend.member.domain
+package picklab.backend.member.domain.entity
 
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
 import picklab.backend.common.model.BaseEntity
+import picklab.backend.member.domain.enum.SocialType
 
 @Entity
 @Table(name = "social_login")

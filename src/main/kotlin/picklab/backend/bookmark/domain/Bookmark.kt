@@ -8,7 +8,7 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.Comment
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.common.model.BaseEntity
-import picklab.backend.member.domain.Member
+import picklab.backend.member.domain.entity.Member
 
 @Entity
 @Table(name = "bookmark")
