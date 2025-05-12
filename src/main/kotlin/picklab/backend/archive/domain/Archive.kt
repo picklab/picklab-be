@@ -1,6 +1,5 @@
 package picklab.backend.archive.domain
 
-import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -9,7 +8,6 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.Lob
 import jakarta.persistence.ManyToOne
-import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import org.hibernate.annotations.Comment
 import picklab.backend.activity.domain.entity.Activity
@@ -63,6 +61,4 @@ class Archive(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "activity_id", nullable = false)
     val activity: Activity,
-    @OneToMany(mappedBy = "archive", cascade = [CascadeType.PERSIST], fetch = FetchType.LAZY)
-    val archiveJobCategory: MutableList<ArchiveJobCategory> = mutableListOf(),
 ) : SoftDeleteEntity()

@@ -1,7 +1,6 @@
 -- 아카이브 테이블 생성
 -- member 테이블과 1(회원):N(아카이브) 관계
 -- activity 테이블과 1(활동):N(아카이브) 관계
--- job_category 테이블과 N(아카이브):M(직무 카테고리) 관계
 CREATE TABLE IF NOT EXISTS archive
 (
     id                       BIGINT         NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '아카이브 ID',
@@ -22,14 +21,3 @@ CREATE TABLE IF NOT EXISTS archive
     deleted_at               DATETIME       NULL     COMMENT '삭제일'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='아카이브 테이블';
-
--- 아카이브 직무 관련 중간 테이블
-CREATE TABLE IF NOT EXISTS archive_job_category
-(
-    id              BIGINT   NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '아카이브 직무 ID',
-    archive_id      BIGINT   NOT NULL COMMENT '아카이브 ID',
-    job_category_id BIGINT   NOT NULL COMMENT '직무 카테고리 ID',
-    created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
-    updated_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4 COMMENT ='아카이브 직무 조인 테이블';
