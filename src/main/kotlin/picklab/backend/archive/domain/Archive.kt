@@ -17,17 +17,17 @@ import picklab.backend.archive.domain.enum.ProgressStatus
 import picklab.backend.archive.domain.enum.RoleType
 import picklab.backend.common.model.SoftDeleteEntity
 import picklab.backend.member.domain.Member
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 @Entity
 @Table(name = "archive")
 class Archive(
     @Column(name = "user_start_date", nullable = false)
     @Comment("활동 시작일")
-    var userStartDate: LocalDateTime,
+    var userStartDate: LocalDate,
     @Column(name = "user_end_date", nullable = false)
     @Comment("활동 종료일")
-    var userEndDate: LocalDateTime,
+    var userEndDate: LocalDate,
     @Column(name = "role", length = 50, nullable = false)
     @Comment("활동 역할")
     var role: RoleType,
