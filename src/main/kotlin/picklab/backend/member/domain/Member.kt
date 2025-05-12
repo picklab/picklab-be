@@ -37,7 +37,7 @@ class Member(
     var educationLevel: String = "",
     @Column(name = "gradation_status", nullable = false, length = 50)
     @Comment("학업 상태")
-    var gradationStatus: String = "",
+    var graduationStatus: String = "",
     @Column(name = "employment_status", nullable = false, length = 50)
     @Comment("재직 상태")
     var employmentStatus: String = "",

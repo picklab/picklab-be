@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS member
     nickname                 VARCHAR(50)   NOT NULL COMMENT '닉네임',
     profile_image_url        VARCHAR(255)  NULL COMMENT '프로필 이미지 url',
     education_level          VARCHAR(50)   NOT NULL COMMENT '최종 학력',
-    gradation_status         VARCHAR(50)   NOT NULL COMMENT '학업 상태',
+    graduation_status        VARCHAR(50)   NOT NULL COMMENT '학업 상태',
     employment_status        VARCHAR(50)   NOT NULL COMMENT '재직 상태',
     employment_type          VARCHAR(50)   NULL COMMENT '고용 형태',
     is_completed             BOOLEAN       NOT NULL DEFAULT FALSE COMMENT '회원 가입 완료 여부',
