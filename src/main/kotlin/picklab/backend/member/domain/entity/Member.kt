@@ -3,6 +3,7 @@ package picklab.backend.member.domain.entity
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
 import picklab.backend.common.model.SoftDeleteEntity
+import picklab.backend.member.domain.enum.EmploymentType
 import java.time.LocalDate
 
 @Entity
@@ -42,8 +43,9 @@ class Member(
     @Comment("재직 상태")
     var employmentStatus: String = "",
     @Column(name = "employment_type", length = 50)
+    @Enumerated(EnumType.STRING)
     @Comment("고용 형태")
-    var employmentType: String = "",
+    var employmentType: EmploymentType? = null,
     @Column(name = "is_completed", nullable = false)
     @Comment("회원 가입 완료 여부")
     var isCompleted: Boolean = false,
