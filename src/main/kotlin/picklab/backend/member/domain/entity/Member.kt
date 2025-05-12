@@ -52,7 +52,7 @@ class Member(
     @Column(name = "withdrawal_reason", length = 255)
     @Comment("탈퇴 사유")
     var withdrawalReason: String? = null,
-    @Column(name = "withdrawal_reason_detail", length = 255)
+    @Column(name = "withdrawal_reason_detail", length = 2000)
     @Comment("탈퇴 상세 사유")
     var withdrawalReasonDetail: String? = null,
     @OneToMany(mappedBy = "member", cascade = [CascadeType.PERSIST], fetch = FetchType.LAZY)
