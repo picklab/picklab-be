@@ -35,7 +35,7 @@ class Review(
     @Column(name = "weakness", length = 1000, nullable = false)
     @Comment("단점")
     var weakness: String,
-    @Column(name = "tips", length = 1000, nullable = false)
+    @Column(name = "tips", length = 1000)
     @Comment("꿀팁")
     var tips: String,
     @Column(name = "job_relevance_score", nullable = false)
