@@ -37,13 +37,13 @@ class Review(
     var weakness: String,
     @Column(name = "tips", length = 1000)
     @Comment("꿀팁")
-    var tips: String,
+    var tips: String? = null,
     @Column(name = "job_relevance_score", nullable = false)
     @Comment("직무 연관성 점수")
     var jobRelevanceScore: Int,
-    @Column(name = "url", nullable = false)
+    @Column(name = "url")
     @Comment("인증 자료 URL")
-    var url: String,
+    var url: String? = null,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     val member: Member,
