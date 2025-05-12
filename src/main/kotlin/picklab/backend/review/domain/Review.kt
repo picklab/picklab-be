@@ -29,13 +29,13 @@ class Review(
     @Column(name = "summary", nullable = false)
     @Comment("한줄 평")
     var summary: String,
-    @Column(name = "strength", nullable = false)
+    @Column(name = "strength", length = 1000, nullable = false)
     @Comment("장점")
     var strength: String,
-    @Column(name = "weakness", nullable = false)
+    @Column(name = "weakness", length = 1000, nullable = false)
     @Comment("단점")
     var weakness: String,
-    @Column(name = "tips", nullable = false)
+    @Column(name = "tips", length = 1000, nullable = false)
     @Comment("꿀팁")
     var tips: String,
     @Column(name = "job_relevance_score", nullable = false)
