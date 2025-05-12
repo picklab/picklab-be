@@ -14,10 +14,10 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.Comment
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.activity.domain.enum.ActivityType
+import picklab.backend.archive.domain.enum.DetailRoleType
 import picklab.backend.archive.domain.enum.ProgressStatus
+import picklab.backend.archive.domain.enum.RoleType
 import picklab.backend.common.model.SoftDeleteEntity
-import picklab.backend.job.domain.JobDetail
-import picklab.backend.job.domain.JobGroup
 import picklab.backend.member.domain.Member
 import java.time.LocalDateTime
 
@@ -32,10 +32,10 @@ class Archive(
     var userEndDate: LocalDateTime,
     @Column(name = "role", length = 50, nullable = false)
     @Comment("활동 역할")
-    var role: JobGroup,
+    var role: RoleType,
     @Column(name = "detail_role", length = 50, nullable = false)
     @Comment("상세 역할")
-    var detailRole: JobDetail,
+    var detailRole: DetailRoleType,
     @Column(name = "custom_role", length = 255)
     @Comment("상세 역할에서 기타를 선택하여 직접 입력한 역할")
     var customRole: String? = null,
