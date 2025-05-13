@@ -45,16 +45,10 @@ class Member(
     @Column(name = "employment_type", length = 50)
     @Enumerated(EnumType.STRING)
     @Comment("고용 형태")
-    var employmentType: EmploymentType? = null,
+    var employmentType: EmploymentType = EmploymentType.NONE,
     @Column(name = "is_completed", nullable = false)
     @Comment("회원 가입 완료 여부")
     var isCompleted: Boolean = false,
-    @Column(name = "withdrawal_reason", length = 255)
-    @Comment("탈퇴 사유")
-    var withdrawalReason: String? = null,
-    @Column(name = "withdrawal_reason_detail", length = 2000)
-    @Comment("탈퇴 상세 사유")
-    var withdrawalReasonDetail: String? = null,
     @OneToMany(mappedBy = "member", cascade = [CascadeType.PERSIST], fetch = FetchType.LAZY)
     val socialLogins: MutableList<SocialLogin> = mutableListOf(),
     @OneToMany(mappedBy = "member", cascade = [CascadeType.PERSIST], fetch = FetchType.LAZY)
