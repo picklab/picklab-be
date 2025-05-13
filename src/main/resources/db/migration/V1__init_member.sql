@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS member
     graduation_status        VARCHAR(50)   NOT NULL COMMENT '학업 상태',
     employment_status        VARCHAR(50)   NOT NULL COMMENT '재직 상태',
     employment_type          VARCHAR(50)   NULL COMMENT '고용 형태',
+    refresh_token            VARCHAR(255)  NULL COMMENT '리프레시 토큰',
     is_completed             BOOLEAN       NOT NULL DEFAULT FALSE COMMENT '회원 가입 완료 여부',
     created_at               DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
     updated_at               DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
