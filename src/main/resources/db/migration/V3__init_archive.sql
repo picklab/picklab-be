@@ -12,8 +12,6 @@ CREATE TABLE IF NOT EXISTS archive
     detail_role              VARCHAR(50)    NOT NULL COMMENT '상세 역할',
     custom_role              VARCHAR(255)   NULL     COMMENT '상세 역할에서 기타를 선택하여 직접 입력한 역할',
     activity_record          TEXT           NOT NULL COMMENT '활동 기록',
-    uploaded_file_url        VARCHAR(255)   NULL     COMMENT '업로드한 파일 URL',
-    reference_url            VARCHAR(255)   NULL     COMMENT '참고 URL',
     activity_type            VARCHAR(50)    NOT NULL COMMENT '활동 구분 (대외활동 / 강연 / 세미나 / 교육 / 공모전/해커톤)',
     activity_progress_status VARCHAR(50)    NOT NULL COMMENT '활동 진행 상태 (수료 완료 / 중도 포기)',
     created_at               DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',

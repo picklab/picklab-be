@@ -41,12 +41,6 @@ class Archive(
     @Column(name = "activity_record", nullable = false, columnDefinition = "TEXT")
     @Comment("활동 기록")
     var activityRecord: String,
-    @Column(name = "uploaded_file_url", length = 255)
-    @Comment("업로드한 파일 URL")
-    var uploadedFileUrl: String? = null,
-    @Column(name = "reference_url", length = 255)
-    @Comment("참고 URL")
-    var referenceUrl: String? = null,
     @Column(name = "activity_type", length = 50, nullable = false)
     @Enumerated(EnumType.STRING)
     @Comment("활동 구분")
