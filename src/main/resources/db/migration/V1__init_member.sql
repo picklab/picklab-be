@@ -15,8 +15,6 @@ CREATE TABLE IF NOT EXISTS member
     employment_status        VARCHAR(50)   NOT NULL COMMENT '재직 상태',
     employment_type          VARCHAR(50)   NULL COMMENT '고용 형태',
     is_completed             BOOLEAN       NOT NULL DEFAULT FALSE COMMENT '회원 가입 완료 여부',
-    withdrawal_reason        VARCHAR(255)  NULL COMMENT '탈퇴 사유',
-    withdrawal_reason_detail VARCHAR(2000) NULL COMMENT '탈퇴 상세 사유',
     created_at               DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
     updated_at               DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
     deleted_at               DATETIME      NULL COMMENT '삭제일'
