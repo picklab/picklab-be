@@ -1,4 +1,4 @@
-package picklab.backend.member.domain
+package picklab.backend.member.domain.entity
 
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment

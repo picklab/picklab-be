@@ -1,8 +1,10 @@
-package picklab.backend.job.domain
+package picklab.backend.job.domain.entity
 
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
 import picklab.backend.common.model.BaseEntity
+import picklab.backend.job.domain.enums.JobDetail
+import picklab.backend.job.domain.enums.JobGroup
 
 @Entity
 @Table(name = "job_category")

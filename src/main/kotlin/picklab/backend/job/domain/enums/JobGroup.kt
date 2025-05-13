@@ -1,6 +1,6 @@
-package picklab.backend.archive.domain.enum
+package picklab.backend.job.domain.enums
 
-enum class RoleType(
+enum class JobGroup(
     val label: String,
 ) {
     PLANNING("기획"),

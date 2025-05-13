@@ -1,4 +1,4 @@
-package picklab.backend.archive.domain.enum
+package picklab.backend.archive.domain.enums
 
 enum class DetailRoleType(
     val group: RoleType,

@@ -1,9 +1,9 @@
-package picklab.backend.notification.domain
+package picklab.backend.notification.domain.entity
 
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
 import picklab.backend.common.model.SoftDeleteEntity
-import picklab.backend.member.domain.Member
+import picklab.backend.member.domain.entity.Member
 
 @Entity
 @Table(name = "notification")

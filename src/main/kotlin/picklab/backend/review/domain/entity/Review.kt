@@ -1,4 +1,4 @@
-package picklab.backend.review.domain
+package picklab.backend.review.domain.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -9,7 +9,7 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.Comment
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.common.model.SoftDeleteEntity
-import picklab.backend.member.domain.Member
+import picklab.backend.member.domain.entity.Member
 
 @Entity
 @Table(name = "review")

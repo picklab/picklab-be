@@ -11,12 +11,12 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.hibernate.annotations.Comment
 import picklab.backend.activity.domain.entity.Activity
-import picklab.backend.activity.domain.enum.ActivityType
-import picklab.backend.archive.domain.enum.DetailRoleType
-import picklab.backend.archive.domain.enum.ProgressStatus
-import picklab.backend.archive.domain.enum.RoleType
+import picklab.backend.activity.domain.enums.ActivityType
+import picklab.backend.archive.domain.enums.DetailRoleType
+import picklab.backend.archive.domain.enums.ProgressStatus
+import picklab.backend.archive.domain.enums.RoleType
 import picklab.backend.common.model.SoftDeleteEntity
-import picklab.backend.member.domain.Member
+import picklab.backend.member.domain.entity.Member
 import java.time.LocalDate
 
 @Entity

@@ -6,7 +6,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import picklab.backend.common.model.BaseEntity
-import picklab.backend.job.domain.JobCategory
+import picklab.backend.job.domain.entity.JobCategory
 
 @Entity
 @Table(name = "activity_job_category")

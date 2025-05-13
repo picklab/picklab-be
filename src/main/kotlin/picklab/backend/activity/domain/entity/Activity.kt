@@ -13,9 +13,9 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.hibernate.annotations.Comment
-import picklab.backend.activity.domain.enum.OrganizerType
-import picklab.backend.activity.domain.enum.ParticipantType
-import picklab.backend.activity.domain.enum.RecruitmentStatus
+import picklab.backend.activity.domain.enums.OrganizerType
+import picklab.backend.activity.domain.enums.ParticipantType
+import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.common.model.SoftDeleteEntity
 import java.time.LocalDate
 

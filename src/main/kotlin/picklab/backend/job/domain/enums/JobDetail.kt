@@ -1,4 +1,4 @@
-package picklab.backend.job.domain
+package picklab.backend.job.domain.enums
 
 enum class JobDetail(
     val group: JobGroup,
