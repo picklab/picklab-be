@@ -6,11 +6,11 @@ import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
 import org.hibernate.annotations.Comment
-import picklab.backend.activity.domain.enum.ActivityFieldType
-import picklab.backend.activity.domain.enum.LocationType
-import picklab.backend.activity.domain.enum.OrganizerType
-import picklab.backend.activity.domain.enum.ParticipantType
-import picklab.backend.activity.domain.enum.RecruitmentStatus
+import picklab.backend.activity.domain.enums.ActivityFieldType
+import picklab.backend.activity.domain.enums.LocationType
+import picklab.backend.activity.domain.enums.OrganizerType
+import picklab.backend.activity.domain.enums.ParticipantType
+import picklab.backend.activity.domain.enums.RecruitmentStatus
 import java.time.LocalDate
 
 @Entity

@@ -1,4 +1,4 @@
-package picklab.backend.member.domain.enum
+package picklab.backend.member.domain.enums
 
 enum class SocialType {
     KAKAO,

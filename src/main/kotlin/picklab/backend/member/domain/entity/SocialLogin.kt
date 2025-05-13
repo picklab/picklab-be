@@ -3,7 +3,7 @@ package picklab.backend.member.domain.entity
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
 import picklab.backend.common.model.BaseEntity
-import picklab.backend.member.domain.enum.SocialType
+import picklab.backend.member.domain.enums.SocialType
 
 @Entity
 @Table(name = "social_login")

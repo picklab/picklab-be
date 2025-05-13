@@ -3,7 +3,7 @@ package picklab.backend.member.domain.entity
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
 import picklab.backend.common.model.SoftDeleteEntity
-import picklab.backend.member.domain.enum.EmploymentType
+import picklab.backend.member.domain.enums.EmploymentType
 import java.time.LocalDate
 
 @Entity

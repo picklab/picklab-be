@@ -1,4 +1,4 @@
-package picklab.backend.bookmark.domain
+package picklab.backend.bookmark.domain.entity
 
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType

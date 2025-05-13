@@ -3,7 +3,7 @@ package picklab.backend.member.domain.entity
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
 import picklab.backend.common.model.BaseEntity
-import picklab.backend.member.domain.enum.WithdrawalType
+import picklab.backend.member.domain.enums.WithdrawalType
 
 @Entity
 @Table(name = "member_withdrawal")

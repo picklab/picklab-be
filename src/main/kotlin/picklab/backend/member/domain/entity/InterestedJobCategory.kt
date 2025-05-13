@@ -2,7 +2,7 @@ package picklab.backend.member.domain.entity
 
 import jakarta.persistence.*
 import picklab.backend.common.model.BaseEntity
-import picklab.backend.job.domain.JobCategory
+import picklab.backend.job.domain.entity.JobCategory
 
 @Entity
 @Table(name = "member_interest_job_category")
