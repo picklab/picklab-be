@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS archive
     activity_record          TEXT           NOT NULL COMMENT '활동 기록',
     activity_type            VARCHAR(50)    NOT NULL COMMENT '활동 구분 (대외활동 / 강연 / 세미나 / 교육 / 공모전/해커톤)',
     activity_progress_status VARCHAR(50)    NOT NULL COMMENT '활동 진행 상태 (수료 완료 / 중도 포기)',
+    write_status             VARCHAR(50)    NOT NULL COMMENT '작성 상태 (미작성 / 작성 중 / 작성 완료)',
     created_at               DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
     updated_at               DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
     deleted_at               DATETIME       NULL     COMMENT '삭제일'

@@ -15,6 +15,7 @@ import picklab.backend.activity.domain.enums.ActivityType
 import picklab.backend.archive.domain.enums.DetailRoleType
 import picklab.backend.archive.domain.enums.ProgressStatus
 import picklab.backend.archive.domain.enums.RoleType
+import picklab.backend.archive.domain.enums.WriteStatus
 import picklab.backend.common.model.SoftDeleteEntity
 import picklab.backend.member.domain.entity.Member
 import java.time.LocalDate
@@ -34,9 +35,6 @@ class Archive(
     @Column(name = "detail_role", length = 50, nullable = false)
     @Comment("상세 역할")
     var detailRole: DetailRoleType,
-    @Column(name = "custom_role", length = 255)
-    @Comment("상세 역할에서 기타를 선택하여 직접 입력한 역할")
-    var customRole: String? = null,
     @Lob
     @Column(name = "activity_record", nullable = false, columnDefinition = "TEXT")
     @Comment("활동 기록")
@@ -49,6 +47,13 @@ class Archive(
     @Enumerated(EnumType.STRING)
     @Comment("활동 진행 상태")
     var activityProgressStatus: ProgressStatus,
+    @Column(name = "write_status", length = 50, nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Comment("작성 상태")
+    var writeStatus: WriteStatus = WriteStatus.NOT_WRITTEN,
+    @Column(name = "custom_role", length = 255)
+    @Comment("상세 역할에서 기타를 선택하여 직접 입력한 역할")
+    var customRole: String? = null,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     val member: Member,
