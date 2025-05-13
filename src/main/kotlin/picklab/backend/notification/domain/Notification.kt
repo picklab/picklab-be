@@ -10,13 +10,13 @@ import picklab.backend.member.domain.Member
 class Notification(
     @Column(name = "title", nullable = false)
     @Comment("알림 제목")
-    var title: String,
+    val title: String,
     @Column(name = "type", length = 50, nullable = false)
     @Comment("알림 타입")
-    var type: String,
+    val type: String,
     @Column(name = "link", nullable = false)
     @Comment("클릭 시 이동할 링크")
-    var link: String,
+    val link: String,
     @Column(name = "is_read", nullable = false)
     @Comment("읽음 여부")
     var isRead: Boolean = false,
