@@ -10,7 +10,7 @@ class ArchiveReferenceUrl(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "archive_id", nullable = false)
     val archive: Archive,
-    @Column(name = "url", nullable = false, length = 2084)
+    @Column(name = "url", nullable = false, length = 2000)
     @Comment("참고 URL")
     val url: String,
 ) : BaseEntity()
