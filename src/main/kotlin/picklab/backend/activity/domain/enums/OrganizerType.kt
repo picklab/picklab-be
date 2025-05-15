@@ -1,4 +1,4 @@
-package picklab.backend.activity.domain.enum
+package picklab.backend.activity.domain.enums
 
 enum class OrganizerType(
     val label: String,
