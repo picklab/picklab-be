@@ -47,6 +47,14 @@ oauth:
     redirect-uri: ${GITHUB_REDIRECT_URI}
     scope: "read:user user:email"
 
+jwt:
+  access:
+    secret: ${JWT_ACCESS_SECRET}
+    expiration: 3600000 # 1시간
+  refresh:
+    secret: ${JWT_REFRESH_SECRET}
+    expiration: 604800000 # 1주일
+
 ---
 spring:
   config:
