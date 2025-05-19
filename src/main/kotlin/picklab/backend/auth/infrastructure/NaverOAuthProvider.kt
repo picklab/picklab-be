@@ -30,7 +30,6 @@ class NaverOAuthProvider(
             .queryParam("response_type", "code")
             .queryParam("client_id", clientId)
             .queryParam("redirect_uri", redirectUri)
-            .queryParam("state", "RANDOM_STATE") // CSRF 보호용
             .build()
             .toUriString()
 
@@ -42,7 +41,6 @@ class NaverOAuthProvider(
                 .queryParam("client_id", clientId)
                 .queryParam("client_secret", clientSecret)
                 .queryParam("code", authCode)
-                .queryParam("state", "RANDOM_STATE")
                 .build()
                 .toUriString()
 
