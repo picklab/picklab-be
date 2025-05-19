@@ -4,6 +4,7 @@ import jakarta.persistence.*
 import org.hibernate.annotations.Comment
 import picklab.backend.common.model.SoftDeleteEntity
 import picklab.backend.member.domain.enums.EmploymentType
+import picklab.backend.member.domain.enums.SocialType
 import java.time.LocalDate
 
 @Entity
@@ -56,4 +57,15 @@ class Member(
     val socialLogins: MutableList<SocialLogin> = mutableListOf(),
     @OneToMany(mappedBy = "member", cascade = [CascadeType.PERSIST], fetch = FetchType.LAZY)
     val interestedJobCategories: MutableList<InterestedJobCategory> = mutableListOf(),
-) : SoftDeleteEntity()
+) : SoftDeleteEntity() {
+    fun addSocialLogin(
+        socialType: SocialType,
+        socialId: String,
+    ) {
+        this.socialLogins.add(SocialLogin(this, socialType, socialId))
+    }
+
+    fun updateRefreshToken(refreshToken: String) {
+        this.refreshToken = refreshToken
+    }
+}
