@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component
 import picklab.backend.auth.domain.TokenResponse
 
 @Component
-class AuthCookieFactory {
+class AuthCookieCreator {
     fun createCookies(tokens: TokenResponse): List<ResponseCookie> =
         listOf(
             ResponseCookie

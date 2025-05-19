@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import picklab.backend.auth.application.AuthUseCase
 import picklab.backend.auth.application.OAuthProviderResolver
-import picklab.backend.auth.infrastructure.AuthCookieFactory
+import picklab.backend.auth.infrastructure.AuthCookieCreator
 import java.net.URI
 
 @RestController
@@ -17,7 +17,7 @@ import java.net.URI
 class AuthController(
     private val oAuthProviderResolver: OAuthProviderResolver,
     private val authUseCase: AuthUseCase,
-    private val authCookieFactory: AuthCookieFactory,
+    private val authCookieCreator: AuthCookieCreator,
 ) : AuthApi {
     @GetMapping("/login/{provider}")
     override fun login(
@@ -38,7 +38,7 @@ class AuthController(
     ): ResponseEntity<Unit> {
         val tokenResponse = authUseCase.handleOAuthCallback(provider, code)
 
-        val cookies = authCookieFactory.createCookies(tokenResponse)
+        val cookies = authCookieCreator.createCookies(tokenResponse)
 
         val responseBuilder = ResponseEntity.ok()
         cookies.forEach { cookie ->
