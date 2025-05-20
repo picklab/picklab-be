@@ -5,6 +5,7 @@ import picklab.backend.auth.domain.AuthToken
 import picklab.backend.auth.infrastructure.AccessTokenProvider
 import picklab.backend.auth.infrastructure.RefreshTokenProvider
 import picklab.backend.member.domain.MemberService
+import picklab.backend.member.domain.enums.SocialType
 
 @Service
 class AuthUseCase(
@@ -15,7 +16,7 @@ class AuthUseCase(
     private val refreshTokenProvider: RefreshTokenProvider,
 ) {
     fun handleOAuthCallback(
-        provider: String,
+        provider: SocialType,
         code: String,
     ): AuthToken {
         val oAuthProvider = oAuthProviderResolver.resolve(provider)

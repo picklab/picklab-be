@@ -7,18 +7,18 @@ import picklab.backend.auth.infrastructure.GithubUserInfo
 import picklab.backend.auth.infrastructure.GoogleUserInfo
 import picklab.backend.auth.infrastructure.KakaoUserInfo
 import picklab.backend.auth.infrastructure.NaverUserInfo
+import picklab.backend.member.domain.enums.SocialType
 
 @Component
 class OAuthUserInfoMapper {
     fun map(
-        provider: String,
+        provider: SocialType,
         attributes: JsonNode,
     ): OAuthUserInfo =
-        when (provider.lowercase()) {
-            "kakao" -> KakaoUserInfo(attributes)
-            "naver" -> NaverUserInfo(attributes)
-            "google" -> GoogleUserInfo(attributes)
-            "github" -> GithubUserInfo(attributes)
-            else -> throw IllegalArgumentException("Unsupported provider: $provider")
+        when (provider) {
+            SocialType.KAKAO -> KakaoUserInfo(attributes)
+            SocialType.NAVER -> NaverUserInfo(attributes)
+            SocialType.GOOGLE -> GoogleUserInfo(attributes)
+            SocialType.GITHUB -> GithubUserInfo(attributes)
         }
 }
