@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
+import picklab.backend.member.domain.enums.SocialType
 
 @Tag(name = "소셜 로그인 API", description = "소셜 로그인을 관리하는 API")
 interface AuthApi {
@@ -19,7 +20,7 @@ interface AuthApi {
         ],
     )
     fun login(
-        @Parameter(description = "소셜 로그인 제공자", required = true) provider: String,
+        @Parameter(description = "소셜 로그인 제공자", required = true) provider: SocialType,
     ): ResponseEntity<Unit>
 
     @Operation(
@@ -33,7 +34,7 @@ interface AuthApi {
         ],
     )
     fun handleCallback(
-        @Parameter(description = "소셜 로그인 제공자", required = true) provider: String,
+        @Parameter(description = "소셜 로그인 제공자", required = true) provider: SocialType,
         @Parameter(description = "인증 코드", required = true) code: String,
     ): ResponseEntity<Unit>
 }

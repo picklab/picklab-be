@@ -2,6 +2,7 @@ package picklab.backend.auth.application
 
 import org.springframework.stereotype.Component
 import picklab.backend.auth.infrastructure.*
+import picklab.backend.member.domain.enums.SocialType
 
 @Component
 class OAuthProviderResolver(
@@ -10,12 +11,11 @@ class OAuthProviderResolver(
     private val githubOAuthProvider: GithubOAuthProvider,
     private val googleOAuthProvider: GoogleOAuthProvider,
 ) {
-    fun resolve(provider: String): OAuthProvider =
+    fun resolve(provider: SocialType): OAuthProvider =
         when (provider) {
-            "kakao" -> kakaoOAuthProvider
-            "naver" -> naverOAuthProvider
-            "github" -> githubOAuthProvider
-            "google" -> googleOAuthProvider
-            else -> throw IllegalArgumentException("Unsupported provider: $provider")
+            SocialType.KAKAO -> kakaoOAuthProvider
+            SocialType.NAVER -> naverOAuthProvider
+            SocialType.GITHUB -> githubOAuthProvider
+            SocialType.GOOGLE -> googleOAuthProvider
         }
 }

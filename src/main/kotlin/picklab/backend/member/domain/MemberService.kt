@@ -11,10 +11,9 @@ class MemberService(
     private val socialLoginRepository: SocialLoginRepository,
 ) {
     fun loginOrSignup(
-        socialType: String,
+        socialType: SocialType,
         userInfo: OAuthUserInfo,
     ): Member {
-        val socialType = SocialType.from(socialType)
         val socialLogin = socialLoginRepository.findBySocialTypeAndSocialId(socialType, userInfo.getSocialId())
 
         return socialLogin?.member ?: run {

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 import picklab.backend.auth.application.AuthUseCase
 import picklab.backend.auth.application.OAuthProviderResolver
 import picklab.backend.auth.infrastructure.AuthCookieCreator
+import picklab.backend.member.domain.enums.SocialType
 import java.net.URI
 
 @RestController
@@ -21,7 +22,7 @@ class AuthController(
 ) : AuthApi {
     @GetMapping("/login/{provider}")
     override fun login(
-        @PathVariable provider: String,
+        @PathVariable provider: SocialType,
     ): ResponseEntity<Unit> {
         val oauthProvider = oAuthProviderResolver.resolve(provider)
 
@@ -33,7 +34,7 @@ class AuthController(
 
     @GetMapping("/callback/{provider}")
     override fun handleCallback(
-        @PathVariable provider: String,
+        @PathVariable provider: SocialType,
         @RequestParam code: String,
     ): ResponseEntity<Unit> {
         val tokens = authUseCase.handleOAuthCallback(provider, code)
