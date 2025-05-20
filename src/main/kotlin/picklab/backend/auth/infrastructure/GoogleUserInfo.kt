@@ -7,20 +7,22 @@ import java.time.LocalDate
 class GoogleUserInfo(
     private val attributes: JsonNode,
 ) : OAuthUserInfo {
-    override fun getSocialId(): String = attributes["id"].asText() ?: throw IllegalArgumentException("SocialId is required")
+    private val socialId = attributes["id"]?.asText() ?: throw IllegalArgumentException("SocialId is required")
+    private val name = attributes["name"]?.asText() ?: throw IllegalArgumentException("Name is required")
+    private val email = attributes["email"]?.asText() ?: throw IllegalArgumentException("Email is required")
+    private val profileImage = attributes["picture"]?.asText() ?: throw IllegalArgumentException("Profile image is required")
+    private val birthdate = attributes["birthdate"]?.asText()
 
-    override fun getName(): String =
-        attributes["name"]?.asText()
-            ?: throw IllegalArgumentException("Name is required")
+    override fun getSocialId(): String = socialId
 
-    override fun getEmail(): String =
-        attributes["email"]?.asText()
-            ?: throw IllegalArgumentException("Email is required")
+    override fun getName(): String = name
 
-    override fun getProfileImage(): String = attributes["picture"]?.asText() ?: throw IllegalArgumentException("Profile image is required")
+    override fun getEmail(): String = email
 
-    override fun getBirthdate(): LocalDate? {
-        val birthdateString = attributes["birthdate"]?.asText() ?: return null
-        return LocalDate.parse(birthdateString)
-    }
+    override fun getProfileImage(): String = profileImage
+
+    override fun getBirthdate(): LocalDate? =
+        birthdate?.let {
+            LocalDate.parse(it)
+        }
 }

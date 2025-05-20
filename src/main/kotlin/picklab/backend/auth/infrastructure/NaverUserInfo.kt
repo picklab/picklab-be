@@ -8,23 +8,27 @@ import java.time.format.DateTimeFormatter
 class NaverUserInfo(
     private val attributes: JsonNode,
 ) : OAuthUserInfo {
-    override fun getSocialId(): String = attributes["response"].get("id").asText() ?: throw IllegalArgumentException("SocialId is required")
+    private val socialId = attributes["id"]?.asText() ?: throw IllegalArgumentException("SocialId is required")
+    private val name = attributes["name"]?.asText() ?: throw IllegalArgumentException("Name is required")
+    private val email = attributes["email"]?.asText() ?: throw IllegalArgumentException("Email is required")
+    private val profileImage =
+        attributes["profile_image"]?.asText() ?: throw IllegalArgumentException("Profile image is required")
+    private val birthYear = attributes["birthyear"]?.asText()
+    private val birthDay = attributes["birthday"]?.asText()
 
-    override fun getName(): String = attributes["response"]?.get("name")?.asText() ?: throw IllegalArgumentException("Name is required")
+    override fun getSocialId(): String = socialId
+
+    override fun getName(): String = name
 
     // 네이버 연락처 이메일 -> ~~@naver.com 형식이 아닐 수 있음
-    override fun getEmail(): String = attributes["response"]?.get("email")?.asText() ?: throw IllegalArgumentException("Email is required")
+    override fun getEmail(): String = email
 
-    override fun getProfileImage(): String =
-        attributes["response"]?.get("profile_image")?.asText() ?: throw IllegalArgumentException("Profile image is required")
+    override fun getProfileImage(): String = profileImage
 
     override fun getBirthdate(): LocalDate? {
-        val birthday = attributes["response"]?.get("birthday")?.asText()
-        val birthyear = attributes["response"]?.get("birthyear")?.asText()
-
         var birthDate: LocalDate? = null
-        if (!birthyear.isNullOrBlank() && !birthday.isNullOrBlank()) {
-            val fullDate = "$birthyear-$birthday"
+        if (!birthYear.isNullOrBlank() && !birthDay.isNullOrBlank()) {
+            val fullDate = "$birthYear-$birthDay"
             birthDate = LocalDate.parse(fullDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         }
 
