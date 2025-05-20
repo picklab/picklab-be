@@ -2,11 +2,11 @@ package picklab.backend.auth.infrastructure
 
 import org.springframework.http.ResponseCookie
 import org.springframework.stereotype.Component
-import picklab.backend.auth.domain.TokenResponse
+import picklab.backend.auth.domain.AuthToken
 
 @Component
 class AuthCookieCreator {
-    fun createCookies(tokens: TokenResponse): List<ResponseCookie> =
+    fun createCookies(tokens: AuthToken): List<ResponseCookie> =
         listOf(
             ResponseCookie
                 .from("accessToken", tokens.accessToken)
