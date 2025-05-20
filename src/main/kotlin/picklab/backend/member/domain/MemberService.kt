@@ -19,9 +19,9 @@ class MemberService(
         return socialLogin?.member ?: run {
             val newMember =
                 Member(
-                    name = userInfo.getName() ?: throw IllegalArgumentException("Name is required"),
-                    email = userInfo.getEmail() ?: throw IllegalArgumentException("Email is required"),
-                    profileImageUrl = userInfo.getProfileImage() ?: throw IllegalArgumentException("Profile image URL is required"),
+                    name = userInfo.getName(),
+                    email = userInfo.getEmail(),
+                    profileImageUrl = userInfo.getProfileImage(),
                     birthDate = userInfo.getBirthdate(),
                 )
 

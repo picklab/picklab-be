@@ -8,14 +8,15 @@ import java.time.format.DateTimeFormatter
 class NaverUserInfo(
     private val attributes: JsonNode,
 ) : OAuthUserInfo {
-    override fun getSocialId(): String = attributes["response"].get("id").asText()
+    override fun getSocialId(): String = attributes["response"].get("id").asText() ?: throw IllegalArgumentException("SocialId is required")
 
-    override fun getName(): String? = attributes["response"]?.get("name")?.asText()
+    override fun getName(): String = attributes["response"]?.get("name")?.asText() ?: throw IllegalArgumentException("Name is required")
 
     // 네이버 연락처 이메일 -> ~~@naver.com 형식이 아닐 수 있음
-    override fun getEmail(): String? = attributes["response"]?.get("email")?.asText()
+    override fun getEmail(): String = attributes["response"]?.get("email")?.asText() ?: throw IllegalArgumentException("Email is required")
 
-    override fun getProfileImage(): String? = attributes["response"]?.get("profile_image")?.asText()
+    override fun getProfileImage(): String =
+        attributes["response"]?.get("profile_image")?.asText() ?: throw IllegalArgumentException("Profile image is required")
 
     override fun getBirthdate(): LocalDate? {
         val birthday = attributes["response"]?.get("birthday")?.asText()
