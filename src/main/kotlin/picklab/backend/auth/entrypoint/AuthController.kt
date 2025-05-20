@@ -12,12 +12,6 @@ import picklab.backend.auth.application.OAuthProviderResolver
 import picklab.backend.auth.infrastructure.AuthCookieCreator
 import java.net.URI
 
-/**
- * 1. mockBean, mockito, mockMvc?
- * 2. mockServer
- *
- */
-
 @RestController
 @RequestMapping("/v1/auth")
 class AuthController(
