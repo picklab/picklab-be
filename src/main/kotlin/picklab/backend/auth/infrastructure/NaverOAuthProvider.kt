@@ -55,7 +55,8 @@ class NaverOAuthProvider(
     override fun getUserInfo(accessToken: String): JsonNode {
         val token = getToken(accessToken)
         val userInfo = getUserInfoFromNaver(token["access_token"].asText())
-        return userInfo
+        return userInfo["response"]
+            ?: throw RuntimeException("네이버 유저 정보 조회 실패")
     }
 
     private fun getUserInfoFromNaver(accessToken: String): JsonNode =
