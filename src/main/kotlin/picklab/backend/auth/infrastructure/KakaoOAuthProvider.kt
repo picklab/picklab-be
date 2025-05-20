@@ -31,6 +31,7 @@ class KakaoOAuthProvider(
             .build()
             .toUriString()
 
+    // 단위테스트 -> exception 발생이 잘 되는가
     override fun getToken(authCode: String): JsonNode {
         val uri =
             UriComponentsBuilder
@@ -56,6 +57,7 @@ class KakaoOAuthProvider(
         return userInfo
     }
 
+    // 단위테스트
     private fun getUserInfoFromKakao(accessToken: String): JsonNode =
         restClient
             .get()

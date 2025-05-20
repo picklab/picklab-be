@@ -1,7 +1,7 @@
 package picklab.backend.auth.application
 
 import org.springframework.stereotype.Service
-import picklab.backend.auth.domain.TokenResponse
+import picklab.backend.auth.domain.AuthToken
 import picklab.backend.auth.infrastructure.AccessTokenProvider
 import picklab.backend.auth.infrastructure.RefreshTokenProvider
 import picklab.backend.member.domain.MemberService
@@ -17,7 +17,7 @@ class AuthUseCase(
     fun handleOAuthCallback(
         provider: String,
         code: String,
-    ): TokenResponse {
+    ): AuthToken {
         val oAuthProvider = oAuthProviderResolver.resolve(provider)
         val userInfo = oAuthProvider.getUserInfo(code)
         val mappedUserInfo = oAuthUserInfoMapper.map(provider, userInfo)
@@ -32,7 +32,7 @@ class AuthUseCase(
             refreshToken = refreshToken,
         )
 
-        return TokenResponse(
+        return AuthToken(
             accessToken = accessToken,
             refreshToken = refreshToken,
         )

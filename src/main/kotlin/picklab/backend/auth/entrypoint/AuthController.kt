@@ -12,6 +12,12 @@ import picklab.backend.auth.application.OAuthProviderResolver
 import picklab.backend.auth.infrastructure.AuthCookieCreator
 import java.net.URI
 
+/**
+ * 1. mockBean, mockito, mockMvc?
+ * 2. mockServer
+ *
+ */
+
 @RestController
 @RequestMapping("/v1/auth")
 class AuthController(
@@ -36,9 +42,9 @@ class AuthController(
         @PathVariable provider: String,
         @RequestParam code: String,
     ): ResponseEntity<Unit> {
-        val tokenResponse = authUseCase.handleOAuthCallback(provider, code)
+        val tokens = authUseCase.handleOAuthCallback(provider, code)
 
-        val cookies = authCookieCreator.createCookies(tokenResponse)
+        val cookies = authCookieCreator.createCookies(tokens)
 
         val responseBuilder = ResponseEntity.ok()
         cookies.forEach { cookie ->

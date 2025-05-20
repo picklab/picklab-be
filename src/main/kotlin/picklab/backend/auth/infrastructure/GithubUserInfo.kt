@@ -1,4 +1,4 @@
-package picklab.backend.auth.application
+package picklab.backend.auth.infrastructure
 
 import com.fasterxml.jackson.databind.JsonNode
 import picklab.backend.auth.domain.OAuthUserInfo
