@@ -9,11 +9,10 @@ import java.time.LocalDateTime
 @MappedSuperclass
 @SQLRestriction("deleted_at IS NULL")
 abstract class SoftDeleteEntity(
-    @Column(nullable = false)
+    @Column(name = "deleted_at")
     @Comment("삭제 시간")
-    var deletedAt: LocalDateTime? = null
+    var deletedAt: LocalDateTime? = null,
 ) : BaseEntity() {
-
     fun delete() {
         deletedAt = LocalDateTime.now()
     }
