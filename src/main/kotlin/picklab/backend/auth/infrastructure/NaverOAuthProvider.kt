@@ -33,14 +33,14 @@ class NaverOAuthProvider(
             .build()
             .toUriString()
 
-    override fun getToken(authCode: String): JsonNode {
+    override fun getToken(code: String): JsonNode {
         val uri =
             UriComponentsBuilder
                 .fromUriString(TOKEN_URL)
                 .queryParam("grant_type", "authorization_code")
                 .queryParam("client_id", clientId)
                 .queryParam("client_secret", clientSecret)
-                .queryParam("code", authCode)
+                .queryParam("code", code)
                 .build()
                 .toUriString()
 
@@ -52,8 +52,8 @@ class NaverOAuthProvider(
             ?: throw RuntimeException("네이버 토큰 응답 실패")
     }
 
-    override fun getUserInfo(accessToken: String): JsonNode {
-        val token = getToken(accessToken)
+    override fun getUserInfo(code: String): JsonNode {
+        val token = getToken(code)
         val userInfo = getUserInfoFromNaver(token["access_token"].asText())
         return userInfo["response"]
             ?: throw RuntimeException("네이버 유저 정보 조회 실패")

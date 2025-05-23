@@ -7,5 +7,5 @@ interface OAuthProvider {
 
     fun getToken(authCode: String): JsonNode
 
-    fun getUserInfo(accessToken: String): JsonNode
+    fun getUserInfo(code: String): JsonNode
 }

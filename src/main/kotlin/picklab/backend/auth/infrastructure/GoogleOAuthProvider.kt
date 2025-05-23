@@ -43,10 +43,10 @@ class GoogleOAuthProvider(
             ).build()
             .toUriString()
 
-    override fun getToken(authCode: String): JsonNode {
+    override fun getToken(code: String): JsonNode {
         val formData =
             LinkedMultiValueMap<String, String>().apply {
-                add("code", authCode)
+                add("code", code)
                 add("client_id", clientId)
                 add("client_secret", clientSecret)
                 add("redirect_uri", redirectUri)
@@ -66,8 +66,8 @@ class GoogleOAuthProvider(
             ?: throw RuntimeException("구글 토큰 응답 실패")
     }
 
-    override fun getUserInfo(accessToken: String): JsonNode {
-        val token = getToken(accessToken)
+    override fun getUserInfo(code: String): JsonNode {
+        val token = getToken(code)
         val userInfo = getBasicUserInfoFromGoogle(token["access_token"].asText())
         val birthdayInfo = getBirthdayInfoFromGoogle(token["access_token"].asText())
 

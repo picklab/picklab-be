@@ -37,7 +37,7 @@ class GithubOAuthProvider(
             .build()
             .toUriString()
 
-    override fun getToken(authCode: String): JsonNode =
+    override fun getToken(code: String): JsonNode =
         restClient
             .post()
             .uri(TOKEN_URL)
@@ -46,15 +46,15 @@ class GithubOAuthProvider(
                 mapOf(
                     "client_id" to clientId,
                     "client_secret" to clientSecret,
-                    "code" to authCode,
+                    "code" to code,
                     "redirect_uri" to redirectUri,
                 ),
             ).retrieve()
             .body(JsonNode::class.java)
             ?: throw RuntimeException("GitHub 토큰 응답 실패")
 
-    override fun getUserInfo(accessToken: String): JsonNode {
-        val token = getToken(accessToken)
+    override fun getUserInfo(code: String): JsonNode {
+        val token = getToken(code)
         val userInfo = getUserInfoFromGithub(token["access_token"].asText())
         val email = getPrimaryEmailFromGithub(token["access_token"].asText())
 

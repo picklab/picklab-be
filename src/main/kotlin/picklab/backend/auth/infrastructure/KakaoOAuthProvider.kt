@@ -31,14 +31,14 @@ class KakaoOAuthProvider(
             .build()
             .toUriString()
 
-    override fun getToken(authCode: String): JsonNode {
+    override fun getToken(code: String): JsonNode {
         val uri =
             UriComponentsBuilder
                 .fromUriString(TOKEN_URL)
                 .queryParam("grant_type", "authorization_code")
                 .queryParam("client_id", clientId)
                 .queryParam("redirect_uri", redirectUri)
-                .queryParam("code", authCode)
+                .queryParam("code", code)
                 .build()
                 .toUriString()
 
@@ -50,8 +50,8 @@ class KakaoOAuthProvider(
             ?: throw RuntimeException("카카오 토큰 응답 실패")
     }
 
-    override fun getUserInfo(accessToken: String): JsonNode {
-        val token = getToken(accessToken)
+    override fun getUserInfo(code: String): JsonNode {
+        val token = getToken(code)
         val userInfo = getUserInfoFromKakao(token["access_token"].asText())
         return userInfo
     }
