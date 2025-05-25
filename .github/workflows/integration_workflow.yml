@@ -53,10 +53,6 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run test
-        shell: bash
-        run: |
-          set -o allexport
-          source ${{ secrets.PRIVATE_ENV_FILE }}
-          set +o allexport
-          export SPRING_PROFILES_ACTIVE=test
-          ./gradlew test
+        env:
+          SPRING_PROFILES_ACTIVE: test
+        run: ./gradlew test
