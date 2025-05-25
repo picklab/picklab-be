@@ -8,7 +8,7 @@ plugins {
 
 group = "picklab"
 version = "0.0.1-SNAPSHOT"
-
+val swaggerVersion = "2.8.8"
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
@@ -26,6 +26,7 @@ repositories {
 }
 
 dependencies {
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$swaggerVersion")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
