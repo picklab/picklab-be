@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: local
+  config:
+    import: classpath:config-repo/application-test.yml
   jpa:
     show-sql: true
     generate-ddl: false
@@ -36,13 +38,3 @@ spring:
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
-
----
-spring:
-  config:
-    activate:
-      on-profile: test
-  datasource:
-    url: jdbc:mysql://localhost:3306/testdb
-    username: root
-    password: password
