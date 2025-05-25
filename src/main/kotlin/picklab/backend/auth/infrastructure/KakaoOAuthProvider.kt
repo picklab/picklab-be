@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 import org.springframework.web.util.UriComponentsBuilder
+import picklab.backend.auth.domain.AuthException
+import picklab.backend.common.model.ErrorCode
 
 @Component
 class KakaoOAuthProvider(
@@ -47,7 +49,7 @@ class KakaoOAuthProvider(
             .uri(uri)
             .retrieve()
             .body(JsonNode::class.java)
-            ?: throw RuntimeException("카카오 토큰 응답 실패")
+            ?: throw AuthException(ErrorCode.SOCIAL_CODE_ERROR)
     }
 
     override fun getUserInfo(code: String): JsonNode {
@@ -63,5 +65,5 @@ class KakaoOAuthProvider(
             .header("Authorization", "Bearer $accessToken")
             .retrieve()
             .body(JsonNode::class.java)
-            ?: throw IllegalStateException("카카오 유저 정보 조회 실패")
+            ?: throw AuthException(ErrorCode.SOCIAL_USER_INFO_ERROR)
 }

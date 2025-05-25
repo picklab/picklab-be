@@ -1,18 +1,20 @@
 package picklab.backend.auth.infrastructure
 
 import com.fasterxml.jackson.databind.JsonNode
+import picklab.backend.auth.domain.AuthException
 import picklab.backend.auth.domain.OAuthUserInfo
+import picklab.backend.common.model.ErrorCode
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class NaverUserInfo(
     private val attributes: JsonNode,
 ) : OAuthUserInfo {
-    private val socialId = attributes["id"]?.asText() ?: throw IllegalArgumentException("SocialId is required")
-    private val name = attributes["name"]?.asText() ?: throw IllegalArgumentException("Name is required")
-    private val email = attributes["email"]?.asText() ?: throw IllegalArgumentException("Email is required")
+    private val socialId = attributes["id"]?.asText() ?: throw AuthException(ErrorCode.EMPTY_SOCIAL_ID)
+    private val name = attributes["name"]?.asText() ?: throw AuthException(ErrorCode.EMPTY_SOCIAL_NAME)
+    private val email = attributes["email"]?.asText() ?: throw AuthException(ErrorCode.EMPTY_SOCIAL_EMAIL)
     private val profileImage =
-        attributes["profile_image"]?.asText() ?: throw IllegalArgumentException("Profile image is required")
+        attributes["profile_image"]?.asText() ?: throw AuthException(ErrorCode.EMPTY_SOCIAL_PROFILE_IMAGE)
     private val birthYear = attributes["birthyear"]?.asText()
     private val birthDay = attributes["birthday"]?.asText()
 

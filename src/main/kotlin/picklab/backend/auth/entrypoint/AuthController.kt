@@ -1,5 +1,6 @@
 package picklab.backend.auth.entrypoint
 
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 import picklab.backend.auth.application.AuthUseCase
 import picklab.backend.auth.application.OAuthProviderResolver
 import picklab.backend.auth.infrastructure.AuthCookieCreator
+import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.member.domain.enums.SocialType
 import java.net.URI
 
@@ -36,16 +38,19 @@ class AuthController(
     override fun handleCallback(
         @PathVariable provider: SocialType,
         @RequestParam code: String,
-    ): ResponseEntity<Unit> {
+    ): ResponseEntity<ResponseWrapper<Unit>> {
         val tokens = authUseCase.handleOAuthCallback(provider, code)
 
         val cookies = authCookieCreator.createCookies(tokens)
 
-        val responseBuilder = ResponseEntity.ok()
+        val headers = HttpHeaders()
         cookies.forEach { cookie ->
-            responseBuilder.header("Set-Cookie", cookie.toString())
+            headers.add("Set-Cookie", cookie.toString())
         }
 
-        return responseBuilder.build()
+        return ResponseEntity
+            .ok()
+            .headers(headers)
+            .body(ResponseWrapper.success(HttpStatus.OK, "소셜 로그인 성공"))
     }
 }

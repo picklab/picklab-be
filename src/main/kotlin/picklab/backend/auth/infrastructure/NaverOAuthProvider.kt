@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestClient
 import org.springframework.web.util.UriComponentsBuilder
+import picklab.backend.auth.domain.AuthException
+import picklab.backend.common.model.ErrorCode
 
 @Component
 class NaverOAuthProvider(
@@ -49,14 +51,13 @@ class NaverOAuthProvider(
             .uri(uri)
             .retrieve()
             .body(JsonNode::class.java)
-            ?: throw RuntimeException("네이버 토큰 응답 실패")
+            ?: throw AuthException(ErrorCode.SOCIAL_CODE_ERROR)
     }
 
     override fun getUserInfo(code: String): JsonNode {
         val token = getToken(code)
         val userInfo = getUserInfoFromNaver(token["access_token"].asText())
         return userInfo["response"]
-            ?: throw RuntimeException("네이버 유저 정보 조회 실패")
     }
 
     private fun getUserInfoFromNaver(accessToken: String): JsonNode =
@@ -66,5 +67,5 @@ class NaverOAuthProvider(
             .header("Authorization", "Bearer $accessToken")
             .retrieve()
             .body(JsonNode::class.java)
-            ?: throw RuntimeException("네이버 유저 정보 조회 실패")
+            ?: throw AuthException(ErrorCode.SOCIAL_USER_INFO_ERROR)
 }

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.RestClient
 import org.springframework.web.util.UriComponentsBuilder
+import picklab.backend.auth.domain.AuthException
+import picklab.backend.common.model.ErrorCode
 import java.time.LocalDate
 
 @Component
@@ -63,7 +65,7 @@ class GoogleOAuthProvider(
                 .body(JsonNode::class.java)
 
         return tokenResponse
-            ?: throw RuntimeException("구글 토큰 응답 실패")
+            ?: throw AuthException(ErrorCode.SOCIAL_CODE_ERROR)
     }
 
     override fun getUserInfo(code: String): JsonNode {
@@ -83,7 +85,7 @@ class GoogleOAuthProvider(
             .header("Authorization", "Bearer $accessToken")
             .retrieve()
             .body(JsonNode::class.java)
-            ?: throw RuntimeException("구글 유저 정보 조회 실패")
+            ?: throw AuthException(ErrorCode.SOCIAL_USER_INFO_ERROR)
 
     private fun getBirthdayInfoFromGoogle(accessToken: String): LocalDate? {
         val birthdays =

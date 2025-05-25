@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
+import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.member.domain.enums.SocialType
 
 @Tag(name = "소셜 로그인 API", description = "소셜 로그인을 관리하는 API")
@@ -31,10 +32,22 @@ interface AuthApi {
                 responseCode = "200",
                 description = "로그인 처리가 완료되었습니다.",
             ),
+            ApiResponse(
+                responseCode = "400",
+                description = "소셜 로그인 유저 정보가 올바르지 않습니다.",
+            ),
+            ApiResponse(
+                responseCode = "401",
+                description = "소셜 로그인 인증 코드가 유효하지 않습니다.",
+            ),
+            ApiResponse(
+                responseCode = "502",
+                description = "소셜 로그인 유저 정보 조회에 실패하였습니다.",
+            ),
         ],
     )
     fun handleCallback(
         @Parameter(description = "소셜 로그인 제공자", required = true) provider: SocialType,
         @Parameter(description = "인증 코드", required = true) code: String,
-    ): ResponseEntity<Unit>
+    ): ResponseEntity<ResponseWrapper<Unit>>
 }

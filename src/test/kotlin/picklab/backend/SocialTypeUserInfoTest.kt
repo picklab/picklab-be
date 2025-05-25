@@ -3,10 +3,12 @@ package picklab.backend
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
+import picklab.backend.auth.domain.AuthException
 import picklab.backend.auth.infrastructure.GithubUserInfo
 import picklab.backend.auth.infrastructure.GoogleUserInfo
 import picklab.backend.auth.infrastructure.KakaoUserInfo
 import picklab.backend.auth.infrastructure.NaverUserInfo
+import picklab.backend.common.model.ErrorCode
 
 @DisplayName("소셜 로그인 유저 정보 매핑 테스트")
 class SocialTypeUserInfoTest {
@@ -75,8 +77,8 @@ class SocialTypeUserInfoTest {
                 val node = ObjectMapper().readTree(json)
 
                 // then
-                val exception = assertThrows<IllegalArgumentException> { KakaoUserInfo(node) }
-                assertThat(exception.message).isEqualTo("SocialId is required")
+                val exception = assertThrows<AuthException> { KakaoUserInfo(node) }
+                assertThat(exception.errorCode).isEqualTo(ErrorCode.EMPTY_SOCIAL_ID)
             }
 
             @Test
@@ -100,8 +102,8 @@ class SocialTypeUserInfoTest {
                 val node = ObjectMapper().readTree(json)
 
                 // then
-                val exception = assertThrows<IllegalArgumentException> { KakaoUserInfo(node) }
-                assertThat(exception.message).isEqualTo("Name is required")
+                val exception = assertThrows<AuthException> { KakaoUserInfo(node) }
+                assertThat(exception.errorCode).isEqualTo(ErrorCode.EMPTY_SOCIAL_NAME)
             }
 
             @Test
@@ -123,8 +125,8 @@ class SocialTypeUserInfoTest {
                 val node = ObjectMapper().readTree(json)
 
                 // then
-                val exception = assertThrows<IllegalArgumentException> { KakaoUserInfo(node) }
-                assertThat(exception.message).isEqualTo("Email is required")
+                val exception = assertThrows<AuthException> { KakaoUserInfo(node) }
+                assertThat(exception.errorCode).isEqualTo(ErrorCode.EMPTY_SOCIAL_EMAIL)
             }
 
             @Test
@@ -148,8 +150,8 @@ class SocialTypeUserInfoTest {
                 val node = ObjectMapper().readTree(json)
 
                 // then
-                val exception = assertThrows<IllegalArgumentException> { KakaoUserInfo(node) }
-                assertThat(exception.message).isEqualTo("Profile image is required")
+                val exception = assertThrows<AuthException> { KakaoUserInfo(node) }
+                assertThat(exception.errorCode).isEqualTo(ErrorCode.EMPTY_SOCIAL_PROFILE_IMAGE)
             }
         }
     }
@@ -208,8 +210,8 @@ class SocialTypeUserInfoTest {
                 val node = ObjectMapper().readTree(json)
 
                 // then
-                val exception = assertThrows<IllegalArgumentException> { GoogleUserInfo(node) }
-                assertThat(exception.message).isEqualTo("SocialId is required")
+                val exception = assertThrows<AuthException> { GoogleUserInfo(node) }
+                assertThat(exception.errorCode).isEqualTo(ErrorCode.EMPTY_SOCIAL_ID)
             }
 
             @Test
@@ -230,8 +232,8 @@ class SocialTypeUserInfoTest {
                 val node = ObjectMapper().readTree(json)
 
                 // then
-                val exception = assertThrows<IllegalArgumentException> { GoogleUserInfo(node) }
-                assertThat(exception.message).isEqualTo("Name is required")
+                val exception = assertThrows<AuthException> { GoogleUserInfo(node) }
+                assertThat(exception.errorCode).isEqualTo(ErrorCode.EMPTY_SOCIAL_NAME)
             }
 
             @Test
@@ -252,8 +254,8 @@ class SocialTypeUserInfoTest {
                 val node = ObjectMapper().readTree(json)
 
                 // then
-                val exception = assertThrows<IllegalArgumentException> { GoogleUserInfo(node) }
-                assertThat(exception.message).isEqualTo("Email is required")
+                val exception = assertThrows<AuthException> { GoogleUserInfo(node) }
+                assertThat(exception.errorCode).isEqualTo(ErrorCode.EMPTY_SOCIAL_EMAIL)
             }
 
             @Test
@@ -274,8 +276,8 @@ class SocialTypeUserInfoTest {
                 val node = ObjectMapper().readTree(json)
 
                 // then
-                val exception = assertThrows<IllegalArgumentException> { GoogleUserInfo(node) }
-                assertThat(exception.message).isEqualTo("Profile image is required")
+                val exception = assertThrows<AuthException> { GoogleUserInfo(node) }
+                assertThat(exception.errorCode).isEqualTo(ErrorCode.EMPTY_SOCIAL_PROFILE_IMAGE)
             }
 
             @Test
@@ -408,8 +410,8 @@ class SocialTypeUserInfoTest {
                 val node = ObjectMapper().readTree(json)
 
                 // then
-                val exception = assertThrows<IllegalArgumentException> { NaverUserInfo(node) }
-                assertThat(exception.message).isEqualTo("SocialId is required")
+                val exception = assertThrows<AuthException> { NaverUserInfo(node) }
+                assertThat(exception.errorCode).isEqualTo(ErrorCode.EMPTY_SOCIAL_ID)
             }
 
             @Test
@@ -431,8 +433,8 @@ class SocialTypeUserInfoTest {
                 val node = ObjectMapper().readTree(json)
 
                 // then
-                val exception = assertThrows<IllegalArgumentException> { NaverUserInfo(node) }
-                assertThat(exception.message).isEqualTo("Name is required")
+                val exception = assertThrows<AuthException> { NaverUserInfo(node) }
+                assertThat(exception.errorCode).isEqualTo(ErrorCode.EMPTY_SOCIAL_NAME)
             }
 
             @Test
@@ -454,8 +456,8 @@ class SocialTypeUserInfoTest {
                 val node = ObjectMapper().readTree(json)
 
                 // then
-                val exception = assertThrows<IllegalArgumentException> { NaverUserInfo(node) }
-                assertThat(exception.message).isEqualTo("Email is required")
+                val exception = assertThrows<AuthException> { NaverUserInfo(node) }
+                assertThat(exception.errorCode).isEqualTo(ErrorCode.EMPTY_SOCIAL_EMAIL)
             }
 
             @Test
@@ -477,8 +479,8 @@ class SocialTypeUserInfoTest {
                 val node = ObjectMapper().readTree(json)
 
                 // then
-                val exception = assertThrows<IllegalArgumentException> { NaverUserInfo(node) }
-                assertThat(exception.message).isEqualTo("Profile image is required")
+                val exception = assertThrows<AuthException> { NaverUserInfo(node) }
+                assertThat(exception.errorCode).isEqualTo(ErrorCode.EMPTY_SOCIAL_PROFILE_IMAGE)
             }
         }
     }
@@ -536,8 +538,8 @@ class SocialTypeUserInfoTest {
                 val node = ObjectMapper().readTree(json)
 
                 // then
-                val exception = assertThrows<IllegalArgumentException> { GithubUserInfo(node) }
-                assertThat(exception.message).isEqualTo("SocialId is required")
+                val exception = assertThrows<AuthException> { GithubUserInfo(node) }
+                assertThat(exception.errorCode).isEqualTo(ErrorCode.EMPTY_SOCIAL_ID)
             }
 
             @Test
@@ -557,8 +559,8 @@ class SocialTypeUserInfoTest {
                 val node = ObjectMapper().readTree(json)
 
                 // then
-                val exception = assertThrows<IllegalArgumentException> { GithubUserInfo(node) }
-                assertThat(exception.message).isEqualTo("Name is required")
+                val exception = assertThrows<AuthException> { GithubUserInfo(node) }
+                assertThat(exception.errorCode).isEqualTo(ErrorCode.EMPTY_SOCIAL_NAME)
             }
 
             @Test
@@ -578,8 +580,8 @@ class SocialTypeUserInfoTest {
                 val node = ObjectMapper().readTree(json)
 
                 // then
-                val exception = assertThrows<IllegalArgumentException> { GithubUserInfo(node) }
-                assertThat(exception.message).isEqualTo("Email is required")
+                val exception = assertThrows<AuthException> { GithubUserInfo(node) }
+                assertThat(exception.errorCode).isEqualTo(ErrorCode.EMPTY_SOCIAL_EMAIL)
             }
 
             @Test
@@ -599,8 +601,8 @@ class SocialTypeUserInfoTest {
                 val node = ObjectMapper().readTree(json)
 
                 // then
-                val exception = assertThrows<IllegalArgumentException> { GithubUserInfo(node) }
-                assertThat(exception.message).isEqualTo("Profile image is required")
+                val exception = assertThrows<AuthException> { GithubUserInfo(node) }
+                assertThat(exception.errorCode).isEqualTo(ErrorCode.EMPTY_SOCIAL_PROFILE_IMAGE)
             }
         }
     }
