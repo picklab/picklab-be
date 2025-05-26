@@ -60,6 +60,7 @@ spring:
   config:
     activate:
       on-profile: local
+    import: classpath:config-repo/security.properties
   datasource:
     url: jdbc:mysql://localhost:3310/picklab
     username: root
@@ -71,6 +72,9 @@ spring:
   config:
     activate:
       on-profile: prod
+    import:
+      - classpath:config-repo/db.properties
+      - classpath:config-repo/security.properties
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -81,7 +85,7 @@ spring:
   config:
     activate:
       on-profile: test
-    import: optional:classpath:config-repo/picklab_be.env[.properties]
+    import: classpath:config-repo/security.properties
   datasource:
     url: jdbc:mysql://localhost:3306/testdb
     username: root
