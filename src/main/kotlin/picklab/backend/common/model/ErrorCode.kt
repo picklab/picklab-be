@@ -9,4 +9,14 @@ enum class ErrorCode(
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
     NOT_FOUND(HttpStatus.NOT_FOUND, "요청한 리소스를 찾을 수 없습니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류입니다."),
+
+    /**
+     * 소셜 로그인 관련
+     */
+    SOCIAL_CODE_ERROR(HttpStatus.UNAUTHORIZED, "소셜 로그인 인증 오류가 발생했습니다."),
+    SOCIAL_USER_INFO_ERROR(HttpStatus.BAD_GATEWAY, "소셜 로그인 유저 정보 조회를 실패하였습니다."),
+    EMPTY_SOCIAL_ID(HttpStatus.BAD_REQUEST, "소셜 ID가 비어있습니다."),
+    EMPTY_SOCIAL_NAME(HttpStatus.BAD_REQUEST, "소셜 이름이 비어있습니다."),
+    EMPTY_SOCIAL_EMAIL(HttpStatus.BAD_REQUEST, "소셜 이메일이 비어있습니다."),
+    EMPTY_SOCIAL_PROFILE_IMAGE(HttpStatus.BAD_REQUEST, "소셜 프로필 이미지가 비어있습니다."),
 }

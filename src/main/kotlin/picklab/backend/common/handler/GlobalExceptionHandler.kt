@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException
 import org.springframework.web.multipart.support.MissingServletRequestPartException
 import org.springframework.web.servlet.NoHandlerFoundException
 import org.springframework.web.servlet.resource.NoResourceFoundException
+import picklab.backend.auth.domain.AuthException
 import picklab.backend.common.model.ErrorCode
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.common.util.logger
@@ -72,5 +73,14 @@ class GlobalExceptionHandler {
         return ResponseEntity
             .status(ErrorCode.INTERNAL_SERVER_ERROR.status)
             .body(ResponseWrapper.error(ErrorCode.INTERNAL_SERVER_ERROR))
+    }
+
+    @ExceptionHandler(AuthException::class)
+    fun handleAuthException(e: AuthException): ResponseEntity<ResponseWrapper<Unit>> {
+        log.warn("[handleAuthException] ${e.message}", e)
+
+        return ResponseEntity
+            .status(e.errorCode.status)
+            .body(ResponseWrapper.error(e.errorCode))
     }
 }
