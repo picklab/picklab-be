@@ -42,6 +42,7 @@ spring:
   config:
     activate:
       on-profile: test
+    import: optional:classpath:config-repo/picklab_be.env[.properties]
   datasource:
     url: jdbc:mysql://localhost:3306/testdb
     username: root
