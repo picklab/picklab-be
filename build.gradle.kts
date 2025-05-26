@@ -44,9 +44,6 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    // swagger
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6")
-
     // jjwt
     implementation("io.jsonwebtoken:jjwt-api:0.12.6")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
