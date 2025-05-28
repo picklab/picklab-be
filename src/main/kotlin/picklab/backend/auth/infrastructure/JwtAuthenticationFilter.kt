@@ -52,7 +52,7 @@ class JwtAuthenticationFilter(
     ): String? = request.cookies?.firstOrNull { it.name == cookieName }?.value
 
     private fun getUserDetails(accessToken: String): MemberPrincipal {
-        val userId = java.lang.Long.valueOf(accessTokenProvider.getSubject(accessToken))
+        val userId = accessTokenProvider.getSubject(accessToken).toLong()
 
         return MemberPrincipal(userId)
     }
