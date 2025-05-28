@@ -12,6 +12,7 @@ import picklab.backend.auth.application.AuthUseCase
 import picklab.backend.auth.application.OAuthProviderResolver
 import picklab.backend.auth.infrastructure.AuthCookieCreator
 import picklab.backend.common.model.ResponseWrapper
+import picklab.backend.common.model.SuccessCode
 import picklab.backend.member.domain.enums.SocialType
 import java.net.URI
 
@@ -51,6 +52,6 @@ class AuthController(
         return ResponseEntity
             .ok()
             .headers(headers)
-            .body(ResponseWrapper.success(HttpStatus.OK, "소셜 로그인 성공"))
+            .body(ResponseWrapper.success(SuccessCode.SOCIAL_LOGIN_SUCCESS))
     }
 }

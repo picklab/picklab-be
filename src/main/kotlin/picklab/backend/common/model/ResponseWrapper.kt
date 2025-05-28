@@ -1,7 +1,5 @@
 package picklab.backend.common.model
 
-import org.springframework.http.HttpStatus
-
 data class ResponseWrapper<T>(
     val code: Int,
     val message: String,
@@ -9,23 +7,19 @@ data class ResponseWrapper<T>(
 ) {
     companion object {
         fun <T> success(
-            code: HttpStatus,
-            message: String,
+            code: SuccessCode,
             data: T?,
         ): ResponseWrapper<T> =
             ResponseWrapper(
-                code = code.value(),
-                message = message,
+                code = code.status.value(),
+                message = code.message,
                 data = data,
             )
 
-        fun success(
-            code: HttpStatus,
-            message: String,
-        ): ResponseWrapper<Unit> =
+        fun success(code: SuccessCode): ResponseWrapper<Unit> =
             ResponseWrapper(
-                code = code.value(),
-                message = message,
+                code = code.status.value(),
+                message = code.message,
                 data = Unit,
             )
 

@@ -8,7 +8,7 @@ plugins {
 
 group = "picklab"
 version = "0.0.1-SNAPSHOT"
-
+val swaggerVersion = "2.8.8"
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
@@ -26,6 +26,7 @@ repositories {
 }
 
 dependencies {
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$swaggerVersion")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -33,15 +34,15 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-mysql")
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.springframework.boot:spring-boot-testcontainers")
+    testImplementation("org.testcontainers:mysql")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("com.mysql:mysql-connector-j")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-
-    // swagger
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6")
 
     // jjwt
     implementation("io.jsonwebtoken:jjwt-api:0.12.6")
