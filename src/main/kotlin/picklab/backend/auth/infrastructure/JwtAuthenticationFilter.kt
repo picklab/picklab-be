@@ -37,9 +37,9 @@ class JwtAuthenticationFilter(
                     setAuthenticationUser(userDetails, request)
                 }
             } catch (e: ExpiredJwtException) {
-                throw AuthException(ErrorCode.UNAUTHORIZED)
+                throw AuthException(ErrorCode.TOKEN_EXPIRED)
             } catch (e: JwtException) {
-                throw AuthException(ErrorCode.UNAUTHORIZED)
+                throw AuthException(ErrorCode.INVALID_TOKEN)
             }
         }
 
