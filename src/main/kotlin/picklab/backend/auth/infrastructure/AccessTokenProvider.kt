@@ -5,7 +5,7 @@ import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.nio.charset.StandardCharsets
-import java.util.Date
+import java.util.*
 import javax.crypto.SecretKey
 
 @Component
@@ -62,4 +62,12 @@ class AccessTokenProvider(
             .parseSignedClaims(token)
             .payload
             .expiration
+
+    override fun getTokenType(token: String): String =
+        Jwts
+            .parser()
+            .verifyWith(key)
+            .build()
+            .parseSignedClaims(token)
+            .payload["tokenType"] as String
 }

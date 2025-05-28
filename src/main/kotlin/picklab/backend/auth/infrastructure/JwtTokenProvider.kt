@@ -10,4 +10,6 @@ interface JwtTokenProvider {
     fun getSubject(token: String): String
 
     fun getExpiration(token: String): Date
+
+    fun getTokenType(token: String): String
 }
