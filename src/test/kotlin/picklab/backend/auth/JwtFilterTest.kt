@@ -40,7 +40,7 @@ class JwtFilterTest : IntegrationTest() {
     }
 
     @Test
-    @DisplayName("[실패] Access Token 쿠키가 존재하지 않으면, 401 에러가 발생한다.")
+    @DisplayName("[실패] Access Token 쿠키가 존재하지 않으면, UNAUTHORIZED 에러가 발생한다.")
     fun failTest() {
         val result =
             mockMvc
@@ -57,7 +57,7 @@ class JwtFilterTest : IntegrationTest() {
     }
 
     @Test
-    @DisplayName("[실패] Access Token이 만료되면 401 에러가 발생한다.")
+    @DisplayName("[실패] Access Token이 만료되면 TOKEN_EXPIRED 에러가 발생한다.")
     fun failWithInvalidTokenTest() {
         val memberId = 1L
         val accessToken = accessTokenProvider.generateToken(memberId)
@@ -80,7 +80,7 @@ class JwtFilterTest : IntegrationTest() {
     }
 
     @Test
-    @DisplayName("[실패] Access Token이 잘못된 형식이면 401 에러가 발생한다.")
+    @DisplayName("[실패] Access Token이 잘못된 형식이면 INVALID_TOKEN 에러가 발생한다.")
     fun failWithMalformedTokenTest() {
         val accessToken = "jwt.token.string"
 
