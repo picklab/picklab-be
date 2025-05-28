@@ -1,5 +1,6 @@
 package picklab.backend.common.config
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -46,8 +47,8 @@ class SecurityConfig(
                 authorize(anyRequest, authenticated)
             }
             exceptionHandling {
-                authenticationEntryPoint = JwtAuthenticationEntryPoint()
-                accessDeniedHandler = JwtAccessDeniedHandler()
+                authenticationEntryPoint = JwtAuthenticationEntryPoint(ObjectMapper())
+                accessDeniedHandler = JwtAccessDeniedHandler(ObjectMapper())
             }
         }
 

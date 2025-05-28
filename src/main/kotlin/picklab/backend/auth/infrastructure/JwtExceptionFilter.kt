@@ -22,8 +22,8 @@ class JwtExceptionFilter(
         try {
             filterChain.doFilter(request, response)
         } catch (e: AuthException) {
-            log.error("JWT Exception: {}", e.message, e)
-            response.status = HttpServletResponse.SC_UNAUTHORIZED
+            log.error("JWT Exception: {}", e.message)
+            response.status = e.errorCode.status.value()
             response.contentType = "application/json"
             objectMapper.writeValue(response.writer, ResponseWrapper.error(e.errorCode))
         }
