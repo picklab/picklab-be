@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import picklab.backend.auth.domain.MemberPrincipal
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.member.domain.enums.SocialType
 
@@ -50,4 +52,8 @@ interface AuthApi {
         @Parameter(description = "소셜 로그인 제공자", required = true) provider: SocialType,
         @Parameter(description = "인증 코드", required = true) code: String,
     ): ResponseEntity<ResponseWrapper<Unit>>
+
+    fun test(
+        @AuthenticationPrincipal principal: MemberPrincipal,
+    ): ResponseEntity<ResponseWrapper<Long>>
 }
