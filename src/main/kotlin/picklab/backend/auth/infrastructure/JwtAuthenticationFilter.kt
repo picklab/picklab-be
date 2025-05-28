@@ -46,7 +46,7 @@ class JwtAuthenticationFilter(
         filterChain.doFilter(request, response)
     }
 
-    fun resolveCookie(
+    private fun resolveCookie(
         request: HttpServletRequest,
         cookieName: String,
     ): String? = request.cookies?.firstOrNull { it.name == cookieName }?.value
