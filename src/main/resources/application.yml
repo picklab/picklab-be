@@ -90,3 +90,11 @@ spring:
     url: jdbc:mysql://localhost:3306/testdb
     username: root
     password: password
+
+jwt:
+  access:
+      secret: testAccessSecrettestAccessSecret
+      expiration: 2000 # 2초
+  refresh:
+      secret: testRefreshSecrettestRefreshSecret
+      expiration: 2000 # 2초
