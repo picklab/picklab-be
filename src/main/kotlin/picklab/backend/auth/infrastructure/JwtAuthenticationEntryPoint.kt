@@ -15,14 +15,14 @@ class JwtAuthenticationEntryPoint(
     val log = logger()
 
     override fun commence(
-        request: HttpServletRequest?,
-        response: HttpServletResponse?,
-        authException: AuthenticationException?,
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        authException: AuthenticationException,
     ) {
-        log.error("commence error: ${authException?.message}, method=${request?.method}, uri=${request?.requestURI}")
-        response?.status = HttpServletResponse.SC_UNAUTHORIZED
-        response?.contentType = "application/json; charset=UTF-8"
+        log.error("commence error: ${authException.message}, method=${request.method}, uri=${request.requestURI}")
+        response.status = HttpServletResponse.SC_UNAUTHORIZED
+        response.contentType = "application/json; charset=UTF-8"
         val errorBody = ResponseWrapper.error(ErrorCode.UNAUTHORIZED)
-        objectMapper.writeValue(response?.writer, errorBody)
+        objectMapper.writeValue(response.writer, errorBody)
     }
 }

@@ -15,14 +15,14 @@ class JwtAccessDeniedHandler(
     val log = logger()
 
     override fun handle(
-        request: HttpServletRequest?,
-        response: HttpServletResponse?,
-        accessDeniedException: AccessDeniedException?,
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        accessDeniedException: AccessDeniedException,
     ) {
-        log.error("Access denied: ${accessDeniedException?.message}, method=${request?.method}, uri=${request?.requestURI}")
-        response?.status = HttpServletResponse.SC_FORBIDDEN
-        response?.contentType = "application/json; charset=UTF-8"
+        log.error("Access denied: ${accessDeniedException.message}, method=${request.method}, uri=${request.requestURI}")
+        response.status = HttpServletResponse.SC_FORBIDDEN
+        response.contentType = "application/json; charset=UTF-8"
         val errorBody = ResponseWrapper.error(ErrorCode.FORBIDDEN)
-        objectMapper.writeValue(response?.writer, errorBody)
+        objectMapper.writeValue(response.writer, errorBody)
     }
 }
