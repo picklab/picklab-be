@@ -19,7 +19,7 @@ class JwtAccessDeniedHandler(
         response: HttpServletResponse,
         accessDeniedException: AccessDeniedException,
     ) {
-        log.error("Access denied: ${accessDeniedException.message}, method=${request.method}, uri=${request.requestURI}")
+        log.warn("Access denied: ${accessDeniedException.message}, method=${request.method}, uri=${request.requestURI}")
         response.status = HttpServletResponse.SC_FORBIDDEN
         response.contentType = "application/json; charset=UTF-8"
         val errorBody = ResponseWrapper.error(ErrorCode.FORBIDDEN)

@@ -19,7 +19,7 @@ class JwtAuthenticationEntryPoint(
         response: HttpServletResponse,
         authException: AuthenticationException,
     ) {
-        log.error("commence error: ${authException.message}, method=${request.method}, uri=${request.requestURI}")
+        log.warn("commence error: ${authException.message}, method=${request.method}, uri=${request.requestURI}")
         response.status = HttpServletResponse.SC_UNAUTHORIZED
         response.contentType = "application/json; charset=UTF-8"
         val errorBody = ResponseWrapper.error(ErrorCode.UNAUTHORIZED)

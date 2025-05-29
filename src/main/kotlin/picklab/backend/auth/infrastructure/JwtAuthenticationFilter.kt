@@ -13,10 +13,13 @@ import org.springframework.web.filter.OncePerRequestFilter
 import picklab.backend.auth.domain.AuthException
 import picklab.backend.common.model.ErrorCode
 import picklab.backend.common.model.MemberPrincipal
+import picklab.backend.common.util.logger
 
 class JwtAuthenticationFilter(
     val accessTokenProvider: JwtTokenProvider,
 ) : OncePerRequestFilter() {
+    val log = logger()
+
     companion object {
         private const val ACCESS_COOKIE_NAME = "accessToken"
         private const val ACCESS_TOKEN_TYPE = "access"
@@ -70,5 +73,6 @@ class JwtAuthenticationFilter(
 
         authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
         SecurityContextHolder.getContext().authentication = authentication
+        log.info("Authenticated User:  {}", userDetails.memberId)
     }
 }
