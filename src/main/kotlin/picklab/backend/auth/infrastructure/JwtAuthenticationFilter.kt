@@ -11,8 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.web.filter.OncePerRequestFilter
 import picklab.backend.auth.domain.AuthException
-import picklab.backend.auth.domain.MemberPrincipal
 import picklab.backend.common.model.ErrorCode
+import picklab.backend.common.model.MemberPrincipal
 
 class JwtAuthenticationFilter(
     val accessTokenProvider: JwtTokenProvider,
