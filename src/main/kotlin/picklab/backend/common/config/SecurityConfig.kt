@@ -18,8 +18,9 @@ import picklab.backend.auth.infrastructure.JwtExceptionFilter
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(
-    val jwtAuthenticationFilter: JwtAuthenticationFilter,
-    val jwtExceptionFilter: JwtExceptionFilter,
+    private val jwtAuthenticationFilter: JwtAuthenticationFilter,
+    private val jwtExceptionFilter: JwtExceptionFilter,
+    private val objectMapper: ObjectMapper,
 ) {
     private val readOnlyUrl =
         arrayOf(
@@ -47,8 +48,8 @@ class SecurityConfig(
                 authorize(anyRequest, authenticated)
             }
             exceptionHandling {
-                authenticationEntryPoint = JwtAuthenticationEntryPoint(ObjectMapper())
-                accessDeniedHandler = JwtAccessDeniedHandler(ObjectMapper())
+                authenticationEntryPoint = JwtAuthenticationEntryPoint(objectMapper)
+                accessDeniedHandler = JwtAccessDeniedHandler(objectMapper)
             }
         }
 
