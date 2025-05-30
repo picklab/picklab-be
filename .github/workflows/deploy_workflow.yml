@@ -71,8 +71,6 @@ jobs:
 
       - name: Copy .env and deploy script to GCP VM
         run: |
-          gcloud compute scp ${{ secrets.PRIVATE_ENV_FILE }} ${{ secrets.GCE_USERNAME }}@${{ secrets.GCE_INSTANCE_NAME }}:${{ secrets.ENV_FILE }} \
-            --zone=${{ secrets.GCE_INSTANCE_ZONE }} --quiet
           gcloud compute scp ${{ secrets.PRIVATE_DEPLOY_FILE }} ${{ secrets.GCE_USERNAME }}@${{ secrets.GCE_INSTANCE_NAME }}:${{ secrets.DEPLOY_FILE }} \
             --zone=${{ secrets.GCE_INSTANCE_ZONE }} --quiet
 
@@ -84,5 +82,4 @@ jobs:
               bash ${{ secrets.DEPLOY_FILE }} \
               ${{ secrets.APP_NAME }} \
               ${{ secrets.DOCKER_REPO }} \
-              ${{ github.event.workflow_run.head_sha }} \
-              ${{ secrets.ENV_FILE }}"
+              ${{ github.event.workflow_run.head_sha }}"
