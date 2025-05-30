@@ -62,4 +62,12 @@ class RefreshTokenProvider(
             .parseSignedClaims(token)
             .payload
             .expiration
+
+    override fun getTokenType(token: String): String =
+        Jwts
+            .parser()
+            .verifyWith(key)
+            .build()
+            .parseSignedClaims(token)
+            .payload["tokenType"] as String
 }
