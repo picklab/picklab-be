@@ -23,4 +23,12 @@ enum class ErrorCode(
     EMPTY_SOCIAL_PROFILE_IMAGE(HttpStatus.BAD_REQUEST, "소셜 프로필 이미지가 비어있습니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다."),
+
+    /**
+     * 회원 도메인 관련
+     */
+    INVALID_MEMBER(HttpStatus.UNAUTHORIZED, "회원을 찾을 수 없습니다."),
+    INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "인증 코드가 유효하지 않습니다."),
+    EXISTS_NICKNAME(HttpStatus.BAD_REQUEST, "이미 사용 중인 닉네임입니다."),
+    JOB_CATEGORY_LIMIT(HttpStatus.BAD_REQUEST, "관심 직군은 최대 5개까지 선택할 수 있습니다."),
 }

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import picklab.backend.auth.application.AuthUseCase
 import picklab.backend.auth.application.OAuthProviderResolver
-import picklab.backend.auth.domain.MemberPrincipal
 import picklab.backend.auth.infrastructure.AuthCookieCreator
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.common.model.SuccessCode
@@ -55,14 +54,4 @@ class AuthController(
             .headers(headers)
             .body(ResponseWrapper.success(SuccessCode.SOCIAL_LOGIN_SUCCESS))
     }
-
-    @GetMapping("/test")
-    override fun test(principal: MemberPrincipal): ResponseEntity<ResponseWrapper<Long>> =
-        ResponseEntity.ok().body(
-            ResponseWrapper(
-                code = 200,
-                message = "성공",
-                data = principal.memberId,
-            ),
-        )
 }

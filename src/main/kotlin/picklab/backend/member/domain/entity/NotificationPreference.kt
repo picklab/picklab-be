@@ -12,8 +12,16 @@ class NotificationPreference(
     val member: Member,
     @Column(name = "notify_popular_activity", nullable = false)
     @Comment("인기 알림 수신 동의 여부")
-    val notifyPopularActivity: Boolean,
+    var notifyPopularActivity: Boolean,
     @Column(name = "notify_bookmarked_activity", nullable = false)
     @Comment("북마크 알림 수신 동의 여부")
-    val notifyBookmarkedActivity: Boolean,
-) : BaseEntity()
+    var notifyBookmarkedActivity: Boolean,
+) : BaseEntity() {
+    fun togglePopular() {
+        this.notifyPopularActivity = !this.notifyPopularActivity
+    }
+
+    fun toggleBookmarked() {
+        this.notifyBookmarkedActivity = !this.notifyBookmarkedActivity
+    }
+}

@@ -9,4 +9,6 @@ interface SocialLoginRepository : JpaRepository<SocialLogin, Long> {
         socialType: SocialType,
         socialId: String,
     ): SocialLogin?
+
+    fun findAllByMemberId(memberId: Long): List<SocialLogin>
 }
