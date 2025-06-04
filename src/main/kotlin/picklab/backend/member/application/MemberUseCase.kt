@@ -24,9 +24,14 @@ class MemberUseCase(
 
         val member = memberService.insertAdditionalInfo(memberId, request)
 
+        val jobCategories =
+            jobUseCase.findJobCategories(
+                interestedJobCategories = request.interestedJobCategories,
+            )
+
         memberService.registerInterestedJobCategories(
-            member,
-            request.interestedJobCategories,
+            member = member,
+            jobCategories = jobCategories,
         )
     }
 
@@ -53,8 +58,8 @@ class MemberUseCase(
         val jobCategories = jobUseCase.findJobCategories(request)
 
         memberService.registerInterestedJobCategories(
-            member,
-            jobCategories,
+            member = member,
+            jobCategories = jobCategories,
         )
     }
 

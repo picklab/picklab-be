@@ -3,11 +3,8 @@ package picklab.backend.member.domain
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import picklab.backend.auth.domain.OAuthUserInfo
-import picklab.backend.common.model.BusinessException
-import picklab.backend.common.model.ErrorCode
 import picklab.backend.job.domain.entity.JobCategory
 import picklab.backend.member.domain.entity.*
-import picklab.backend.member.domain.enums.EmploymentType
 import picklab.backend.member.domain.enums.NotificationType
 import picklab.backend.member.domain.enums.SocialType
 import picklab.backend.member.domain.repository.*
@@ -122,7 +119,7 @@ class MemberService(
             graduationStatus = request.graduationStatus,
             employmentStatus = request.employmentStatus,
             company = request.company,
-            employmentType = EmploymentType.valueOf(request.employmentType.uppercase()),
+            employmentType = request.employmentType,
         )
 
         memberRepository.save(member)
@@ -165,8 +162,8 @@ class MemberService(
         email: String,
     ): MemberVerification? =
         memberVerificationRepository.findByMemberIdAndEmailAndDeletedAtIsNull(
-            memberId,
-            email,
+            memberId = memberId,
+            email = email,
         )
 
     @Transactional
@@ -181,10 +178,10 @@ class MemberService(
 
         memberVerificationRepository.save(
             MemberVerification(
-                email,
-                code,
-                now.plusMinutes(5),
-                member,
+                email = email,
+                code = code,
+                expiredAt = now.plusMinutes(5),
+                member = member,
             ),
         )
     }

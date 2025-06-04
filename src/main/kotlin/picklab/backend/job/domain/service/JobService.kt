@@ -1,6 +1,7 @@
 package picklab.backend.job.domain.service
 
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import picklab.backend.job.domain.JobCategoryRepository
 import picklab.backend.job.domain.entity.JobCategory
 import picklab.backend.job.domain.enums.JobDetail
@@ -12,6 +13,7 @@ class JobService(
 ) {
     fun groupByJobGroup(): Map<JobGroup, List<JobDetail>> = JobDetail.entries.groupBy { it.group }
 
+    @Transactional(readOnly = true)
     fun findJobCategoriesByGroupAndDetail(jobCategoryList: List<Pair<JobGroup, JobDetail>>): List<JobCategory> =
         jobCategoryRepository
             .findByJobGroupInAndJobDetailIn(

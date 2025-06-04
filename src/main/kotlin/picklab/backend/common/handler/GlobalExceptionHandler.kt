@@ -21,6 +21,7 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import org.springframework.web.servlet.NoHandlerFoundException
 import org.springframework.web.servlet.resource.NoResourceFoundException
 import picklab.backend.auth.domain.AuthException
+import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.common.util.logger
@@ -78,6 +79,15 @@ class GlobalExceptionHandler {
     @ExceptionHandler(AuthException::class)
     fun handleAuthException(e: AuthException): ResponseEntity<ResponseWrapper<Unit>> {
         log.warn("[handleAuthException] ${e.message}", e)
+
+        return ResponseEntity
+            .status(e.errorCode.status)
+            .body(ResponseWrapper.error(e.errorCode))
+    }
+
+    @ExceptionHandler(BusinessException::class)
+    fun handleBusinessException(e: BusinessException): ResponseEntity<ResponseWrapper<Unit>> {
+        log.warn("[handleBusinessException] ${e.message}", e)
 
         return ResponseEntity
             .status(e.errorCode.status)
