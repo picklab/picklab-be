@@ -3,6 +3,7 @@ package picklab.backend.member.entrypoint
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -12,6 +13,7 @@ import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.member.entrypoint.request.*
 import picklab.backend.member.entrypoint.response.GetSocialLoginsResponse
 
+@Tag(name = "회원 API", description = "회원 관련 작업을 하는 API")
 interface MemberApi {
     @Operation(
         summary = "회원 추가 정보 기입",
@@ -20,8 +22,9 @@ interface MemberApi {
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "회원 추가 정보 기입에 성공했습니다."),
-            ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
+            ApiResponse(responseCode = "400", description = "이미 사용 중인 닉네임입니다."),
             ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
+            ApiResponse(responseCode = "500", description = "서버 오류입니다."),
         ],
     )
     fun additionalInfo(
@@ -36,8 +39,9 @@ interface MemberApi {
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "회원 정보 수정에 성공했습니다."),
-            ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
+            ApiResponse(responseCode = "400", description = "이미 사용 중인 닉네임입니다."),
             ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
+            ApiResponse(responseCode = "500", description = "서버 오류입니다."),
         ],
     )
     fun updateMemberInfo(
@@ -52,8 +56,10 @@ interface MemberApi {
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "회원 관심직무 수정에 성공했습니다."),
-            ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
+            ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
+            ApiResponse(responseCode = "400", description = "관심 직군은 최대 5개까지 선택할 수 있습니다."),
             ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
+            ApiResponse(responseCode = "500", description = "서버 오류입니다."),
         ],
     )
     fun updateJobCategories(
@@ -68,8 +74,9 @@ interface MemberApi {
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "회원 프로필 이미지 수정에 성공했습니다."),
-            ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
+            ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
             ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
+            ApiResponse(responseCode = "500", description = "서버 오류입니다."),
         ],
     )
     fun updateProfileImage(
@@ -84,8 +91,9 @@ interface MemberApi {
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "이메일 주소 변경에 성공했습니다."),
-            ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
+            ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
             ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
+            ApiResponse(responseCode = "500", description = "서버 오류입니다."),
         ],
     )
     fun changeEmail(
@@ -100,8 +108,9 @@ interface MemberApi {
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "이메일 인증 코드 전송에 성공했습니다."),
-            ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
+            ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
             ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
+            ApiResponse(responseCode = "500", description = "서버 오류입니다."),
         ],
     )
     fun sendEmailVerificationCode(
@@ -116,8 +125,9 @@ interface MemberApi {
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "이메일 인증 코드 확인에 성공했습니다."),
-            ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
+            ApiResponse(responseCode = "400", description = "인증 코드가 유효하지 않습니다."),
             ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
+            ApiResponse(responseCode = "500", description = "서버 오류입니다."),
         ],
     )
     fun verifyEmailCode(
@@ -134,6 +144,7 @@ interface MemberApi {
             ApiResponse(responseCode = "200", description = "이메일 수신 동의 여부 수정에 성공했습니다."),
             ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
             ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
+            ApiResponse(responseCode = "500", description = "서버 오류입니다."),
         ],
     )
     fun updateEmailAgreement(
@@ -150,6 +161,7 @@ interface MemberApi {
             ApiResponse(responseCode = "200", description = "소셜 로그인 정보 조회에 성공했습니다."),
             ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
             ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
+            ApiResponse(responseCode = "500", description = "서버 오류입니다."),
         ],
     )
     fun getSocialLogins(
@@ -163,8 +175,9 @@ interface MemberApi {
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "회원 탈퇴에 성공했습니다."),
-            ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
+            ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
             ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
+            ApiResponse(responseCode = "500", description = "서버 오류입니다."),
         ],
     )
     fun withdrawMember(
@@ -178,8 +191,9 @@ interface MemberApi {
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "탈퇴 설문 제출에 성공했습니다."),
-            ApiResponse(responseCode = "400", description = "글자 수를 초과하였습니다."),
+            ApiResponse(responseCode = "400", description = "회원을 찾을 수 없습니다."),
             ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
+            ApiResponse(responseCode = "500", description = "서버 오류입니다."),
         ],
     )
     fun submitWithdrawalSurvey(
@@ -196,6 +210,7 @@ interface MemberApi {
             ApiResponse(responseCode = "200", description = "알림 변경에 성공했습니다."),
             ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
             ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
+            ApiResponse(responseCode = "500", description = "서버 오류입니다."),
         ],
     )
     fun toggleNotification(
