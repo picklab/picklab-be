@@ -5,7 +5,7 @@ import picklab.backend.job.domain.entity.JobCategory
 import picklab.backend.job.domain.enums.JobDetail
 import picklab.backend.job.domain.enums.JobGroup
 import picklab.backend.job.domain.service.JobService
-import picklab.backend.member.entrypoint.request.JobCategoryRequest
+import picklab.backend.member.entrypoint.request.JobCategoryDto
 
 @Component
 class JobUseCase(
@@ -13,7 +13,7 @@ class JobUseCase(
 ) {
     fun findGrouped(): Map<JobGroup, List<JobDetail>> = jobService.groupByJobGroup()
 
-    fun findJobCategories(interestedJobCategories: List<JobCategoryRequest>): List<JobCategory> {
+    fun findJobCategories(interestedJobCategories: List<JobCategoryDto>): List<JobCategory> {
         val jobCategoryList =
             interestedJobCategories.map {
                 JobGroup.valueOf(it.group) to JobDetail.valueOf(it.detail)

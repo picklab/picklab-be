@@ -3,6 +3,8 @@ package picklab.backend.member.domain
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import picklab.backend.auth.domain.OAuthUserInfo
+import picklab.backend.common.model.BusinessException
+import picklab.backend.common.model.ErrorCode
 import picklab.backend.job.domain.entity.JobCategory
 import picklab.backend.member.domain.entity.*
 import picklab.backend.member.domain.enums.NotificationType
