@@ -6,13 +6,14 @@ import picklab.backend.common.model.SoftDeleteEntity
 import picklab.backend.member.domain.enums.EmploymentType
 import picklab.backend.member.domain.enums.SocialType
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "member")
 class Member(
     @Column(name = "name", length = 20, nullable = false)
     @Comment("회원 이름")
-    val name: String,
+    var name: String,
     @Column(name = "email", length = 100, nullable = false)
     @Comment("회원 이메일")
     var email: String,
@@ -67,5 +68,55 @@ class Member(
 
     fun updateRefreshToken(refreshToken: String) {
         this.refreshToken = refreshToken
+    }
+
+    fun insertAdditionalInfo(
+        nickname: String,
+        educationLevel: String,
+        school: String,
+        graduationStatus: String,
+        employmentStatus: String,
+        company: String,
+        employmentType: EmploymentType,
+    ) {
+        this.nickname = nickname
+        this.educationLevel = educationLevel
+        this.school = school
+        this.graduationStatus = graduationStatus
+        this.employmentStatus = employmentStatus
+        this.company = company
+        this.employmentType = employmentType
+    }
+
+    fun updateInfo(
+        name: String,
+        nickname: String,
+        educationLevel: String,
+        school: String,
+        graduationStatus: String,
+        employmentStatus: String,
+        company: String,
+        employmentType: EmploymentType,
+    ) {
+        this.name = name
+        this.nickname = nickname
+        this.educationLevel = educationLevel
+        this.school = school
+        this.graduationStatus = graduationStatus
+        this.employmentStatus = employmentStatus
+        this.company = company
+        this.employmentType = employmentType
+    }
+
+    fun updateProfileImage(profileImage: String) {
+        this.profileImageUrl = profileImage
+    }
+
+    fun updateEmail(email: String) {
+        this.email = email
+    }
+
+    fun withdraw() {
+        this.deletedAt = LocalDateTime.now()
     }
 }

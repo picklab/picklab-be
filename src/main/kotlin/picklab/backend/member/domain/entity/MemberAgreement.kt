@@ -16,4 +16,8 @@ class MemberAgreement(
     @Column(nullable = false)
     @Comment("개인정보 수집 및 이용 동의 여부")
     var privacyAgreement: Boolean,
-) : BaseEntity()
+) : BaseEntity() {
+    fun updateEmailAgreement(agree: Boolean) {
+        this.emailAgreement = agree
+    }
+}

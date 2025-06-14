@@ -1,4 +1,4 @@
-package picklab.backend.member.domain
+package picklab.backend.member.domain.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
 import picklab.backend.member.domain.entity.SocialLogin
@@ -9,4 +9,6 @@ interface SocialLoginRepository : JpaRepository<SocialLogin, Long> {
         socialType: SocialType,
         socialId: String,
     ): SocialLogin?
+
+    fun findAllByMemberId(memberId: Long): List<SocialLogin>
 }
