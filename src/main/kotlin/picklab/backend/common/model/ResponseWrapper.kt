@@ -22,7 +22,5 @@ data class ResponseWrapper<T>(
                 message = code.message,
                 data = Unit,
             )
-
-        fun error(code: ErrorCode): ResponseWrapper<Unit> = ResponseWrapper(code = code.status.value(), code.message, Unit)
     }
 }
