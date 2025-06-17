@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.web.access.AccessDeniedHandler
 import picklab.backend.common.model.ErrorCode
-import picklab.backend.common.model.ResponseWrapper
+import picklab.backend.common.model.ErrorResponseWrapper
 import picklab.backend.common.util.logger
 
 class JwtAccessDeniedHandler(
@@ -22,7 +22,7 @@ class JwtAccessDeniedHandler(
         log.warn("Access denied: ${accessDeniedException.message}, method=${request.method}, uri=${request.requestURI}")
         response.status = HttpServletResponse.SC_FORBIDDEN
         response.contentType = "application/json; charset=UTF-8"
-        val errorBody = ResponseWrapper.error(ErrorCode.FORBIDDEN)
+        val errorBody = ErrorResponseWrapper.error(ErrorCode.FORBIDDEN)
         objectMapper.writeValue(response.writer, errorBody)
     }
 }

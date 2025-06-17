@@ -25,7 +25,6 @@ import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
 import picklab.backend.common.model.ErrorField
 import picklab.backend.common.model.ErrorResponseWrapper
-import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.common.util.logger
 
 @RestControllerAdvice
@@ -126,12 +125,12 @@ class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception::class)
-    fun handleException(e: Exception): ResponseEntity<ResponseWrapper<Unit>> {
+    fun handleException(e: Exception): ResponseEntity<ErrorResponseWrapper> {
         log.error("[handleException] ${e.message}", e)
 
         return ResponseEntity
             .status(ErrorCode.INTERNAL_SERVER_ERROR.status)
-            .body(ResponseWrapper.error(ErrorCode.INTERNAL_SERVER_ERROR))
+            .body(ErrorResponseWrapper.error(ErrorCode.INTERNAL_SERVER_ERROR))
     }
 
     @ExceptionHandler(AuthException::class)

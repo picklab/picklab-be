@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint
 import picklab.backend.common.model.ErrorCode
-import picklab.backend.common.model.ResponseWrapper
+import picklab.backend.common.model.ErrorResponseWrapper
 import picklab.backend.common.util.logger
 
 class JwtAuthenticationEntryPoint(
@@ -22,7 +22,7 @@ class JwtAuthenticationEntryPoint(
         log.warn("commence error: ${authException.message}, method=${request.method}, uri=${request.requestURI}")
         response.status = HttpServletResponse.SC_UNAUTHORIZED
         response.contentType = "application/json; charset=UTF-8"
-        val errorBody = ResponseWrapper.error(ErrorCode.UNAUTHORIZED)
+        val errorBody = ErrorResponseWrapper.error(ErrorCode.UNAUTHORIZED)
         objectMapper.writeValue(response.writer, errorBody)
     }
 }
