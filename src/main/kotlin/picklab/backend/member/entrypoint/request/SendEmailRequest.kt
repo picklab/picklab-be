@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 
 data class SendEmailRequest(
-    @field:NotBlank
+    @field:NotBlank(message = "이메일은 필수 입력값입니다.")
     @field:Email(message = "유효하지 않은 이메일 형식입니다.")
     @field:Schema(description = "이메일", example = "test@example.com")
     val email: String,

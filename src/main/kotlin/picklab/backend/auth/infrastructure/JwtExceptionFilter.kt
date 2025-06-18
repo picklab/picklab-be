@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.filter.OncePerRequestFilter
 import picklab.backend.auth.domain.AuthException
-import picklab.backend.common.model.ResponseWrapper
+import picklab.backend.common.model.ErrorResponseWrapper
 import picklab.backend.common.util.logger
 
 class JwtExceptionFilter(
@@ -25,7 +25,7 @@ class JwtExceptionFilter(
             log.error("JWT Exception: {}", e.message)
             response.status = e.errorCode.status.value()
             response.contentType = "application/json"
-            objectMapper.writeValue(response.writer, ResponseWrapper.error(e.errorCode))
+            objectMapper.writeValue(response.writer, ErrorResponseWrapper.error(e.errorCode))
         }
     }
 }

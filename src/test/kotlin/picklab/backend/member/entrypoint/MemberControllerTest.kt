@@ -91,7 +91,7 @@ class MemberControllerTest {
                         with(csrf())
                     }.andExpect { status { isBadRequest() } }
                     .andExpect { jsonPath("$.code") { value(400) } }
-                    .andExpect { jsonPath("$.message") { value("잘못된 요청입니다.") } }
+                    .andExpect { jsonPath("$.message") { value("요청 검증에 실패했습니다.") } }
                     .andReturn()
 
             assertTrue(result.resolvedException is MethodArgumentNotValidException)
@@ -124,7 +124,7 @@ class MemberControllerTest {
                         with(csrf())
                     }.andExpect { status { isBadRequest() } }
                     .andExpect { jsonPath("$.code") { value(400) } }
-                    .andExpect { jsonPath("$.message") { value("잘못된 요청입니다.") } }
+                    .andExpect { jsonPath("$.message") { value("요청 검증에 실패했습니다.") } }
                     .andReturn()
 
             assertTrue(result.resolvedException is HttpMessageNotReadableException)
@@ -158,7 +158,7 @@ class MemberControllerTest {
                         with(csrf())
                     }.andExpect { status { isBadRequest() } }
                     .andExpect { jsonPath("$.code") { value(400) } }
-                    .andExpect { jsonPath("$.message") { value("잘못된 요청입니다.") } }
+                    .andExpect { jsonPath("$.message") { value("요청 검증에 실패했습니다.") } }
                     .andReturn()
 
             assertTrue(result.resolvedException is MethodArgumentNotValidException)
@@ -287,7 +287,7 @@ class MemberControllerTest {
                         with(csrf())
                     }.andExpect { status { isBadRequest() } }
                     .andExpect { jsonPath("$.code") { value(400) } }
-                    .andExpect { jsonPath("$.message") { value("잘못된 요청입니다.") } }
+                    .andExpect { jsonPath("$.message") { value("요청 검증에 실패했습니다.") } }
                     .andReturn()
 
             assertTrue(result.resolvedException is MethodArgumentNotValidException)
@@ -309,7 +309,7 @@ class MemberControllerTest {
                         with(csrf())
                     }.andExpect { status { isBadRequest() } }
                     .andExpect { jsonPath("$.code") { value(400) } }
-                    .andExpect { jsonPath("$.message") { value("잘못된 요청입니다.") } }
+                    .andExpect { jsonPath("$.message") { value("요청 검증에 실패했습니다.") } }
                     .andReturn()
 
             assertTrue(result.resolvedException is MethodArgumentNotValidException)
@@ -330,7 +330,7 @@ class MemberControllerTest {
                         with(csrf())
                     }.andExpect { status { isBadRequest() } }
                     .andExpect { jsonPath("$.code") { value(400) } }
-                    .andExpect { jsonPath("$.message") { value("잘못된 요청입니다.") } }
+                    .andExpect { jsonPath("$.message") { value("요청 검증에 실패했습니다.") } }
                     .andReturn()
 
             assertTrue(result.resolvedException is HttpMessageNotReadableException)
@@ -376,7 +376,7 @@ class MemberControllerTest {
                         with(csrf())
                     }.andExpect { status { isBadRequest() } }
                     .andExpect { jsonPath("$.code") { value(400) } }
-                    .andExpect { jsonPath("$.message") { value("잘못된 요청입니다.") } }
+                    .andExpect { jsonPath("$.message") { value("요청 검증에 실패했습니다.") } }
                     .andReturn()
 
             assertTrue(result.resolvedException is MethodArgumentNotValidException)
@@ -398,7 +398,7 @@ class MemberControllerTest {
                         with(csrf())
                     }.andExpect { status { isBadRequest() } }
                     .andExpect { jsonPath("$.code") { value(400) } }
-                    .andExpect { jsonPath("$.message") { value("잘못된 요청입니다.") } }
+                    .andExpect { jsonPath("$.message") { value("요청 검증에 실패했습니다.") } }
                     .andReturn()
 
             assertTrue(result.resolvedException is MethodArgumentNotValidException)
@@ -500,7 +500,7 @@ class MemberControllerTest {
                         with(csrf())
                     }.andExpect { status { isBadRequest() } }
                     .andExpect { jsonPath("$.code") { value(400) } }
-                    .andExpect { jsonPath("$.message") { value("잘못된 요청입니다.") } }
+                    .andExpect { jsonPath("$.message") { value("요청 검증에 실패했습니다.") } }
                     .andReturn()
 
             assertTrue(result.resolvedException is MethodArgumentNotValidException)
