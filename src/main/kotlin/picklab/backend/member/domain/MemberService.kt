@@ -269,7 +269,7 @@ class MemberService(
         notificationPreferenceRepository.save(notificationPreference)
     }
 
-    private fun findActiveMember(memberId: Long): Member =
+    fun findActiveMember(memberId: Long): Member =
         memberRepository
             .findByIdAndDeletedAtIsNull(memberId)
             .orElseThrow { BusinessException(ErrorCode.INVALID_MEMBER) }
