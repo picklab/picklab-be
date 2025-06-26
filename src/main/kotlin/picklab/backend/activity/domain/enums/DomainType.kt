@@ -20,4 +20,11 @@ enum class DomainType(
     ELECTRONICS_ROBOTICS("전자기술/로보틱스"),
     BUSINESS_ENTERPRISE("비즈니스/엔터프라이즈"),
     ETC("기타"),
+    ;
+
+    companion object {
+        fun findByType(type: String): DomainType =
+            DomainType.entries.find { it.name.equals(type, ignoreCase = true) }
+                ?: throw IllegalArgumentException("존재하지 않는 DomainType입니다: $type")
+    }
 }

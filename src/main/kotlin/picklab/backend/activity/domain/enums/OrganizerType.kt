@@ -13,4 +13,11 @@ enum class OrganizerType(
     FINANCIAL_INSTITUTION("금융권"),
     HOSPITAL("병원"),
     ETC("기타"),
+    ;
+
+    companion object {
+        fun findByType(type: String): OrganizerType =
+            OrganizerType.entries.find { it.name.equals(type, ignoreCase = true) }
+                ?: throw IllegalArgumentException("존재하지 않는 OrganizerType입니다: $type")
+    }
 }

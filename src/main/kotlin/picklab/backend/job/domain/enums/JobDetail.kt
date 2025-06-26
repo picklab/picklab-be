@@ -41,4 +41,11 @@ enum class JobDetail(
     COMPUTER_VISION(JobGroup.AI, "컴퓨터 비전"),
     NLP(JobGroup.AI, "NLP"),
     DATA_SCIENCE(JobGroup.AI, "데이터"),
+    ;
+
+    companion object {
+        fun findByType(type: String): JobDetail =
+            JobDetail.entries.find { it.name.equals(type, ignoreCase = true) }
+                ?: throw IllegalArgumentException("존재하지 않는 JobDetail입니다: $type")
+    }
 }
