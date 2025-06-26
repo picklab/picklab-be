@@ -18,7 +18,6 @@ class ActivityRepositoryImpl(
         queryData: ActivitySearchCommand,
         pageable: PageRequest,
     ): Page<ActivityItem> {
-        println("===========================: ${queryData.award}")
         val (condition, params) = createCondition(queryData)
 
         val orderBy =
