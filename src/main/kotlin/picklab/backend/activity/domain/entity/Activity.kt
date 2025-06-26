@@ -60,6 +60,9 @@ abstract class Activity(
     @Column(name = "duration", nullable = false)
     @Comment("활동 기간(일)")
     var duration: Int = UNLIMITED_DURATION,
+    @Column(name = "activity_thumbnail_url")
+    @Comment("활동 썸네일 이미지 URL")
+    var activityThumbnailUrl: String? = null,
     @Column(name = "description", length = 2000)
     @Comment("활동 내용")
     var description: String = "",
