@@ -8,7 +8,6 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import picklab.backend.activity.application.model.ActivitySearchCommand
-import picklab.backend.activity.domain.ActivityService
 import picklab.backend.activity.domain.enums.ActivityFieldType
 import picklab.backend.activity.domain.enums.ActivitySortType
 import picklab.backend.activity.domain.enums.ActivityType
@@ -19,6 +18,7 @@ import picklab.backend.activity.domain.enums.LocationType
 import picklab.backend.activity.domain.enums.OrganizerType
 import picklab.backend.activity.domain.enums.ParticipantType
 import picklab.backend.activity.domain.repository.ActivityRepository
+import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.job.domain.enums.JobDetail
 import kotlin.test.Test
 

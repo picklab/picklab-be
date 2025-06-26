@@ -4,7 +4,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
 import picklab.backend.activity.application.model.ActivityItemWithBookmark
 import picklab.backend.activity.application.model.ActivitySearchCommand
-import picklab.backend.activity.domain.ActivityService
+import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.activity.entrypoint.response.GetActivityListResponse
 import picklab.backend.bookmark.application.BookmarkUseCase
 
