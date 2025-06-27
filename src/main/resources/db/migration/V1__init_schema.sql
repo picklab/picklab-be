@@ -125,6 +125,8 @@ CREATE TABLE IF NOT EXISTS activity
     domain                 VARCHAR(50) COMMENT '도메인(공모전/해커톤)',
     cost                   BIGINT COMMENT '시상 규모(공모전/해커톤), 교육비용(교육)',
     duration               INTEGER     NOT NULL COMMENT '활동 기간(일)',
+    description            VARCHAR(2000) COMMENT '활동 설명',
+    benefit                VARCHAR(2000) COMMENT '활동 혜택',
     created_at             DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
     updated_at             DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
     deleted_at             DATETIME    NULL COMMENT '삭제일'
@@ -149,6 +151,18 @@ CREATE TABLE IF NOT EXISTS activity_job_category
     id              BIGINT   NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '활동-직무 연결 ID',
     activity_id     BIGINT   NOT NULL COMMENT '활동 ID',
     job_category_id BIGINT   NOT NULL COMMENT '직무 카테고리 ID',
+    created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    updated_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='활동-직무 조인 테이블';
+
+-- 활동 파일 업로드 테이블
+CREATE TABLE IF NOT EXISTS activity_upload_file
+(
+    id              BIGINT   NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '활동-직무 연결 ID',
+    activity_id     BIGINT   NOT NULL COMMENT '활동 ID',
+    name            VARCHAR(255)  NOT NULL COMMENT '파일명(ex. 지원 PDF)',
+    url             VARCHAR(2084) NOT NULL COMMENT '업로드 파일 URL',
     created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
     updated_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'
 ) ENGINE = InnoDB
