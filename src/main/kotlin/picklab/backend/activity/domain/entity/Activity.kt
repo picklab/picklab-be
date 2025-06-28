@@ -60,6 +60,12 @@ abstract class Activity(
     @Column(name = "duration", nullable = false)
     @Comment("활동 기간(일)")
     var duration: Int = UNLIMITED_DURATION,
+    @Column(name = "description", length = 2000)
+    @Comment("활동 내용")
+    var description: String = "",
+    @Column(name = "benefit", length = 2000)
+    @Comment("활동 혜택")
+    var benefit: String = "",
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id", nullable = false)
     val activityGroup: ActivityGroup,
