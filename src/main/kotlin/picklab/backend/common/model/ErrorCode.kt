@@ -36,4 +36,9 @@ enum class ErrorCode(
      * 활동 도메인 관련
      */
     NOT_FOUND_ACTIVITY(HttpStatus.BAD_REQUEST, "활동 정보를 찾을 수 없습니다."),
+
+    /**
+     * 아카이브 도메인 관련
+     */
+    NOT_FOUND_ARCHIVE(HttpStatus.NOT_FOUND, "아카이브 정보를 찾을 수 없습니다."),
 }

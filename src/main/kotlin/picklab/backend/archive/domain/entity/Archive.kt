@@ -13,6 +13,7 @@ import org.hibernate.annotations.Comment
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.activity.domain.enums.ActivityType
 import picklab.backend.archive.domain.enums.DetailRoleType
+import picklab.backend.archive.domain.enums.PassOrFailStatus
 import picklab.backend.archive.domain.enums.ProgressStatus
 import picklab.backend.archive.domain.enums.RoleType
 import picklab.backend.archive.domain.enums.WriteStatus
@@ -60,4 +61,17 @@ class Archive(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "activity_id", nullable = false)
     val activity: Activity,
-) : SoftDeleteEntity()
+    @Comment("합불 여부")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "pass_or_fail_status", nullable = false)
+    var passOrFailStatus: PassOrFailStatus = PassOrFailStatus.FAIL,
+) : SoftDeleteEntity() {
+
+    fun update(
+        activityProgressStatus: ProgressStatus = this.activityProgressStatus,
+        passOrFailStatus: PassOrFailStatus = this.passOrFailStatus,
+    ) {
+        this.activityProgressStatus = activityProgressStatus
+        this.passOrFailStatus = passOrFailStatus
+    }
+}

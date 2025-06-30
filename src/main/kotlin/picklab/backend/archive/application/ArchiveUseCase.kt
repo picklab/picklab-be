@@ -9,6 +9,7 @@ import picklab.backend.archive.domain.service.ArchiveReferenceUrlService
 import picklab.backend.archive.domain.service.ArchiveService
 import picklab.backend.archive.domain.service.ArchiveUploadFileUrlService
 import picklab.backend.archive.entrypoint.request.ArchiveCreateRequest
+import picklab.backend.archive.entrypoint.request.ArchiveUpdateRequest
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.member.domain.MemberService
 
@@ -36,5 +37,22 @@ class ArchiveUseCase(
 
         archiveReferenceUrlService.saveAll(referenceUrls)
         archiveUploadFileUrlService.saveAll(uploadedFileUrls)
+    }
+
+    @Transactional
+    fun updateArchive(
+        archiveId: Long,
+        request: ArchiveUpdateRequest,
+        memberPrincipal: MemberPrincipal,
+    ) {
+        val member = memberService.findActiveMember(memberPrincipal.memberId)
+        val archive = archiveService.mustFindByIdAndMember(archiveId, member)
+
+        archive.update(
+            activityProgressStatus = request.activityProgressStatus,
+            passOrFailStatus = request.passOrFailStatus,
+        )
+
+        archiveService.save(archive)
     }
 }
