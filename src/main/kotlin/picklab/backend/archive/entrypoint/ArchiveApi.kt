@@ -5,17 +5,20 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestBody
 import picklab.backend.archive.entrypoint.request.ArchiveCreateRequest
+import picklab.backend.archive.entrypoint.request.ArchiveUpdateRequest
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.ResponseWrapper
-import picklab.backend.common.model.SuccessCode
 
-@Tag(name = "아카이브 API", description = "아카이브 관련 API 문서입니다.")
+@Tag(name = "아카이브 API", description = "아카이브 관련 API 입니다.")
 interface ArchiveApi {
 
     @Operation(
-        summary = "회원 추가 정보 기입",
-        description = "회원의 추가 정보를 기입합니다.",
+        summary = "아카이브 정보 생성",
+        description = "아카이브 정보를 생성 합니다",
     )
     @ApiResponses(
         value = [
@@ -23,4 +26,21 @@ interface ArchiveApi {
         ],
     )
     fun create(member: MemberPrincipal, request: ArchiveCreateRequest): ResponseEntity<ResponseWrapper<Unit>>
+
+    @Operation(
+        summary = "아카이브 정보 수정",
+        description = "아카이브 정보를 수정 합니다",
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "아카이브 수정에 성공했습니다."),
+            ApiResponse(responseCode = "400", description = "아카이브 소유자만 수정할 수 있습니다."),
+            ApiResponse(responseCode = "404", description = "아카이브 정보를 찾을 수 없습니다."),
+        ],
+    )
+    fun update(
+        @AuthenticationPrincipal member: MemberPrincipal,
+        @PathVariable archiveId: Long,
+        @RequestBody request: ArchiveUpdateRequest
+    ): ResponseEntity<ResponseWrapper<Unit>>
 }

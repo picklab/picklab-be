@@ -28,4 +28,5 @@ enum class SuccessCode(
 
     // Archive 도메인 관련
     CREATE_ARCHIVE_SUCCESS(HttpStatus.OK, "아카이브 생성에 성공했습니다."),
+    UPDATE_ARCHIVE_SUCCESS(HttpStatus.OK, "아카이브 수정에 성공했습니다."),
 }
