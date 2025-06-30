@@ -12,7 +12,7 @@ enum class ActivityType(
 
     companion object {
         fun findByType(type: String): ActivityType =
-            ActivityType.entries.find { it.discriminator == type }
+            ActivityType.entries.find { it.discriminator.equals(type, ignoreCase = true) }
                 ?: throw IllegalArgumentException("존재하지 않는 ActivityType입니다: $type")
     }
 }

@@ -29,6 +29,7 @@ class SeminarActivity(
     status: RecruitmentStatus,
     viewCount: Long,
     duration: Int,
+    activityThumbnailUrl: String?,
     activityGroup: ActivityGroup,
 ) : Activity(
         title = title,
@@ -41,5 +42,6 @@ class SeminarActivity(
         status = status,
         viewCount = viewCount,
         duration = duration,
+        activityThumbnailUrl = activityThumbnailUrl,
         activityGroup = activityGroup,
     )

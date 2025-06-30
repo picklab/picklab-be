@@ -23,6 +23,9 @@ enum class SuccessCode(
     SUBMIT_SURVEY(HttpStatus.OK, "탈퇴 설문 제출에 성공했습니다."),
     MEMBER_NOTIFICATION_UPDATED(HttpStatus.OK, "알림 변경에 성공했습니다."),
 
+    // Activity 도메인 관련
+    GET_ACTIVITIES(HttpStatus.OK, "활동 목록 조회에 성공했습니다."),
+
     // Archive 도메인 관련
     CREATE_ARCHIVE_SUCCESS(HttpStatus.OK, "아카이브 생성에 성공했습니다."),
 }
