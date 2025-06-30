@@ -34,7 +34,6 @@ interface ArchiveApi {
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "아카이브 수정에 성공했습니다."),
-            ApiResponse(responseCode = "400", description = "아카이브 소유자만 수정할 수 있습니다."),
             ApiResponse(responseCode = "404", description = "아카이브 정보를 찾을 수 없습니다."),
         ],
     )

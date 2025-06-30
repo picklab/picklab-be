@@ -2,6 +2,7 @@ package picklab.backend.archive.entrypoint
 
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -28,7 +29,7 @@ class ArchiveController(
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.CREATE_ARCHIVE_SUCCESS))
     }
 
-    @PutMapping("/v1/archive/{archiveId}")
+    @PatchMapping("/v1/archive/{archiveId}")
     override fun update(
         @AuthenticationPrincipal member: MemberPrincipal,
         @PathVariable archiveId: Long,

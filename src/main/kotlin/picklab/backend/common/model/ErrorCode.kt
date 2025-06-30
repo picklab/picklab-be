@@ -41,5 +41,4 @@ enum class ErrorCode(
      * 아카이브 도메인 관련
      */
     NOT_FOUND_ARCHIVE(HttpStatus.NOT_FOUND, "아카이브 정보를 찾을 수 없습니다."),
-    NOT_ALLOW_UPDATE_ARCHIVE_NOT_OWNER(HttpStatus.BAD_REQUEST, "아카이브 소유자만 수정할 수 있습니다."),
 }

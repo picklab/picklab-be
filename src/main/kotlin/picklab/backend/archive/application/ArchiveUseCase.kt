@@ -3,7 +3,6 @@ package picklab.backend.archive.application
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import picklab.backend.activity.domain.service.ActivityService
-import picklab.backend.archive.domain.entity.Archive
 import picklab.backend.archive.domain.entity.ArchiveReferenceUrl
 import picklab.backend.archive.domain.entity.ArchiveUploadFileUrl
 import picklab.backend.archive.domain.service.ArchiveReferenceUrlService
@@ -11,11 +10,8 @@ import picklab.backend.archive.domain.service.ArchiveService
 import picklab.backend.archive.domain.service.ArchiveUploadFileUrlService
 import picklab.backend.archive.entrypoint.request.ArchiveCreateRequest
 import picklab.backend.archive.entrypoint.request.ArchiveUpdateRequest
-import picklab.backend.common.model.BusinessException
-import picklab.backend.common.model.ErrorCode
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.member.domain.MemberService
-import picklab.backend.member.domain.entity.Member
 
 @Component
 class ArchiveUseCase(
@@ -50,11 +46,7 @@ class ArchiveUseCase(
         memberPrincipal: MemberPrincipal,
     ) {
         val member = memberService.findActiveMember(memberPrincipal.memberId)
-        val archive = archiveService.mustFindById(archiveId)
-
-        if (isNotOwner(member, archive)) {
-            throw BusinessException(ErrorCode.NOT_ALLOW_UPDATE_ARCHIVE_NOT_OWNER)
-        }
+        val archive = archiveService.mustFindByIdAndMember(archiveId, member)
 
         archive.update(
             activityProgressStatus = request.activityProgressStatus,
@@ -63,6 +55,4 @@ class ArchiveUseCase(
 
         archiveService.save(archive)
     }
-
-    fun isNotOwner(member: Member, archive: Archive): Boolean = member != archive.member
 }
