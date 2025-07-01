@@ -4,12 +4,14 @@ plugins {
     id("org.springframework.boot") version "3.4.4"
     id("io.spring.dependency-management") version "1.1.7"
     kotlin("plugin.jpa") version "1.9.25"
+    id("com.google.devtools.ksp") version "1.9.25-1.0.20"
 }
 
 group = "picklab"
 version = "0.0.1-SNAPSHOT"
 val swaggerVersion = "2.8.8"
 val jjwtVersion = "0.12.6"
+val queryDSLVersion = "7.0"
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
@@ -50,6 +52,11 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
+
+    // QueryDSL
+    implementation("io.github.openfeign.querydsl:querydsl-jpa:$queryDSLVersion")
+    ksp("io.github.openfeign.querydsl:querydsl-ksp-codegen:$queryDSLVersion")
+    annotationProcessor("io.github.openfeign.querydsl:querydsl-apt:$queryDSLVersion:jakarta")
 }
 
 kotlin {
