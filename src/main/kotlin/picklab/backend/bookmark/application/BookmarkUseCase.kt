@@ -15,4 +15,15 @@ class BookmarkUseCase(
             memberId = memberId,
             activityIds = activityIds,
         )
+
+    fun getActivityBookmarkCount(activityId: Long) = bookmarkService.countByActivityId(activityId)
+
+    fun getMyBookmarkedActivityId(
+        memberId: Long,
+        activityId: Long,
+    ): Boolean? =
+        bookmarkService.existsByMemberIdAndActivityId(
+            memberId = memberId,
+            activityId = activityId,
+        )
 }
