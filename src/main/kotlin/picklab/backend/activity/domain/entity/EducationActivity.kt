@@ -32,6 +32,7 @@ class EducationActivity(
     viewCount: Long,
     duration: Int,
     activityThumbnailUrl: String?,
+    benefit: String,
     @Column(name = "cost")
     @Comment("교육비용(교육)")
     var cost: Long,
@@ -56,5 +57,6 @@ class EducationActivity(
         viewCount = viewCount,
         duration = duration,
         activityThumbnailUrl = activityThumbnailUrl,
+        benefit = benefit,
         activityGroup = activityGroup,
     )

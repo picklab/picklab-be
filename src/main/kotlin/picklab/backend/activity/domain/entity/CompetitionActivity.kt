@@ -26,6 +26,7 @@ class CompetitionActivity(
     viewCount: Long,
     duration: Int,
     activityThumbnailUrl: String?,
+    benefit: String,
     activityGroup: ActivityGroup,
     @Column(name = "domain")
     @Enumerated(EnumType.STRING)
@@ -46,5 +47,6 @@ class CompetitionActivity(
         viewCount = viewCount,
         duration = duration,
         activityThumbnailUrl = activityThumbnailUrl,
+        benefit = benefit,
         activityGroup = activityGroup,
     )
