@@ -12,6 +12,7 @@ import picklab.backend.activity.domain.entity.CompetitionActivity
 import picklab.backend.activity.domain.entity.EducationActivity
 import picklab.backend.activity.domain.entity.ExternalActivity
 import picklab.backend.activity.domain.enums.ActivityFieldType
+import picklab.backend.activity.domain.enums.ActivityType
 import picklab.backend.activity.domain.enums.DomainType
 import picklab.backend.activity.domain.enums.EducationCostType
 import picklab.backend.activity.domain.enums.EducationFormatType
@@ -21,6 +22,7 @@ import picklab.backend.activity.domain.enums.ParticipantType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.activity.domain.repository.ActivityGroupRepository
 import picklab.backend.activity.domain.repository.ActivityRepository
+import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
 import picklab.backend.activity.entrypoint.response.GetActivityListResponse
 import picklab.backend.bookmark.domain.entity.Bookmark
 import picklab.backend.bookmark.domain.repository.BookmarkRepository
@@ -53,25 +55,25 @@ class ActivityIntegrationTest : IntegrationTest() {
 
     lateinit var activityGroup: ActivityGroup
 
+    @BeforeEach
+    fun setUp() {
+        cleanUp.all()
+
+        activityGroup =
+            activityGroupRepository.save(
+                ActivityGroup(
+                    name = "테스트 그룹",
+                    description = "테스트 그룹 설명",
+                ),
+            )
+    }
+
     @Nested
     @DisplayName("활동 조회 통합 테스트")
     inner class GetActivityListTest {
         @Nested
         @DisplayName("활동 리스트를 조회한다.")
         inner class GetExternalActivityListTest {
-            @BeforeEach
-            fun setUp() {
-                cleanUp.all()
-
-                activityGroup =
-                    activityGroupRepository.save(
-                        ActivityGroup(
-                            name = "테스트 그룹",
-                            description = "테스트 그룹 설명",
-                        ),
-                    )
-            }
-
             @Test
             @DisplayName("[성공] 대외활동 목록을 조회한다.")
             fun `대외활동 목록을 조회한다`() {
@@ -96,6 +98,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
+                            benefit = "",
                         ),
                     )
 
@@ -119,6 +122,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
+                            benefit = "",
                         ),
                     )
 
@@ -171,6 +175,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
+                            benefit = "",
                         ),
                     )
 
@@ -194,6 +199,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
+                            benefit = "",
                         ),
                     )
 
@@ -247,6 +253,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
+                            benefit = "",
                         ),
                     )
 
@@ -270,6 +277,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
+                            benefit = "",
                         ),
                     )
 
@@ -323,6 +331,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
+                            benefit = "",
                         ),
                     )
 
@@ -346,6 +355,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
+                            benefit = "",
                         ),
                     )
 
@@ -399,6 +409,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
+                            benefit = "",
                         ),
                     )
 
@@ -422,6 +433,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.DOMESTIC_VOLUNTEER,
+                            benefit = "",
                         ),
                     )
 
@@ -480,6 +492,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                                 cost = 0L,
                                 costType = EducationCostType.FULLY_GOVERNMENT,
                                 format = EducationFormatType.ONLINE,
+                                benefit = "",
                             ),
                         )
 
@@ -505,6 +518,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                                 cost = 0L,
                                 costType = EducationCostType.FULLY_GOVERNMENT,
                                 format = EducationFormatType.OFFLINE,
+                                benefit = "",
                             ),
                         )
 
@@ -560,6 +574,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                                 cost = 0L,
                                 costType = EducationCostType.FULLY_GOVERNMENT,
                                 format = EducationFormatType.ONLINE,
+                                benefit = "",
                             ),
                         )
 
@@ -585,6 +600,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                                 cost = 0L,
                                 costType = EducationCostType.FULLY_GOVERNMENT,
                                 format = EducationFormatType.OFFLINE,
+                                benefit = "",
                             ),
                         )
 
@@ -641,6 +657,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             cost = 0L,
                             costType = EducationCostType.FULLY_GOVERNMENT,
                             format = EducationFormatType.ONLINE,
+                            benefit = "",
                         ),
                     )
 
@@ -666,6 +683,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             cost = 0L,
                             costType = EducationCostType.FREE,
                             format = EducationFormatType.OFFLINE,
+                            benefit = "",
                         ),
                     )
 
@@ -721,6 +739,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             cost = 0L,
                             costType = EducationCostType.FULLY_GOVERNMENT,
                             format = EducationFormatType.ONLINE,
+                            benefit = "",
                         ),
                     )
 
@@ -746,6 +765,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             cost = 0L,
                             costType = EducationCostType.FULLY_GOVERNMENT,
                             format = EducationFormatType.OFFLINE,
+                            benefit = "",
                         ),
                     )
 
@@ -798,6 +818,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             activityGroup = activityGroup,
                             domain = DomainType.EDUCATION,
                             cost = 10000000,
+                            benefit = "",
                         ),
                     )
 
@@ -821,6 +842,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             activityGroup = activityGroup,
                             domain = DomainType.SAAS,
                             cost = 10000000,
+                            benefit = "",
                         ),
                     )
 
@@ -873,6 +895,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             activityGroup = activityGroup,
                             domain = DomainType.EDUCATION,
                             cost = 3000000,
+                            benefit = "",
                         ),
                     )
 
@@ -896,6 +919,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             activityGroup = activityGroup,
                             domain = DomainType.SAAS,
                             cost = 9000000,
+                            benefit = "",
                         ),
                     )
 
@@ -949,6 +973,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
+                            benefit = "",
                         ),
                     )
 
@@ -972,6 +997,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
+                            benefit = "",
                         ),
                     )
 
@@ -1023,6 +1049,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
+                            benefit = "",
                         ),
                     )
 
@@ -1046,6 +1073,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
+                            benefit = "",
                         ),
                     )
 
@@ -1098,6 +1126,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
+                            benefit = "",
                         ),
                     )
 
@@ -1137,6 +1166,77 @@ class ActivityIntegrationTest : IntegrationTest() {
                 val items = got.items
                 assertThat(items[0].isBookmarked).isTrue
             }
+        }
+    }
+
+    @Nested
+    @DisplayName("활동 상세 조회 통합 테스트")
+    inner class GetActivityDetailTest {
+        @Test
+        @WithMockUser
+        @DisplayName("[성공] 활동 상세 조회 - 유저 북마크 포함")
+        fun `활동 상세 조회`() {
+            // Given
+            val given =
+                activityRepository.save(
+                    ExternalActivity(
+                        title = "테스트 대외활동",
+                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                        targetAudience = ParticipantType.WORKER,
+                        location = LocationType.SEOUL_INCHEON,
+                        recruitmentStartDate = LocalDate.now().plusDays(1),
+                        recruitmentEndDate = LocalDate.now().plusMonths(1),
+                        startDate = LocalDate.now().plusMonths(3),
+                        endDate = LocalDate.now().plusMonths(6),
+                        status = RecruitmentStatus.OPEN,
+                        viewCount = 0L,
+                        duration =
+                            ChronoUnit.DAYS
+                                .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
+                                .toInt(),
+                        activityThumbnailUrl = null,
+                        activityGroup = activityGroup,
+                        activityField = ActivityFieldType.MENTORING,
+                        benefit = "테스트 혜택",
+                    ),
+                )
+
+            val member =
+                memberRepository.save(
+                    Member(
+                        name = "기존유저",
+                        email = "test@example.com",
+                    ),
+                )
+
+            bookmarkRepository.save(
+                Bookmark(
+                    member = member,
+                    activity = given,
+                ),
+            )
+
+            // When
+            val result =
+                mockMvc
+                    .get("/v1/activities/${given.id}")
+                    .andExpect { status { isOk() } }
+                    .andExpect { jsonPath("$.code") { value(SuccessCode.GET_ACTIVITY_DETAIL.status.value()) } }
+                    .andExpect { jsonPath("$.message") { value(SuccessCode.GET_ACTIVITY_DETAIL.message) } }
+                    .andReturn()
+
+            val body: ResponseWrapper<GetActivityDetailResponse> = result.extractBody(mapper)
+            val got = body.data!!
+
+            // Then
+            assertThat(got).isNotNull
+            assertThat(got.id).isEqualTo(given.id)
+            assertThat(got.title).isEqualTo(given.title)
+            assertThat(got.category).isEqualTo(ActivityType.EXTRACURRICULAR.name)
+            assertThat(got.domains).isEmpty()
+            assertThat(got.regions).isEqualTo(listOf("서울", "인천"))
+            assertThat(got.benefits).isEqualTo("테스트 혜택")
+            assertThat(got.isBookmarked).isTrue
         }
     }
 }
