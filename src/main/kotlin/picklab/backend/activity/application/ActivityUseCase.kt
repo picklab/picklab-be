@@ -67,4 +67,6 @@ class ActivityUseCase(
             isBookmarked = isBookmarked,
         )
     }
+
+    fun mustFindActivity(activityId: Long) = activityService.mustFindActiveActivity(activityId)
 }
