@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component
 import picklab.backend.activity.application.model.ActivityItemWithBookmark
 import picklab.backend.activity.application.model.ActivitySearchCommand
 import picklab.backend.activity.domain.service.ActivityService
+import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
 import picklab.backend.activity.entrypoint.response.GetActivityListResponse
 import picklab.backend.bookmark.application.BookmarkUseCase
 
@@ -48,6 +49,22 @@ class ActivityUseCase(
         return GetActivityListResponse.from(
             activityPage = activityPage,
             items = items,
+        )
+    }
+
+    fun getActivityDetail(
+        activityId: Long,
+        memberId: Long?,
+    ): GetActivityDetailResponse {
+        // TODO 조회수 증가 로직 추가 필요
+        val activity = activityService.mustFindActiveActivity(activityId)
+        val bookmarkCount = bookmarkUseCase.getActivityBookmarkCount(activityId)
+        val isBookmarked = memberId?.let { bookmarkUseCase.getMyBookmarkedActivityId(memberId, activityId) } ?: false
+
+        return GetActivityDetailResponse.from(
+            activity = activity,
+            bookmarkCount = bookmarkCount,
+            isBookmarked = isBookmarked,
         )
     }
 }

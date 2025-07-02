@@ -17,4 +17,14 @@ class BookmarkService(
                 activityIds = activityIds,
             ).map { it.activity.id }
             .toSet()
+
+    fun countByActivityId(activityId: Long) = bookmarkRepository.countByActivityId(activityId)
+
+    fun existsByMemberIdAndActivityId(
+        memberId: Long,
+        activityId: Long,
+    ) = bookmarkRepository.existsByMemberIdAndActivityId(
+        memberId = memberId,
+        activityId = activityId,
+    )
 }
