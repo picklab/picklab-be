@@ -2,7 +2,6 @@ package picklab.backend.activity.domain.repository
 
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.group.GroupBy
-import com.querydsl.core.group.GroupBy.list
 import com.querydsl.core.types.Projections
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.Expressions
