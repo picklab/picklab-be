@@ -56,18 +56,4 @@ class ActivityController(
     ): ResponseEntity<ResponseWrapper<Unit>> {
         TODO("Not yet implemented")
     }
-
-    override fun createActivityBookmark(
-        @AuthenticationPrincipal member: MemberPrincipal,
-        @Parameter(description = "활동 ID값") @PathVariable activityId: Long,
-    ): ResponseEntity<ResponseWrapper<Unit>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun removeActivityBookmark(
-        @AuthenticationPrincipal member: MemberPrincipal,
-        @Parameter(description = "활동 ID값") @PathVariable activityId: Long,
-    ): ResponseEntity<ResponseWrapper<Unit>> {
-        TODO("Not yet implemented")
-    }
 }
