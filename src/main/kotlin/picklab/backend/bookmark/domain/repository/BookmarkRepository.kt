@@ -1,7 +1,9 @@
 package picklab.backend.bookmark.domain.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
+import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.bookmark.domain.entity.Bookmark
+import picklab.backend.member.domain.entity.Member
 
 interface BookmarkRepository : JpaRepository<Bookmark, Long> {
     fun findAllByMemberIdAndActivityIdIn(
@@ -15,4 +17,14 @@ interface BookmarkRepository : JpaRepository<Bookmark, Long> {
         memberId: Long,
         activityId: Long,
     ): Boolean
+
+    fun existsByMemberAndActivity(
+        member: Member,
+        activity: Activity,
+    ): Boolean
+
+    fun deleteByMemberAndActivity(
+        member: Member,
+        activity: Activity,
+    )
 }

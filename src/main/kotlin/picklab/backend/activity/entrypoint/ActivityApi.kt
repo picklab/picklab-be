@@ -80,30 +80,4 @@ interface ActivityApi {
         @AuthenticationPrincipal member: MemberPrincipal,
         @Parameter(description = "활동 ID값") @PathVariable activityId: Long,
     ): ResponseEntity<ResponseWrapper<Unit>>
-
-    @Operation(
-        summary = "활동 북마크 생성",
-        description = "해당 유저가 특정 ID값의 활동에 대한 북마크를 생성합니다.",
-        responses = [
-            ApiResponse(responseCode = "200", description = "북마크가 추가되었습니다."),
-            ApiResponse(responseCode = "500", description = "서버 오류입니다."),
-        ],
-    )
-    fun createActivityBookmark(
-        @AuthenticationPrincipal member: MemberPrincipal,
-        @Parameter(description = "활동 ID값") @PathVariable activityId: Long,
-    ): ResponseEntity<ResponseWrapper<Unit>>
-
-    @Operation(
-        summary = "활동 북마크 해제",
-        description = "해당 유저가 특정 ID값의 활동에 대한 북마크를 해제합니다.",
-        responses = [
-            ApiResponse(responseCode = "200", description = "북마크가 해제되었습니다."),
-            ApiResponse(responseCode = "500", description = "서버 오류입니다."),
-        ],
-    )
-    fun removeActivityBookmark(
-        @AuthenticationPrincipal member: MemberPrincipal,
-        @Parameter(description = "활동 ID값") @PathVariable activityId: Long,
-    ): ResponseEntity<ResponseWrapper<Unit>>
 }
