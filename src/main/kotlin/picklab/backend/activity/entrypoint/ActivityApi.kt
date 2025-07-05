@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import picklab.backend.activity.entrypoint.request.ActivitySearchCondition
+import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
 import picklab.backend.activity.entrypoint.response.GetActivityListResponse
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.ResponseWrapper
@@ -55,9 +56,7 @@ interface ActivityApi {
 
     @Operation(
         summary = "활동 페이지 상세 조회",
-        description = """
-            특정 ID값의 활동 페이지를 조회합니다.
-        """,
+        description = "특정 ID값의 활동 페이지를 조회합니다.",
         responses = [
             ApiResponse(responseCode = "200", description = "활동 조회에 성공했습니다."),
             ApiResponse(responseCode = "500", description = "서버 오류입니다."),
@@ -65,13 +64,11 @@ interface ActivityApi {
     )
     fun getActivitiesDetail(
         @Parameter(description = "활동 ID값") @PathVariable activityId: Long,
-    ): ResponseEntity<ResponseWrapper<Unit>>
+    ): ResponseEntity<ResponseWrapper<GetActivityDetailResponse>>
 
     @Operation(
         summary = "활동 지원",
-        description = """
-            해당 유저가 특정 ID값의 활동에 지원합니다.
-        """,
+        description = "해당 유저가 특정 ID값의 활동에 지원합니다.",
         responses = [
             ApiResponse(responseCode = "200", description = "지원이 완료되었습니다."),
             ApiResponse(responseCode = "404", description = "해당 활동을 찾을 수 없습니다."),
@@ -86,9 +83,7 @@ interface ActivityApi {
 
     @Operation(
         summary = "활동 북마크 생성",
-        description = """
-            해당 유저가 특정 ID값의 활동에 대한 북마크를 생성합니다.
-        """,
+        description = "해당 유저가 특정 ID값의 활동에 대한 북마크를 생성합니다.",
         responses = [
             ApiResponse(responseCode = "200", description = "북마크가 추가되었습니다."),
             ApiResponse(responseCode = "500", description = "서버 오류입니다."),
@@ -101,9 +96,7 @@ interface ActivityApi {
 
     @Operation(
         summary = "활동 북마크 해제",
-        description = """
-            해당 유저가 특정 ID값의 활동에 대한 북마크를 해제합니다.
-        """,
+        description = "해당 유저가 특정 ID값의 활동에 대한 북마크를 해제합니다.",
         responses = [
             ApiResponse(responseCode = "200", description = "북마크가 해제되었습니다."),
             ApiResponse(responseCode = "500", description = "서버 오류입니다."),

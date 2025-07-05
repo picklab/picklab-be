@@ -8,4 +8,11 @@ interface BookmarkRepository : JpaRepository<Bookmark, Long> {
         memberId: Long?,
         activityIds: List<Long>,
     ): List<Bookmark>
+
+    fun countByActivityId(activityId: Long): Long
+
+    fun existsByMemberIdAndActivityId(
+        memberId: Long,
+        activityId: Long,
+    ): Boolean
 }
