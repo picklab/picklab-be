@@ -7,7 +7,7 @@ import picklab.backend.bookmark.domain.repository.BookmarkRepository
 class BookmarkService(
     private val bookmarkRepository: BookmarkRepository,
 ) {
-    fun getActivityIdsBookmarkedByMember(
+    fun getMyBookmarkedActivityIds(
         memberId: Long?,
         activityIds: List<Long>,
     ): Set<Long> =
