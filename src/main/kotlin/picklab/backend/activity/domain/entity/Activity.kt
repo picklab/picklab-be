@@ -27,6 +27,9 @@ import java.time.LocalDate
 )
 @Table(name = "activity")
 abstract class Activity(
+    @Column(name = "activity_type", insertable = false, updatable = false)
+    @Comment("활동 유형 (대외활동, 공모전/해커톤, 강연/세미나, 교육)")
+    val activityType: String? = null,
     @Column(name = "title", nullable = false, length = 50)
     @Comment("활동명")
     var title: String,

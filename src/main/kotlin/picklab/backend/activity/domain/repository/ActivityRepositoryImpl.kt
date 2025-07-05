@@ -1,164 +1,145 @@
 package picklab.backend.activity.domain.repository
 
-import jakarta.persistence.EntityManager
+import com.querydsl.core.BooleanBuilder
+import com.querydsl.core.group.GroupBy
+import com.querydsl.core.types.Projections
+import com.querydsl.core.types.dsl.BooleanExpression
+import com.querydsl.core.types.dsl.Expressions
+import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Repository
 import picklab.backend.activity.application.model.ActivityItem
 import picklab.backend.activity.application.model.ActivitySearchCommand
+import picklab.backend.activity.domain.entity.QActivity
+import picklab.backend.activity.domain.entity.QActivityJobCategory
+import picklab.backend.activity.domain.enums.ActivityFieldType
 import picklab.backend.activity.domain.enums.ActivitySortType
-import java.sql.Date
+import picklab.backend.activity.domain.enums.DomainType
+import picklab.backend.activity.domain.enums.EducationCostType
+import picklab.backend.activity.domain.enums.EducationFormatType
+import picklab.backend.activity.domain.enums.LocationType
+import picklab.backend.job.domain.entity.QJobCategory
+import java.time.LocalDate
 
 @Repository
 class ActivityRepositoryImpl(
-    private val entityManager: EntityManager,
+    private val jpaQueryFactory: JPAQueryFactory,
 ) : ActivityRepositoryCustom {
     override fun getActivities(
         queryData: ActivitySearchCommand,
         pageable: PageRequest,
     ): Page<ActivityItem> {
-        val (condition, params) = createCondition(queryData)
+        val condition =
+            BooleanBuilder().apply {
+                and(QActivity.activity.activityType.eq(queryData.category.name))
+                and(QActivity.activity.deletedAt.isNull)
+                and(QActivity.activity.recruitmentEndDate.goe(LocalDate.now()))
+                andIfNotNullOrEmpty(queryData.jobTag) { QJobCategory.jobCategory.jobDetail.`in`(queryData.jobTag) }
+                andIfNotNullOrEmpty(queryData.organizer) { QActivity.activity.organizer.`in`(queryData.organizer) }
+                andIfNotNullOrEmpty(queryData.target) { QActivity.activity.targetAudience.`in`(queryData.target) }
+                andIfNotNullOrEmpty(queryData.field) {
+                    Expressions.enumPath(ActivityFieldType::class.javaObjectType, "activityField").`in`(queryData.field)
+                }
+                andIfNotNullOrEmpty(queryData.location) {
+                    Expressions.enumPath(LocationType::class.javaObjectType, "location").`in`(queryData.location)
+                }
+                andIfNotNullOrEmpty(queryData.format) {
+                    Expressions.enumPath(EducationFormatType::class.javaObjectType, "format").`in`(queryData.format)
+                }
+                andIfNotNullOrEmpty(queryData.costType) {
+                    Expressions.enumPath(EducationCostType::class.javaObjectType, "costType").`in`(queryData.costType)
+                }
+                andIfNotNullOrEmpty(queryData.domain) {
+                    Expressions.enumPath(DomainType::class.javaObjectType, "domain").`in`(queryData.domain)
+                }
+
+                if (queryData.award != null) {
+                    if (queryData.award.size == 1) {
+                        and(Expressions.numberPath(Long::class.javaObjectType, "cost").lt(queryData.award[0]))
+                    } else {
+                        and(Expressions.numberPath(Long::class.javaObjectType, "cost").goe(queryData.award[0]))
+                        and(Expressions.numberPath(Long::class.javaObjectType, "cost").lt(queryData.award[1]))
+                    }
+                }
+                if (queryData.duration != null) {
+                    if (queryData.duration.size == 1) {
+                        and(QActivity.activity.duration.lt(queryData.duration[0] * 30))
+                    } else {
+                        and(QActivity.activity.duration.between(queryData.duration[0] * 30, queryData.duration[1] * 30))
+                    }
+                }
+            }
 
         val orderBy =
             when (queryData.sort) {
-                ActivitySortType.LATEST -> "ORDER BY a.created_at DESC"
-                ActivitySortType.DEADLINE_ASC -> "ORDER BY a.recruitment_end_date ASC, a.created_at DESC"
-                ActivitySortType.DEADLINE_DESC -> "ORDER BY DATEDIFF(a.recruitment_end_date, CURRENT_DATE) DESC, a.created_at DESC"
+                ActivitySortType.LATEST -> listOf(QActivity.activity.createdAt.desc())
+                ActivitySortType.DEADLINE_ASC -> listOf(QActivity.activity.recruitmentEndDate.asc(), QActivity.activity.createdAt.desc())
+                ActivitySortType.DEADLINE_DESC ->
+                    listOf(
+                        Expressions
+                            .numberTemplate(
+                                Long::class.java,
+                                "DATEDIFF({0}, {1})",
+                                QActivity.activity.recruitmentEndDate,
+                                LocalDate.now(),
+                            ).desc(),
+                        QActivity.activity.createdAt.desc(),
+                    )
             }
-
-        val itemQuery =
-            """
-            SELECT a.id, a.title, a.organizer, a.start_date, a.activity_type,
-            GROUP_CONCAT(jc.job_detail) AS job_tags,
-            a.activity_thumbnail_url
-            FROM activity a
-            LEFT JOIN activity_group ag ON a.group_id = ag.id
-            LEFT JOIN activity_job_category ajc ON a.id = ajc.activity_id
-            LEFT JOIN job_category jc ON ajc.job_category_id = jc.id
-            $condition
-            GROUP BY a.id, a.title, a.organizer, a.start_date, a.activity_type, a.activity_thumbnail_url, a.created_at
-            $orderBy
-            LIMIT :offset, :size
-            """.trimIndent()
-
-        val countQuery =
-            """
-            SELECT COUNT(DISTINCT a.id)
-            FROM activity a
-            LEFT JOIN activity_group ag ON a.group_id = ag.id
-            LEFT JOIN activity_job_category ajc ON a.id = ajc.activity_id
-            LEFT JOIN job_category jc ON ajc.job_category_id = jc.id
-            $condition
-            """.trimIndent()
-
-        val nativeQuery =
-            entityManager
-                .createNativeQuery(itemQuery)
-                .setParameter("category", queryData.category.name)
-                .setParameter("offset", pageable.offset)
-                .setParameter("size", pageable.pageSize)
-
-        val countNativeQuery =
-            entityManager
-                .createNativeQuery(countQuery)
-                .setParameter("category", queryData.category.name)
-
-        params.forEach { (key, value) ->
-            nativeQuery.setParameter(key, value)
-            countNativeQuery.setParameter(key, value)
-        }
-
-        val result = nativeQuery.resultList as List<Array<Any?>>
-        val total = (countNativeQuery.singleResult as Number).toLong()
 
         val items =
-            result.map { row ->
-                ActivityItem(
-                    id = (row[0] as Number).toLong(),
-                    title = row[1] as String,
-                    organization = row[2] as String,
-                    startDate = (row[3] as Date).toLocalDate(),
-                    category = row[4] as String,
-                    jobTags = (row[5] as? String)?.split(",") ?: emptyList(),
-                    thumbnailUrl = row[6] as? String,
+            jpaQueryFactory
+                .selectFrom(QActivity.activity)
+                .leftJoin(QActivityJobCategory.activityJobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.activity.id
+                        .eq(QActivity.activity.id),
+                ).leftJoin(QJobCategory.jobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.jobCategory.id
+                        .eq(QJobCategory.jobCategory.id),
+                ).where(condition)
+                .orderBy(*orderBy.toTypedArray())
+                .offset(pageable.offset)
+                .limit(pageable.pageSize.toLong())
+                .transform(
+                    GroupBy.groupBy(QActivity.activity.id).list(
+                        Projections.constructor(
+                            ActivityItem::class.java,
+                            QActivity.activity.id,
+                            QActivity.activity.title,
+                            QActivity.activity.organizer.stringValue(),
+                            QActivity.activity.startDate,
+                            QActivity.activity.activityType,
+                            GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),
+                            QActivity.activity.activityThumbnailUrl,
+                        ),
+                    ),
                 )
-            }
 
-        return PageImpl(items, pageable, total)
-    }
+        val count =
+            jpaQueryFactory
+                .select(QActivity.activity.id.countDistinct())
+                .from(QActivity.activity)
+                .leftJoin(QActivity.activity.activityGroup)
+                .leftJoin(QActivityJobCategory.activityJobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.activity.id
+                        .eq(QActivity.activity.id),
+                ).leftJoin(QJobCategory.jobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.jobCategory.id
+                        .eq(QJobCategory.jobCategory.id),
+                ).where(condition)
+                .fetchOne() ?: 0L
 
-    private fun createCondition(queryData: ActivitySearchCommand): Pair<String, Map<String, Any>> {
-        var condition =
-            """
-            WHERE a.activity_type = :category
-            AND a.deleted_at IS NULL
-            AND a.recruitment_end_date >= CURRENT_DATE
-            """.trimIndent()
-        val params = mutableMapOf<String, Any>()
-
-        if (!queryData.jobTag.isNullOrEmpty()) {
-            condition += " AND jc.job_detail IN (:jobTags)"
-            params["jobTags"] = queryData.jobTag.map { it.name }
-        }
-
-        if (!queryData.organizer.isNullOrEmpty()) {
-            condition += " AND a.organizer IN (:organizers)"
-            params["organizers"] = queryData.organizer.map { it.name }
-        }
-
-        if (!queryData.target.isNullOrEmpty()) {
-            condition += " AND a.target_audience IN (:targets)"
-            params["targets"] = queryData.target.map { it.name }
-        }
-
-        if (!queryData.field.isNullOrEmpty()) {
-            condition += " AND a.activity_field IN (:fields)"
-            params["fields"] = queryData.field.map { it.name }
-        }
-
-        if (!queryData.location.isNullOrEmpty()) {
-            condition += " AND a.location IN (:locations)"
-            params["locations"] = queryData.location.map { it.name }
-        }
-
-        if (queryData.format != null) {
-            condition += " AND a.education_format IN (:format)"
-            params["format"] = queryData.format.map { it.name }
-        }
-
-        if (!queryData.costType.isNullOrEmpty()) {
-            condition += " AND a.education_cost_type IN (:costTypes)"
-            params["costTypes"] = queryData.costType.map { it.name }
-        }
-
-        if (queryData.award != null) {
-            if (queryData.award.size == 1) {
-                condition += " AND a.cost < :maxAward"
-                params["maxAward"] = queryData.award[0]
-            } else {
-                condition += " AND a.cost >= :minAward AND a.cost < :maxAward"
-                params["minAward"] = queryData.award[0]
-                params["maxAward"] = queryData.award[1]
-            }
-        }
-
-        if (queryData.duration != null) {
-            if (queryData.duration.size == 1) {
-                condition += " AND a.duration < :maxDuration"
-                params["maxDuration"] = queryData.duration[0] * 30
-            } else {
-                condition += " AND a.duration BETWEEN :minDuration AND :maxDuration"
-                params["minDuration"] = queryData.duration[0] * 30
-                params["maxDuration"] = queryData.duration[1] * 30
-            }
-        }
-
-        if (!queryData.domain.isNullOrEmpty()) {
-            condition += " AND a.domain IN (:domains)"
-            params["domains"] = queryData.domain.map { it.name }
-        }
-
-        return condition to params
+        return PageImpl(items, pageable, count)
     }
 }
+
+inline fun <T> BooleanBuilder.andIfNotNullOrEmpty(
+    collection: Collection<T>?,
+    predicate: (Collection<T>) -> BooleanExpression,
+) = apply { if (!collection.isNullOrEmpty()) and(predicate(collection)) }
