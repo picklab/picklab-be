@@ -28,8 +28,11 @@ class SchemaAnnotationTest {
                     println("Checking field: ${field.name} in class ${item.name}")
                     println("Annotations: ${field.annotations.map { it.rawType.name }}") // 필드 어노테이션 확인
 
-                    val result = if (field.isAnnotatedWith(Schema::class.java)) {
-                        satisfied(field, "Field '${field.name}' in class ${item.name} is satisfied (having @Schema annotation)")
+                    val result = if (field.name.isCompanion() || field.isAnnotatedWith(Schema::class.java)) {
+                        satisfied(
+                            field,
+                            "Field '${field.name}' in class ${item.name} is satisfied (having @Schema annotation)"
+                        )
                     } else {
                         violated(field, "Field '${field.name}' in class ${item.name} does not have @Schema annotation")
                     }
@@ -47,5 +50,6 @@ class SchemaAnnotationTest {
     }
 
     private fun String.isResponseOrRequest() = this.contains("response") || this.contains("request")
+    private fun String.isCompanion() = this == "Companion"
     private fun String.isNotResponseOrRequest() = !this.isResponseOrRequest()
 }
