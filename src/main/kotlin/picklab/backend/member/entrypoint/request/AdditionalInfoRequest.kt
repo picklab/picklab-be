@@ -36,5 +36,6 @@ data class AdditionalInfoRequest(
     val employmentType: EmploymentType = EmploymentType.NONE,
     @field:NotEmpty(message = "관심 직군은 필수 입력값입니다.")
     @field:JsonProperty("interested_job_categories")
+    @field:Schema(description = "관심 직무 카테고리")
     val interestedJobCategories: List<JobCategoryDto>,
 )
