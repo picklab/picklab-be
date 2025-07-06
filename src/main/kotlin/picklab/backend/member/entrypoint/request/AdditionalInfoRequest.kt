@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.Pattern
+import picklab.backend.job.domain.enums.JobDetail
+import picklab.backend.job.domain.enums.JobGroup
 import picklab.backend.member.domain.enums.EmploymentType
 
 data class AdditionalInfoRequest(
@@ -38,4 +40,8 @@ data class AdditionalInfoRequest(
     @field:JsonProperty("interested_job_categories")
     @field:Schema(description = "관심 직무 카테고리")
     val interestedJobCategories: List<JobCategoryDto>,
-)
+){
+    fun toJobGroupDetailMap(): List<Pair<JobGroup, JobDetail>> = this.interestedJobCategories.map {
+        JobGroup.valueOf(it.group) to JobDetail.valueOf(it.detail)
+    }
+}

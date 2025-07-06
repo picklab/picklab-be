@@ -7,11 +7,12 @@ import picklab.backend.activity.application.model.ActivitySearchCommand
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.activity.entrypoint.response.GetActivityListResponse
 import picklab.backend.bookmark.application.BookmarkUseCase
+import picklab.backend.bookmark.domain.BookmarkService
 
 @Component
 class ActivityUseCase(
     private val activityService: ActivityService,
-    private val bookmarkUseCase: BookmarkUseCase,
+    private val bookmarkService: BookmarkService,
 ) {
     fun getActivities(
         queryParams: ActivitySearchCommand,
@@ -32,7 +33,7 @@ class ActivityUseCase(
         val activityIds = activityItems.map { it.id }
 
         val bookmarkedActivityIds =
-            bookmarkUseCase.getMyBookmarkedActivityIds(
+            bookmarkService.getActivityIdsBookmarkedByMember(
                 memberId = memberId,
                 activityIds = activityIds,
             )

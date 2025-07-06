@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test
 
 class UseCaseArchitectureTest {
 
-    private val importedClasses: JavaClasses = ClassFileImporter().importPackages("picklab.backend")
+    private val importedClasses: JavaClasses = ClassFileImporter()
+        .importPackages("picklab.backend")
 
     @Test
     fun useCasesShouldOnlyDependOnServiceLayer() {
