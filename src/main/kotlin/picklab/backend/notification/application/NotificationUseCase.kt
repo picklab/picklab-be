@@ -56,43 +56,4 @@ class NotificationUseCase(
     fun markAllAsRead(memberId: Long): Int {
         return notificationService.markAllAsRead(memberId)
     }
-
-    /**
-     * 읽지 않은 알림 개수 조회
-     */
-    fun getUnreadCount(memberId: Long): Long {
-        return notificationService.getUnreadCount(memberId)
-    }
-
-    /**
-     * 특정 사용자에게 직접 알림 전송 (내부 사용)
-     */
-    fun sendDirectNotification(
-        receiverId: Long,
-        title: String,
-        type: String,
-        link: String
-    ): NotificationResponse {
-        val request = NotificationCreateRequest(
-            receiverId = receiverId,
-            title = title,
-            type = type,
-            link = link
-        )
-        return sendNotification(request)
-    }
-
-    /**
-     * SSE 연결 상태 확인
-     */
-    fun isUserConnected(memberId: Long): Boolean {
-        return sseEmitterService.isUserConnected(memberId)
-    }
-
-    /**
-     * 현재 연결된 사용자 수 조회
-     */
-    fun getConnectedUserCount(): Int {
-        return sseEmitterService.getConnectedUserCount()
-    }
 }

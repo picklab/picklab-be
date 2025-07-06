@@ -80,14 +80,4 @@ interface NotificationApi {
     fun markAllAsRead(
         @AuthenticationPrincipal memberPrincipal: MemberPrincipal
     ): ResponseWrapper<Unit>
-
-    @Operation(
-        summary = "읽지 않은 알림 개수 조회",
-        description = "현재 로그인한 사용자의 읽지 않은 알림 개수를 조회합니다."
-    )
-    @ApiResponse(responseCode = "200", description = "읽지 않은 알림 개수 조회 성공")
-    @GetMapping("/notifications/unread-count")
-    fun getUnreadCount(
-        @AuthenticationPrincipal memberPrincipal: MemberPrincipal
-    ): ResponseWrapper<Long>
 }

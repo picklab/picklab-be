@@ -22,11 +22,6 @@ interface NotificationRepository : JpaRepository<Notification, Long> {
     ): Page<Notification>
     
     /**
-     * 특정 사용자의 읽지 않은 알림 개수를 조회합니다
-     */
-    fun countByMemberIdAndReadIsFalse(memberId: Long): Long
-    
-    /**
      * 특정 사용자의 특정 알림을 조회합니다
      */
     fun findByIdAndMemberId(id: Long, memberId: Long): Notification?

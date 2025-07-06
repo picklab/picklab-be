@@ -60,11 +60,4 @@ class NotificationController(
         notificationUseCase.markAllAsRead(memberPrincipal.memberId)
         return ResponseWrapper.success(SuccessCode.MARK_ALL_NOTIFICATIONS_READ_SUCCESS)
     }
-
-    override fun getUnreadCount(
-        @AuthenticationPrincipal memberPrincipal: MemberPrincipal
-    ): ResponseWrapper<Long> {
-        val count = notificationUseCase.getUnreadCount(memberPrincipal.memberId)
-        return ResponseWrapper.success(SuccessCode.GET_UNREAD_COUNT_SUCCESS, count)
-    }
 }

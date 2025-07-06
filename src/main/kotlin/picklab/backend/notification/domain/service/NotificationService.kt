@@ -162,12 +162,4 @@ class NotificationService(
             logger.error("모든 알림 읽음 처리 실시간 전송 중 오류 발생", e)
         }
     }
-
-    /**
-     * 특정 사용자의 읽지 않은 알림 개수를 조회합니다
-     */
-    @Transactional(readOnly = true)
-    fun getUnreadCount(memberId: Long): Long {
-        return notificationRepository.countByMemberIdAndReadIsFalse(memberId)
-    }
 }
