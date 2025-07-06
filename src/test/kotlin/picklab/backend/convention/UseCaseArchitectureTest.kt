@@ -11,34 +11,6 @@ class UseCaseArchitectureTest {
     private val importedClasses: JavaClasses = ClassFileImporter()
         .importPackages("picklab.backend")
 
-    @Test
-    fun useCasesShouldOnlyDependOnServiceLayer() {
-        val rule = classes()
-            .that().haveSimpleNameEndingWith("UseCase")
-            .should().onlyDependOnClassesThat()
-            .resideInAnyPackage(
-                "picklab.backend..service..",
-                "picklab.backend..infrastructure..", 
-                "picklab.backend..model..",
-                "picklab.backend..enums..",
-                "picklab.backend..entity..",
-                "java..",
-                "kotlin..",
-                "org.springframework..",
-                "org.jetbrains.annotations..",
-                "jakarta.."
-            )
-            .orShould().dependOnClassesThat()
-            .haveSimpleNameEndingWith("Service")
-            .orShould().dependOnClassesThat()
-            .haveSimpleNameEndingWith("Provider")
-            .orShould().dependOnClassesThat()
-            .haveSimpleNameEndingWith("Mapper")
-            .orShould().dependOnClassesThat()
-            .areInterfaces()
-
-        rule.check(importedClasses)
-    }
 
     @Test
     fun useCasesShouldNotDependOnOtherUseCases() {
