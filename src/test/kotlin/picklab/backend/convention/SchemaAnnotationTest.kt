@@ -1,55 +1,80 @@
 package picklab.backend.convention
 
-import com.tngtech.archunit.core.domain.JavaClass
-import com.tngtech.archunit.core.domain.JavaClasses
-import com.tngtech.archunit.core.importer.ClassFileImporter
-import com.tngtech.archunit.lang.ArchCondition
-import com.tngtech.archunit.lang.ArchRule
-import com.tngtech.archunit.lang.ConditionEvents
-import com.tngtech.archunit.lang.SimpleConditionEvent.satisfied
-import com.tngtech.archunit.lang.SimpleConditionEvent.violated
-import com.tngtech.archunit.lang.syntax.ArchRuleDefinition
 import io.swagger.v3.oas.annotations.media.Schema
 import org.junit.jupiter.api.Test
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider
+import kotlin.reflect.KClass
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.jvm.javaField
+import kotlin.test.fail
 
 class SchemaAnnotationTest {
 
     @Test
     fun allDtoClassesMustHaveSchemaAnnotation() {
-        val importedClasses: JavaClasses = ClassFileImporter().importPackages("picklab.backend")
-        importedClasses.forEach { println("Imported class: ${it.name}") }
+        val requestResponseClasses = findRequestResponseClasses()
+        val violations = mutableListOf<String>()
 
-        val schemaAnnotationCondition = object : ArchCondition<JavaClass>("have all fields annotated with @Schema") {
-            override fun check(item: JavaClass, events: ConditionEvents) {
-                val className = item.name.lowercase()
-                if (className.isNotResponseOrRequest()) return
+        requestResponseClasses.forEach { kClass ->
+            println("Checking class: ${kClass.simpleName}")
 
-                item.fields.forEach { field ->
-                    println("Checking field: ${field.name} in class ${item.name}")
-                    println("Annotations: ${field.annotations.map { it.rawType.name }}") // 필드 어노테이션 확인
+            kClass.memberProperties.forEach { property ->
+                val hasSchemaAnnotation = checkSchemaAnnotation(kClass, property)
 
-                    val result = if (field.name.isCompanion() || field.isAnnotatedWith(Schema::class.java)) {
-                        satisfied(
-                            field,
-                            "Field '${field.name}' in class ${item.name} is satisfied (having @Schema annotation)"
-                        )
-                    } else {
-                        violated(field, "Field '${field.name}' in class ${item.name} does not have @Schema annotation")
-                    }
-                    events.add(result)
+                if (!hasSchemaAnnotation) {
+                    val violation =
+                        "Property '${property.name}' in class ${kClass.simpleName} does not have @Schema annotation"
+                    violations.add(violation)
+                    println("  ❌ ${property.name}")
+                } else {
+                    println("  ✅ ${property.name}")
                 }
             }
         }
 
-        val rule: ArchRule = ArchRuleDefinition.classes()
-            .that()
-            .resideInAnyPackage("..request..", "..response..")
-            .should(schemaAnnotationCondition)
-
-        rule.check(importedClasses)
+        if (violations.isNotEmpty()) {
+            fail("Found ${violations.size} violations:\n${violations.joinToString("\n")}")
+        }
     }
 
-    private fun String.isResponseOrRequest() = this.contains("response") || this.contains("request")
-    private fun String.isCompanion() = this == "Companion"
-    private fun String.isNotResponseOrRequest() = !this.isResponseOrRequest()
+    private fun checkSchemaAnnotation(kClass: KClass<*>, property: kotlin.reflect.KProperty1<out Any, *>): Boolean {
+        // 1. Property 자체의 annotation 확인 (접두사 없이 사용한 경우)
+        val hasPropertySchema = property.annotations.any { it is Schema }
+
+        // 2. Getter method annotation 확인 (@get: 사용한 경우)
+        val hasGetterSchema = property.getter.annotations.any { it is Schema }
+
+        // 3. Backing field annotation 확인 (@field: 사용한 경우)
+        val hasFieldSchema = property.javaField?.annotations?.any { it is Schema } ?: false
+
+        // 4. Constructor parameter annotation 확인 (접두사 없이 사용한 경우)
+        val constructorParam = kClass.constructors.firstOrNull()?.parameters?.find { it.name == property.name }
+        val hasConstructorParamSchema = constructorParam?.annotations?.any { it is Schema } ?: false
+
+        return hasPropertySchema || hasGetterSchema || hasFieldSchema || hasConstructorParamSchema
+    }
+
+    private fun findRequestResponseClasses(): List<KClass<*>> {
+        val provider = ClassPathScanningCandidateComponentProvider(false)
+        provider.addIncludeFilter { _, _ -> true }
+
+        val classes = mutableListOf<KClass<*>>()
+
+        // 전체 picklab.backend 패키지를 스캔하여 request/response 클래스 찾기
+        provider.findCandidateComponents("picklab.backend").forEach { beanDefinition ->
+            val className = beanDefinition.beanClassName
+            if (className != null &&
+                (className.contains(".request.") || className.contains(".response.")) &&
+                (className.contains("Request") || className.contains("Response"))
+            ) {
+                try {
+                    classes.add(Class.forName(className).kotlin)
+                } catch (e: Exception) {
+                    // 클래스 로드 실패 시 무시
+                }
+            }
+        }
+
+        return classes
+    }
 }
