@@ -28,6 +28,7 @@ enum class ErrorCode(
      * 회원 도메인 관련
      */
     INVALID_MEMBER(HttpStatus.UNAUTHORIZED, "회원을 찾을 수 없습니다."),
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "회원 정보를 찾을 수 없습니다."),
     INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "인증 코드가 유효하지 않습니다."),
     EXISTS_NICKNAME(HttpStatus.BAD_REQUEST, "이미 사용 중인 닉네임입니다."),
     JOB_CATEGORY_LIMIT(HttpStatus.BAD_REQUEST, "관심 직군은 최대 5개까지 선택할 수 있습니다."),
@@ -41,4 +42,9 @@ enum class ErrorCode(
      * 아카이브 도메인 관련
      */
     NOT_FOUND_ARCHIVE(HttpStatus.NOT_FOUND, "아카이브 정보를 찾을 수 없습니다."),
+
+    /**
+     * 알림 도메인 관련
+     */
+    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "알림 정보를 찾을 수 없습니다."),
 }
