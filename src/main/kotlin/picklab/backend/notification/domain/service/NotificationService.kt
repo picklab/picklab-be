@@ -53,11 +53,11 @@ class NotificationService(
      */
     private fun sendRealtimeNotification(notification: Notification) {
         try {
-            val isConnected = sseEmitterService.isUserConnected(notification.member.id!!)
+            val isConnected = sseEmitterService.isUserConnected(notification.member.id)
             if (isConnected) {
                 val response = NotificationResponse.from(notification)
                 val success = sseEmitterService.sendEventToUser(
-                    notification.member.id!!,
+                    notification.member.id,
                     "notification",
                     response
                 )
