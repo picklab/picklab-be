@@ -33,6 +33,7 @@ enum class SuccessCode(
     // Notification 도메인 관련
     SEND_NOTIFICATION_SUCCESS(HttpStatus.OK, "알림 전송에 성공했습니다."),
     GET_NOTIFICATIONS_SUCCESS(HttpStatus.OK, "알림 목록 조회에 성공했습니다."),
+    GET_RECENT_NOTIFICATIONS_SUCCESS(HttpStatus.OK, "최근 알림 목록 조회에 성공했습니다."),
     MARK_NOTIFICATION_READ_SUCCESS(HttpStatus.OK, "알림 읽음 처리에 성공했습니다."),
     MARK_ALL_NOTIFICATIONS_READ_SUCCESS(HttpStatus.OK, "모든 알림 읽음 처리에 성공했습니다."),
     GET_UNREAD_COUNT_SUCCESS(HttpStatus.OK, "읽지 않은 알림 개수 조회에 성공했습니다.")

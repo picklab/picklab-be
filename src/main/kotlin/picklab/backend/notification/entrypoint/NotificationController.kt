@@ -38,6 +38,14 @@ class NotificationController(
         return ResponseWrapper.success(SuccessCode.GET_NOTIFICATIONS_SUCCESS, notifications)
     }
 
+    override fun getRecentNotifications(
+        @AuthenticationPrincipal memberPrincipal: MemberPrincipal,
+        @RequestParam(defaultValue = "30") days: Int
+    ): ResponseWrapper<List<NotificationResponse>> {
+        val notifications = notificationUseCase.getRecentNotifications(memberPrincipal.memberId, days)
+        return ResponseWrapper.success(SuccessCode.GET_RECENT_NOTIFICATIONS_SUCCESS, notifications)
+    }
+
     override fun markAsRead(
         @PathVariable notificationId: Long,
         @AuthenticationPrincipal memberPrincipal: MemberPrincipal

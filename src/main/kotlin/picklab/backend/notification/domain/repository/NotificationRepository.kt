@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import picklab.backend.notification.domain.entity.Notification
+import java.time.LocalDateTime
 
 @Repository
 interface NotificationRepository : JpaRepository<Notification, Long> {
@@ -23,7 +24,7 @@ interface NotificationRepository : JpaRepository<Notification, Long> {
     /**
      * 특정 사용자의 읽지 않은 알림 개수를 조회합니다
      */
-    fun countByMemberIdAndIsReadFalse(memberId: Long): Long
+    fun countByMemberIdAndReadIsFalse(memberId: Long): Long
     
     /**
      * 특정 사용자의 특정 알림을 조회합니다
@@ -36,11 +37,12 @@ interface NotificationRepository : JpaRepository<Notification, Long> {
     @Modifying
     @Query("UPDATE Notification n SET n.isRead = true WHERE n.member.id = :memberId AND n.isRead = false")
     fun markAllAsReadByMemberId(@Param("memberId") memberId: Long): Int
-    
+
     /**
-     * 특정 사용자의 읽지 않은 알림 목록을 조회합니다
+     * 특정 사용자의 최근 n일 내 알림을 조회합니다
      */
-    fun findByMemberIdAndIsReadFalseOrderByCreatedAtDesc(
-        memberId: Long
+    fun findByMemberIdAndCreatedAtAfterOrderByCreatedAtDesc(
+        memberId: Long,
+        createdAt: LocalDateTime
     ): List<Notification>
 }

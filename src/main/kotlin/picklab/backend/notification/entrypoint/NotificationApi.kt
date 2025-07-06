@@ -49,6 +49,18 @@ interface NotificationApi {
     ): ResponseWrapper<Page<NotificationResponse>>
 
     @Operation(
+        summary = "최근 n일 내 알림 조회",
+        description = "현재 로그인한 사용자의 최근 n일 내 알림을 조회합니다."
+    )
+    @ApiResponse(responseCode = "200", description = "최근 알림 조회 성공")
+    @GetMapping("/notifications/recent")
+    fun getRecentNotifications(
+        @AuthenticationPrincipal memberPrincipal: MemberPrincipal,
+        @Parameter(description = "조회할 일 수", example = "7")
+        @RequestParam(defaultValue = "7") days: Int
+    ): ResponseWrapper<List<NotificationResponse>>
+
+    @Operation(
         summary = "알림 읽음 처리",
         description = "특정 알림을 읽음 상태로 변경합니다."
     )
