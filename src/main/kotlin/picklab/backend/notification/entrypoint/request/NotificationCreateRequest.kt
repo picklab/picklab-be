@@ -1,6 +1,7 @@
 package picklab.backend.notification.entrypoint.request
 
 import io.swagger.v3.oas.annotations.media.Schema
+import picklab.backend.notification.domain.entity.NotificationType
 
 @Schema(description = "알림 생성 요청")
 data class NotificationCreateRequest(
@@ -11,7 +12,7 @@ data class NotificationCreateRequest(
     val title: String,
     
     @Schema(description = "알림 타입", example = "ACTIVITY_CREATED")
-    val type: String,
+    val type: NotificationType,
     
     @Schema(description = "클릭 시 이동할 링크", example = "/activities/123")
     val link: String
