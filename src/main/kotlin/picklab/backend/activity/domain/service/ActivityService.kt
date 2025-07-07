@@ -21,7 +21,7 @@ class ActivityService(
 
     fun mustFindActiveActivity(activityId: Long): Activity =
         activityRepository
-            .findByIdAndDeletedAtIsNull(activityId)
+            .findById(activityId)
             .orElseThrow { throw BusinessException(ErrorCode.NOT_FOUND_ACTIVITY) }
 
     fun getActivities(
