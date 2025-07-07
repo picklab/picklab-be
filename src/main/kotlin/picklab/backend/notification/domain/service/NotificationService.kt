@@ -136,8 +136,5 @@ class NotificationService(
     /**
      * 특정 사용자의 모든 알림을 읽음 상태로 변경합니다
      */
-    fun markAllAsRead(memberId: Long): Int {
-        val updatedCount = notificationRepository.markAllAsReadByMemberId(memberId)
-        return updatedCount
-    }
+    fun markAllAsRead(memberId: Long): Int = notificationRepository.markAllAsReadByMemberId(memberId)
 }
