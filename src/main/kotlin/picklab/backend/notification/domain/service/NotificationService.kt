@@ -119,11 +119,11 @@ class NotificationService(
      */
     private fun sendReadStatusUpdate(notification: Notification) {
         try {
-            val isConnected = sseEmitterService.isUserConnected(notification.member.id!!)
+            val isConnected = sseEmitterService.isUserConnected(notification.member.id)
             if (isConnected) {
                 val response = NotificationResponse.from(notification)
                 sseEmitterService.sendEventToUser(
-                    notification.member.id!!,
+                    notification.member.id,
                     "notification_read",
                     response
                 )
