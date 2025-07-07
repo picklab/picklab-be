@@ -32,6 +32,7 @@ class SecurityConfig(
             "/v1/auth/login/*",
             "/v1/auth/callback/*",
             "/v1/activities",
+            "/v1/activities/**",
         )
 
     @Bean

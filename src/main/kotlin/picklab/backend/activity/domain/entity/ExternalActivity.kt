@@ -31,6 +31,7 @@ class ExternalActivity(
     viewCount: Long,
     duration: Int,
     activityThumbnailUrl: String?,
+    benefit: String,
     activityGroup: ActivityGroup,
     @Column(name = "activity_field")
     @Enumerated(EnumType.STRING)
@@ -48,5 +49,6 @@ class ExternalActivity(
         viewCount = viewCount,
         duration = duration,
         activityThumbnailUrl = activityThumbnailUrl,
+        benefit = benefit,
         activityGroup = activityGroup,
     )
