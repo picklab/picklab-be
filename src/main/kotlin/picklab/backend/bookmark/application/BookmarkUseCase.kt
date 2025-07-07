@@ -12,26 +12,6 @@ class BookmarkUseCase(
     private val memberService: MemberService,
     private val activityService: ActivityService,
 ) {
-    fun getMyBookmarkedActivityIds(
-        memberId: Long?,
-        activityIds: List<Long>,
-    ): Set<Long> =
-        bookmarkService.getActivityIdsBookmarkedByMember(
-            memberId = memberId,
-            activityIds = activityIds,
-        )
-
-    fun getActivityBookmarkCount(activityId: Long) = bookmarkService.countByActivityId(activityId)
-
-    fun getMyBookmarkedActivityId(
-        memberId: Long,
-        activityId: Long,
-    ): Boolean? =
-        bookmarkService.existsByMemberIdAndActivityId(
-            memberId = memberId,
-            activityId = activityId,
-        )
-
     @Transactional
     fun createActivityBookmark(
         memberId: Long,
