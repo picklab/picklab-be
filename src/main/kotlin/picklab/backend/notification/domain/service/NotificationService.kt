@@ -138,28 +138,6 @@ class NotificationService(
      */
     fun markAllAsRead(memberId: Long): Int {
         val updatedCount = notificationRepository.markAllAsReadByMemberId(memberId)
-
-        // 모든 알림 읽음 처리를 실시간으로 전송
-        sendAllReadStatusUpdate(memberId)
-
         return updatedCount
-    }
-
-    /**
-     * 모든 알림 읽음 처리를 실시간으로 전송합니다
-     */
-    private fun sendAllReadStatusUpdate(memberId: Long) {
-        try {
-            val isConnected = sseEmitterService.isUserConnected(memberId)
-            if (isConnected) {
-                sseEmitterService.sendEventToUser(
-                    memberId,
-                    "all_notifications_read",
-                    mapOf("message" to "모든 알림이 읽음 처리되었습니다.")
-                )
-            }
-        } catch (e: Exception) {
-            logger.error("모든 알림 읽음 처리 실시간 전송 중 오류 발생", e)
-        }
     }
 }
