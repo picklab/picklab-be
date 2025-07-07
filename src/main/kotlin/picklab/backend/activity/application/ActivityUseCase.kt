@@ -57,7 +57,7 @@ class ActivityUseCase(
         memberId: Long?,
     ): GetActivityDetailResponse {
         // TODO 조회수 증가 로직 추가 필요
-        val activity = activityService.mustFindActiveActivity(activityId)
+        val activity = activityService.mustFindById(activityId)
         val bookmarkCount = bookmarkService.countByActivityId(activityId)
         val isBookmarked = memberId?.let { bookmarkService.existsByMemberIdAndActivityId(memberId, activityId) } ?: false
 

@@ -19,11 +19,6 @@ class ActivityService(
             .findById(activityId)
             .orElseThrow { throw BusinessException(ErrorCode.NOT_FOUND_ACTIVITY) }
 
-    fun mustFindActiveActivity(activityId: Long): Activity =
-        activityRepository
-            .findByIdAndDeletedAtIsNull(activityId)
-            .orElseThrow { throw BusinessException(ErrorCode.NOT_FOUND_ACTIVITY) }
-
     fun getActivities(
         queryData: ActivitySearchCommand,
         pageable: PageRequest,
