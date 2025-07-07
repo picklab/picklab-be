@@ -13,7 +13,8 @@ class Notification(
     val title: String,
     @Column(name = "type", length = 50, nullable = false)
     @Comment("알림 타입")
-    val type: String,
+    @Enumerated(EnumType.STRING)
+    val type: NotificationType,
     @Column(name = "link", nullable = false)
     @Comment("클릭 시 이동할 링크")
     val link: String,
@@ -24,3 +25,7 @@ class Notification(
     @JoinColumn(name = "member_id", nullable = false)
     val member: Member,
 ) : SoftDeleteEntity()
+
+enum class NotificationType {
+    ACTIVITY_CREATED,
+}
