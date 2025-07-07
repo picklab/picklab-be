@@ -1,12 +1,12 @@
 package picklab.backend.notification.domain.service
 
-import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
+import picklab.backend.common.util.logger
 import picklab.backend.member.domain.MemberService
 import picklab.backend.notification.domain.entity.Notification
 import picklab.backend.notification.domain.repository.NotificationRepository
@@ -22,7 +22,7 @@ class NotificationService(
     private val sseEmitterService: SseEmitterService
 ) {
 
-    private val logger = LoggerFactory.getLogger(NotificationService::class.java)
+    private val logger = this.logger()
 
     /**
      * 알림을 생성하고 실시간으로 전송합니다
