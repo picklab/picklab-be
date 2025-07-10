@@ -179,7 +179,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-                val given2 =
+
                     activityRepository.save(
                         ExternalActivity(
                             title = "테스트 대외활동2",
@@ -257,7 +257,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-                val given2 =
+
                     activityRepository.save(
                         ExternalActivity(
                             title = "테스트 대외활동2",
@@ -335,7 +335,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-                val given2 =
+
                     activityRepository.save(
                         ExternalActivity(
                             title = "테스트 대외활동2",
@@ -413,7 +413,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-                val given2 =
+
                     activityRepository.save(
                         ExternalActivity(
                             title = "테스트 대외활동2",
@@ -496,7 +496,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             ),
                         )
 
-                    val given2 =
+
                         activityRepository.save(
                             EducationActivity(
                                 title = "테스트 교육활동",
@@ -578,7 +578,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                             ),
                         )
 
-                    val given2 =
+
                         activityRepository.save(
                             EducationActivity(
                                 title = "테스트 교육활동2",
@@ -661,7 +661,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-                val given2 =
+
                     activityRepository.save(
                         EducationActivity(
                             title = "테스트 교육활동2",
@@ -743,7 +743,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-                val given2 =
+
                     activityRepository.save(
                         EducationActivity(
                             title = "테스트 교육활동2",
@@ -822,7 +822,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-                val given2 =
+
                     activityRepository.save(
                         CompetitionActivity(
                             title = "테스트 공모전2",
@@ -899,7 +899,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-                val given2 =
+
                     activityRepository.save(
                         CompetitionActivity(
                             title = "테스트 공모전2",
@@ -953,7 +953,7 @@ class ActivityIntegrationTest : IntegrationTest() {
             @Test
             @DisplayName("[성공] 활동 조회 시 마감 임박 순 정렬을 적용한다.")
             fun `마감 임박 순 정렬 테스트`() {
-                val given1 =
+
                     activityRepository.save(
                         ExternalActivity(
                             title = "테스트 대외활동1",
@@ -1053,7 +1053,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-                val given2 =
+
                     activityRepository.save(
                         ExternalActivity(
                             title = "테스트 대외활동2",
@@ -1138,7 +1138,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-                val bookmark =
+
                     bookmarkRepository.save(
                         Bookmark(
                             member = member,
