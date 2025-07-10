@@ -34,7 +34,7 @@ class NotificationScheduler(
      * 설정된 보관 기간을 초과한 알림을 자동으로 삭제합니다.
      * 매일 새벽 2시(UTC)에 실행됩니다.
      */
-    @Scheduled(cron = "0 * * * * *", zone = "UTC")
+    @Scheduled(cron = "0 0 0 * * *", zone = "UTC")
     @Transactional
     fun cleanupOldNotifications() {
         try {
