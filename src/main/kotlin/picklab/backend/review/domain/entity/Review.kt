@@ -8,6 +8,7 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.hibernate.annotations.Comment
 import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.common.model.SoftDeleteEntity
 import picklab.backend.member.domain.entity.Member
@@ -15,6 +16,7 @@ import picklab.backend.member.domain.entity.Member
 @Entity
 @Table(name = "review")
 @SQLDelete(sql = "UPDATE review SET deleted_at = NOW() WHERE id = ?")
+@SQLRestriction("deleted_at IS NULL")
 class Review(
     @Column(name = "overall_score", nullable = false)
     @Comment("총 평점")

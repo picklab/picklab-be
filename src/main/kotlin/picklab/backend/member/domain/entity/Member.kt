@@ -3,6 +3,7 @@ package picklab.backend.member.domain.entity
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
 import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 import picklab.backend.common.model.SoftDeleteEntity
 import picklab.backend.member.domain.enums.EmploymentType
 import picklab.backend.member.domain.enums.SocialType
@@ -12,6 +13,7 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "member")
 @SQLDelete(sql = "UPDATE member SET deleted_at = NOW() WHERE id = ?")
+@SQLRestriction("deleted_at IS NULL")
 class Member(
     @Column(name = "name", length = 20, nullable = false)
     @Comment("회원 이름")
