@@ -67,7 +67,6 @@ class NotificationScheduler(
             
             val notifications = notificationsPage.content
             notificationRepository.deleteAll(notifications)
-            notificationRepository.flush()
             totalDeletedCount += notifications.size
         }
         
