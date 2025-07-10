@@ -26,6 +26,13 @@ spring:
           starttls:
             enable: true
 
+app:
+  notification:
+    cleanup:
+      enabled: true # 알림 정리 배치 작업 활성화 여부
+      retention-days: 30 # 알림 보관 기간 (일)
+      batch-size: 100 # 배치 처리 시 한 번에 처리할 알림 개수
+
 logging:
   level:
     org.hibernate.SQL: debug

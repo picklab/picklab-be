@@ -40,4 +40,12 @@ interface NotificationRepository : JpaRepository<Notification, Long> {
         memberId: Long,
         createdAt: LocalDateTime
     ): List<Notification>
+
+    /**
+     * 지정된 날짜 이전에 생성된 알림을 배치 단위로 조회합니다
+     */
+    fun findByCreatedAtBeforeOrderByCreatedAtAsc(
+        cutoffDate: LocalDateTime,
+        pageable: Pageable
+    ): Page<Notification>
 }
