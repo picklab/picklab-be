@@ -48,4 +48,7 @@ interface NotificationRepository : JpaRepository<Notification, Long> {
         cutoffDate: LocalDateTime,
         pageable: Pageable
     ): Page<Notification>
+
+    @Query(nativeQuery = true, value = "select * from notification where id = :id")
+    fun findByIdIgnoreDelete(id: Long): Notification?
 }
