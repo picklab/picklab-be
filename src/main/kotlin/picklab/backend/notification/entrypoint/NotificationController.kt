@@ -44,7 +44,7 @@ class NotificationController(
     @GetMapping("/notifications/recent")
     override fun getRecentNotifications(
         @AuthenticationPrincipal memberPrincipal: MemberPrincipal,
-        @RequestParam(defaultValue = "7") days: Int
+        @RequestParam(defaultValue = "30") days: Int
     ): ResponseWrapper<List<NotificationResponse>> {
         val notifications = notificationUseCase.getRecentNotifications(memberPrincipal.memberId, days)
         return ResponseWrapper.success(SuccessCode.GET_RECENT_NOTIFICATIONS_SUCCESS, notifications)
