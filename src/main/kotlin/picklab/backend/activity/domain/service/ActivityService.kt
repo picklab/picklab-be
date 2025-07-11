@@ -96,10 +96,10 @@ class ActivityService(
         if (filteredAward.isEmpty()) return null
 
         if (filteredAward.size == 1) {
-            val award = filteredAward.maxOrNull()!!
+            val curAward = filteredAward.maxOrNull() ?: throw IllegalStateException("max is null")
             return when {
-                award < 5000000 -> listOf(0, 5000000)
-                award >= 5000000 && award < 10000000 -> listOf(5000000, 10000000)
+                curAward < 5000000 -> listOf(0, 5000000)
+                curAward >= 5000000 && curAward < 10000000 -> listOf(5000000, 10000000)
                 else -> listOf(10000000, Long.MAX_VALUE)
             }
         }

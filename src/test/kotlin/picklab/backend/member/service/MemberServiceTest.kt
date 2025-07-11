@@ -101,14 +101,14 @@ class MemberServiceTest : IntegrationTest() {
                     ),
                 )
 
-            val socialUser =
-                socialLoginRepository.save(
-                    SocialLogin(
-                        socialType = SocialType.KAKAO,
-                        socialId = "kakao12345",
-                        member = member,
-                    ),
-                )
+
+            socialLoginRepository.save(
+                SocialLogin(
+                    socialType = SocialType.KAKAO,
+                    socialId = "kakao12345",
+                    member = member,
+                ),
+            )
 
             val socialType = SocialType.KAKAO
             val userInfo =
@@ -358,7 +358,7 @@ class MemberServiceTest : IntegrationTest() {
             )
 
             // when
-            val clearedMember = memberService.clearInterestedJobCategories(member.id)
+            memberService.clearInterestedJobCategories(member.id)
 
             // then
             val interestedCategories =
@@ -815,14 +815,14 @@ class MemberServiceTest : IntegrationTest() {
         @DisplayName("[성공] 닉네임이 중복되지 않는 경우 false를 반환한다.")
         fun successCheckNicknameNotDuplicate() {
             // given
-            val member =
-                memberRepository.save(
-                    Member(
-                        name = "테스트유저",
-                        email = "test@example.com",
-                        nickname = "testNickname",
-                    ),
-                )
+
+            memberRepository.save(
+                Member(
+                    name = "테스트유저",
+                    email = "test@example.com",
+                    nickname = "testNickname",
+                ),
+            )
 
             // when
             val result = memberService.existByNickname("newNickname")
@@ -835,14 +835,14 @@ class MemberServiceTest : IntegrationTest() {
         @DisplayName("[성공] 닉네임이 중복되는 경우 true를 반환한다.")
         fun successCheckNicknameDuplicate() {
             // given
-            val member =
-                memberRepository.save(
-                    Member(
-                        name = "테스트유저",
-                        email = "test@example.com",
-                        nickname = "testNickname",
-                    ),
-                )
+
+            memberRepository.save(
+                Member(
+                    name = "테스트유저",
+                    email = "test@example.com",
+                    nickname = "testNickname",
+                ),
+            )
 
             // when
             val result = memberService.existByNickname("testNickname")
