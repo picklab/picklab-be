@@ -58,6 +58,9 @@ dependencies {
     implementation("io.github.openfeign.querydsl:querydsl-jpa:$queryDSLVersion")
     ksp("io.github.openfeign.querydsl:querydsl-ksp-codegen:$queryDSLVersion")
     annotationProcessor("io.github.openfeign.querydsl:querydsl-apt:$queryDSLVersion:jakarta")
+
+    // archunit
+    testImplementation("com.tngtech.archunit:archunit-junit5:1.4.1")
 }
 
 kotlin {

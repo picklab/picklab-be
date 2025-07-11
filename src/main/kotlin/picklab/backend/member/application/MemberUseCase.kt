@@ -3,7 +3,9 @@ package picklab.backend.member.application
 import org.springframework.stereotype.Component
 import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
-import picklab.backend.job.application.JobUseCase
+import picklab.backend.job.domain.enums.JobDetail
+import picklab.backend.job.domain.enums.JobGroup
+import picklab.backend.job.domain.service.JobService
 import picklab.backend.member.domain.MemberService
 import picklab.backend.member.entrypoint.request.*
 import picklab.backend.member.infrastructure.MailService
@@ -11,7 +13,7 @@ import picklab.backend.member.infrastructure.MailService
 @Component
 class MemberUseCase(
     private val memberService: MemberService,
-    private val jobUseCase: JobUseCase,
+    private val jobService: JobService,
     private val mailService: MailService,
 ) {
     fun updateAdditionalInfo(
@@ -24,10 +26,7 @@ class MemberUseCase(
 
         val member = memberService.insertAdditionalInfo(memberId, request)
 
-        val jobCategories =
-            jobUseCase.findJobCategories(
-                interestedJobCategories = request.interestedJobCategories,
-            )
+        val jobCategories = jobService.findJobCategoriesByGroupAndDetail(request.toJobGroupDetailMap())
 
         memberService.registerInterestedJobCategories(
             member = member,
@@ -55,7 +54,9 @@ class MemberUseCase(
         }
         val member = memberService.clearInterestedJobCategories(memberId)
 
-        val jobCategories = jobUseCase.findJobCategories(request)
+        val jobCategoryList = request.map { JobGroup.valueOf(it.group) to JobDetail.valueOf(it.detail) }
+
+        val jobCategories = jobService.findJobCategoriesByGroupAndDetail(jobCategoryList)
 
         memberService.registerInterestedJobCategories(
             member = member,
