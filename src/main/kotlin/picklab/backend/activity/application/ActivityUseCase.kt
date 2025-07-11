@@ -7,8 +7,6 @@ import picklab.backend.activity.application.model.ActivitySearchCommand
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
 import picklab.backend.activity.entrypoint.response.GetActivityListResponse
-import picklab.backend.bookmark.application.BookmarkUseCase
-import picklab.backend.bookmark.domain.BookmarkService
 import picklab.backend.bookmark.domain.BookmarkService
 
 @Component
