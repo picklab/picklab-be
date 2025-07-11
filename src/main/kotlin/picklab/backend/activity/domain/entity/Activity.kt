@@ -13,6 +13,8 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.hibernate.annotations.Comment
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 import picklab.backend.activity.domain.enums.OrganizerType
 import picklab.backend.activity.domain.enums.ParticipantType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
@@ -26,6 +28,8 @@ import java.time.LocalDate
     discriminatorType = DiscriminatorType.STRING,
 )
 @Table(name = "activity")
+@SQLDelete(sql = "UPDATE activity SET deleted_at = NOW() WHERE id = ?")
+@SQLRestriction("deleted_at IS NULL")
 abstract class Activity(
     @Column(name = "activity_type", insertable = false, updatable = false)
     @Comment("활동 유형 (대외활동, 공모전/해커톤, 강연/세미나, 교육)")

@@ -10,6 +10,8 @@ import jakarta.persistence.Lob
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.hibernate.annotations.Comment
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.activity.domain.enums.ActivityType
 import picklab.backend.archive.domain.enums.DetailRoleType
@@ -23,6 +25,8 @@ import java.time.LocalDate
 
 @Entity
 @Table(name = "archive")
+@SQLDelete(sql = "UPDATE archive SET deleted_at = NOW() WHERE id = ?")
+@SQLRestriction("deleted_at IS NULL")
 class Archive(
     @Column(name = "user_start_date", nullable = false)
     @Comment("활동 시작일")

@@ -705,9 +705,9 @@ class MemberServiceTest : IntegrationTest() {
             memberService.withdrawMember(member.id)
 
             // then
-            val withdrawnMember = memberRepository.findById(member.id).orElse(null)
+            val withdrawnMember = memberRepository.findByIdIgnoreDelete(member.id)
             assertThat(withdrawnMember).isNotNull
-            assertThat(withdrawnMember.deletedAt).isNotNull
+            assertThat(withdrawnMember!!.deletedAt).isNotNull
         }
     }
 

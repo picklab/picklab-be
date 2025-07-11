@@ -2,11 +2,15 @@ package picklab.backend.notification.domain.entity
 
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
+import org.hibernate.annotations.SQLDelete
+import org.hibernate.annotations.SQLRestriction
 import picklab.backend.common.model.SoftDeleteEntity
 import picklab.backend.member.domain.entity.Member
 
 @Entity
 @Table(name = "notification")
+@SQLDelete(sql = "UPDATE notification SET deleted_at = NOW() WHERE id = ?")
+@SQLRestriction("deleted_at IS NULL")
 class Notification(
     @Column(name = "title", nullable = false)
     @Comment("알림 제목")
