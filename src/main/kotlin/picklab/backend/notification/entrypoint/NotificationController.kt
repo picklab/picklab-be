@@ -17,12 +17,14 @@ class NotificationController(
     private val notificationUseCase: NotificationUseCase
 ) : NotificationApi {
 
+    @GetMapping("/notifications/subscribe")
     override fun subscribeNotifications(
         @AuthenticationPrincipal memberPrincipal: MemberPrincipal
     ): SseEmitter {
         return notificationUseCase.subscribeNotifications(memberPrincipal.memberId)
     }
 
+    @PostMapping("/notifications/send")
     override fun sendNotification(
         @RequestBody request: NotificationCreateRequest
     ): ResponseWrapper<NotificationResponse> {
@@ -30,6 +32,7 @@ class NotificationController(
         return ResponseWrapper.success(SuccessCode.SEND_NOTIFICATION_SUCCESS, response)
     }
 
+    @GetMapping("/notifications")
     override fun getMyNotifications(
         @AuthenticationPrincipal memberPrincipal: MemberPrincipal,
         pageable: Pageable
@@ -38,14 +41,16 @@ class NotificationController(
         return ResponseWrapper.success(SuccessCode.GET_NOTIFICATIONS_SUCCESS, notifications)
     }
 
+    @GetMapping("/notifications/recent")
     override fun getRecentNotifications(
         @AuthenticationPrincipal memberPrincipal: MemberPrincipal,
-        @RequestParam(defaultValue = "30") days: Int
+        @RequestParam(defaultValue = "7") days: Int
     ): ResponseWrapper<List<NotificationResponse>> {
         val notifications = notificationUseCase.getRecentNotifications(memberPrincipal.memberId, days)
         return ResponseWrapper.success(SuccessCode.GET_RECENT_NOTIFICATIONS_SUCCESS, notifications)
     }
 
+    @PatchMapping("/notifications/{notificationId}/read")
     override fun markAsRead(
         @PathVariable notificationId: Long,
         @AuthenticationPrincipal memberPrincipal: MemberPrincipal
@@ -54,10 +59,17 @@ class NotificationController(
         return ResponseWrapper.success(SuccessCode.MARK_NOTIFICATION_READ_SUCCESS, response)
     }
 
+    @PatchMapping("/notifications/read-all")
     override fun markAllAsRead(
         @AuthenticationPrincipal memberPrincipal: MemberPrincipal
     ): ResponseWrapper<Unit> {
         notificationUseCase.markAllAsRead(memberPrincipal.memberId)
         return ResponseWrapper.success(SuccessCode.MARK_ALL_NOTIFICATIONS_READ_SUCCESS)
+    }
+
+    @DeleteMapping("/notifications")
+    override fun deleteAllByMember(@AuthenticationPrincipal memberPrincipal: MemberPrincipal): ResponseWrapper<Unit> {
+        notificationUseCase.deleteAllByMember(memberPrincipal.memberId)
+        return ResponseWrapper.success(SuccessCode.DELETE_ALL_MEMBER_NOTIFICATION)
     }
 }

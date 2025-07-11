@@ -1,5 +1,7 @@
 package picklab.backend.notification.domain.service
 
+import com.querydsl.core.annotations.QueryEntities
+import jakarta.persistence.Entity
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -8,6 +10,7 @@ import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
 import picklab.backend.common.util.logger
 import picklab.backend.member.domain.MemberService
+import picklab.backend.member.domain.entity.Member
 import picklab.backend.notification.domain.entity.Notification
 import picklab.backend.notification.domain.repository.NotificationRepository
 import picklab.backend.notification.entrypoint.request.NotificationCreateRequest
@@ -137,4 +140,6 @@ class NotificationService(
      * 특정 사용자의 모든 알림을 읽음 상태로 변경합니다
      */
     fun markAllAsRead(memberId: Long): Int = notificationRepository.markAllAsReadByMemberId(memberId)
+    fun findAllByMember(member: Member): List<Notification> = notificationRepository.findAllByMember(member)
+    fun saveAll(entities: List<Notification>): List<Notification> = notificationRepository.saveAll(entities)
 }
