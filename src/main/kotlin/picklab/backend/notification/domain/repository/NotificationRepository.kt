@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import picklab.backend.member.domain.entity.Member
 import picklab.backend.notification.domain.entity.Notification
 import java.time.LocalDateTime
 
@@ -51,4 +52,6 @@ interface NotificationRepository : JpaRepository<Notification, Long> {
 
     @Query(nativeQuery = true, value = "select * from notification where id = :id")
     fun findByIdIgnoreDelete(id: Long): Notification?
+
+    fun findAllByMember(member: Member) : List<Notification>
 }

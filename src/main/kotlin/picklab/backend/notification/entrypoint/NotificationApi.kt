@@ -6,8 +6,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
-import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.ResponseWrapper
@@ -22,9 +20,8 @@ interface NotificationApi {
         description = "실시간 알림을 받기 위한 SSE 연결을 생성합니다."
     )
     @ApiResponse(responseCode = "200", description = "SSE 연결 성공")
-    @GetMapping("/notifications/subscribe")
     fun subscribeNotifications(
-        @AuthenticationPrincipal memberPrincipal: MemberPrincipal
+        memberPrincipal: MemberPrincipal
     ): SseEmitter
 
     @Operation(
@@ -32,9 +29,8 @@ interface NotificationApi {
         description = "특정 사용자에게 알림을 전송합니다."
     )
     @ApiResponse(responseCode = "200", description = "알림 전송 성공")
-    @PostMapping("/notifications/send")
     fun sendNotification(
-        @RequestBody request: NotificationCreateRequest
+        request: NotificationCreateRequest
     ): ResponseWrapper<NotificationResponse>
 
     @Operation(
@@ -42,9 +38,8 @@ interface NotificationApi {
         description = "현재 로그인한 사용자의 알림 목록을 조회합니다."
     )
     @ApiResponse(responseCode = "200", description = "알림 목록 조회 성공")
-    @GetMapping("/notifications")
     fun getMyNotifications(
-        @AuthenticationPrincipal memberPrincipal: MemberPrincipal,
+        memberPrincipal: MemberPrincipal,
         pageable: Pageable
     ): ResponseWrapper<Page<NotificationResponse>>
 
@@ -53,11 +48,10 @@ interface NotificationApi {
         description = "현재 로그인한 사용자의 최근 n일 내 알림을 조회합니다."
     )
     @ApiResponse(responseCode = "200", description = "최근 알림 조회 성공")
-    @GetMapping("/notifications/recent")
     fun getRecentNotifications(
-        @AuthenticationPrincipal memberPrincipal: MemberPrincipal,
+        memberPrincipal: MemberPrincipal,
         @Parameter(description = "조회할 일 수", example = "7")
-        @RequestParam(defaultValue = "7") days: Int
+        days: Int
     ): ResponseWrapper<List<NotificationResponse>>
 
     @Operation(
@@ -65,10 +59,9 @@ interface NotificationApi {
         description = "특정 알림을 읽음 상태로 변경합니다."
     )
     @ApiResponse(responseCode = "200", description = "알림 읽음 처리 성공")
-    @PatchMapping("/notifications/{notificationId}/read")
     fun markAsRead(
-        @Parameter(description = "알림 ID") @PathVariable notificationId: Long,
-        @AuthenticationPrincipal memberPrincipal: MemberPrincipal
+        @Parameter(description = "알림 ID") notificationId: Long,
+        memberPrincipal: MemberPrincipal
     ): ResponseWrapper<NotificationResponse>
 
     @Operation(
@@ -76,8 +69,16 @@ interface NotificationApi {
         description = "현재 로그인한 사용자의 모든 알림을 읽음 상태로 변경합니다."
     )
     @ApiResponse(responseCode = "200", description = "모든 알림 읽음 처리 성공")
-    @PatchMapping("/notifications/read-all")
     fun markAllAsRead(
-        @AuthenticationPrincipal memberPrincipal: MemberPrincipal
+        memberPrincipal: MemberPrincipal
+    ): ResponseWrapper<Unit>
+
+    @Operation(
+        summary = "사용자의 모든 알림 삭제 처리",
+        description = "현재 로그인한 사용자의 모든 알림을 삭제 처리합니다."
+    )
+    @ApiResponse(responseCode = "200", description = "모든 알림 삭제 처리 성공")
+    fun deleteAllByMember(
+        memberPrincipal: MemberPrincipal
     ): ResponseWrapper<Unit>
 }

@@ -28,7 +28,12 @@ class Notification(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     val member: Member,
-) : SoftDeleteEntity()
+) : SoftDeleteEntity() {
+
+    fun read() {
+        isRead = true
+    }
+}
 
 enum class NotificationType {
     ACTIVITY_CREATED,
