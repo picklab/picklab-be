@@ -706,8 +706,8 @@ class MemberServiceTest : IntegrationTest() {
 
             // then
             val withdrawnMember = memberRepository.findByIdIgnoreDelete(member.id)
-                ?: throw IllegalStateException("Member with id ${member.id} was not found")
-            assertThat(withdrawnMember.deletedAt).isNotNull
+            assertThat(withdrawnMember).isNotNull
+            assertThat(withdrawnMember!!.deletedAt).isNotNull
         }
     }
 
