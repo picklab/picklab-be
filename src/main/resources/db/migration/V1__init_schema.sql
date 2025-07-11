@@ -223,6 +223,7 @@ CREATE TABLE IF NOT EXISTS review
     tips                 VARCHAR(1000)  NULL      COMMENT '꿀팁',
     job_relevance_score  TINYINT        NOT NULL  COMMENT '직무 연관성 점수',
     url                  VARCHAR(255)   NULL      COMMENT '인증 자료 URL',
+    status               VARCHAR(50)    NOT NULL  COMMENT '승인 여부 상태(미승인 / 승인 / 승인 중)',
     created_at           DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
     updated_at           DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
     deleted_at           DATETIME       NULL      COMMENT '삭제일'
