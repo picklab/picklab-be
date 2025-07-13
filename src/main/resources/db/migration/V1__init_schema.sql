@@ -223,6 +223,7 @@ CREATE TABLE IF NOT EXISTS review
     tips                 VARCHAR(1000)  NULL      COMMENT '꿀팁',
     job_relevance_score  TINYINT        NOT NULL  COMMENT '직무 연관성 점수',
     url                  VARCHAR(255)   NULL      COMMENT '인증 자료 URL',
+    approval_status      VARCHAR(50)    NOT NULL  COMMENT '승인 여부 상태(미승인 / 승인 / 승인 중)',
     created_at           DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
     updated_at           DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
     deleted_at           DATETIME       NULL      COMMENT '삭제일'
@@ -268,3 +269,19 @@ CREATE TABLE IF NOT EXISTS archive_upload_file_url
     updated_at               DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='아카이브 업로드 파일 URL 테이블';
+
+-- 활동 참여 테이블 생성
+-- 활동 테이블과 1(활동):N(활동 참여) 관계
+-- 멤버 테이블과 1(회원):N(활동 참여) 관계
+CREATE TABLE IF NOT EXISTS activity_participation
+(
+    id                       BIGINT         NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '활동 참여 ID',
+    member_id                BIGINT         NOT NULL COMMENT '회원 ID',
+    activity_id              BIGINT         NOT NULL COMMENT '활동 ID',
+    application_status       VARCHAR(50)    NOT NULL COMMENT '지원 상태 (지원 완료 / 최종 합격 / 불합격)',
+    progress_status          VARCHAR(50)    NOT NULL COMMENT '진행 상태 (진행 중 / 수료 완료 / 중도 포기)',
+    created_at               DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    updated_at               DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    deleted_at               DATETIME       NULL     COMMENT '삭제일'
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='활동 참여 테이블';
