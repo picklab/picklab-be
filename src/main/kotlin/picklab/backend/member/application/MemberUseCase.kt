@@ -1,6 +1,7 @@
 package picklab.backend.member.application
 
 import org.springframework.stereotype.Component
+import picklab.backend.auth.domain.VerificationCodeService
 import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
 import picklab.backend.job.domain.enums.JobDetail
@@ -15,6 +16,7 @@ class MemberUseCase(
     private val memberService: MemberService,
     private val jobService: JobService,
     private val mailService: MailService,
+    private val verificationCodeService: VerificationCodeService,
 ) {
     fun updateAdditionalInfo(
         memberId: Long,
@@ -86,7 +88,7 @@ class MemberUseCase(
         if (exist != null) {
             memberService.invalidateVerificationCode(exist)
         }
-        val code = mailService.createVerificationCode()
+        val code = verificationCodeService.createCode()
         memberService.addEmailVerificationCode(memberId, request.email, code)
         mailService.sendMail(request.email, code)
     }
