@@ -12,7 +12,7 @@ import org.hibernate.annotations.SQLRestriction
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.common.model.SoftDeleteEntity
 import picklab.backend.member.domain.entity.Member
-import picklab.backend.review.domain.enums.ReviewStatus
+import picklab.backend.review.domain.enums.ReviewApprovalStatus
 
 @Entity
 @Table(name = "review")
@@ -49,9 +49,9 @@ class Review(
     @Column(name = "url")
     @Comment("인증 자료 URL")
     var url: String? = null,
-    @Column(name = "status")
+    @Column(name = "approval_status")
     @Comment("승인 여부 상태(미승인 / 승인 / 승인 중)")
-    var status: ReviewStatus,
+    var reviewApprovalStatus: ReviewApprovalStatus,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     val member: Member,

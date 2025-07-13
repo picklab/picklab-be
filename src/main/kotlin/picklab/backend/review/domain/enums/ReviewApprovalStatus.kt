@@ -1,6 +1,6 @@
 package picklab.backend.review.domain.enums
 
-enum class ReviewStatus(
+enum class ReviewApprovalStatus(
     val label: String,
 ) {
     PENDING("승인 중"),
