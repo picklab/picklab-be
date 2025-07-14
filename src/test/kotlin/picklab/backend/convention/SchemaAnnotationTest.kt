@@ -1,15 +1,19 @@
 package picklab.backend.convention
 
 import io.swagger.v3.oas.annotations.media.Schema
+import jakarta.persistence.DiscriminatorValue
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 import org.junit.jupiter.api.Test
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider
+import org.springframework.core.type.filter.AnnotationTypeFilter
 import kotlin.reflect.KClass
+import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.javaField
 import kotlin.test.fail
 
 class SchemaAnnotationTest {
-
     @Test
     fun allDtoClassesMustHaveSchemaAnnotation() {
         val requestResponseClasses = findRequestResponseClasses()
@@ -37,7 +41,49 @@ class SchemaAnnotationTest {
         }
     }
 
-    private fun checkSchemaAnnotation(kClass: KClass<*>, property: kotlin.reflect.KProperty1<out Any, *>): Boolean {
+    @Test
+    fun allEntityClassesMustHaveTableAnnotationAndTableName() {
+        val provider = ClassPathScanningCandidateComponentProvider(false)
+        provider.addIncludeFilter(AnnotationTypeFilter(Entity::class.java))
+
+        val entityClasses =
+            provider.findCandidateComponents("picklab.backend").mapNotNull { beanDefinition ->
+                try {
+                    Class.forName(beanDefinition.beanClassName).kotlin
+                } catch (e: Exception) {
+                    null
+                }
+            }
+
+        val parentEntities = entityClasses.filter { it.findAnnotation<DiscriminatorValue>() == null }
+
+        // @Table 어노테이션이 빠져 있는 엔티티 검증
+        val violations =
+            parentEntities
+                .filter { entity -> entity.annotations.none { it is Table } }
+                .mapNotNull { it.simpleName }
+
+        if (violations.isNotEmpty()) {
+            fail("The following entity classes are missing the @Table annotation:\n${violations.joinToString("\n")}")
+        }
+
+        // @Table 어노테이션은 존재하지만, 테이블명을 누락한 엔티티 검증
+        val emptyNameViolations =
+            parentEntities
+                .mapNotNull { entity ->
+                    val table = entity.findAnnotation<Table>()
+                    if (table != null && table.name.isBlank()) entity.simpleName else null
+                }
+
+        if (emptyNameViolations.isNotEmpty()) {
+            fail("The following entity classes are missing the @Table.name value:\n${emptyNameViolations.joinToString("\n")}")
+        }
+    }
+
+    private fun checkSchemaAnnotation(
+        kClass: KClass<*>,
+        property: kotlin.reflect.KProperty1<out Any, *>,
+    ): Boolean {
         // 1. Property 자체의 annotation 확인 (접두사 없이 사용한 경우)
         val hasPropertySchema = property.annotations.any { it is Schema }
 
@@ -48,7 +94,11 @@ class SchemaAnnotationTest {
         val hasFieldSchema = property.javaField?.annotations?.any { it is Schema } ?: false
 
         // 4. Constructor parameter annotation 확인 (접두사 없이 사용한 경우)
-        val constructorParam = kClass.constructors.firstOrNull()?.parameters?.find { it.name == property.name }
+        val constructorParam =
+            kClass.constructors
+                .firstOrNull()
+                ?.parameters
+                ?.find { it.name == property.name }
         val hasConstructorParamSchema = constructorParam?.annotations?.any { it is Schema } ?: false
 
         return hasPropertySchema || hasGetterSchema || hasFieldSchema || hasConstructorParamSchema
