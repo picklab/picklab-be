@@ -12,6 +12,8 @@ import picklab.backend.notification.domain.config.NotificationDeadlineProperties
 import picklab.backend.notification.domain.entity.Notification
 import picklab.backend.notification.domain.entity.NotificationType
 import picklab.backend.notification.domain.repository.NotificationRepository
+import java.time.LocalDate
+import java.time.ZoneId
 
 @Service
 @Transactional
@@ -27,13 +29,21 @@ class ActivityDeadlineNotificationService(
     private val logger = this.logger()
 
     /**
+     * 설정된 시간대 기준으로 현재 날짜를 반환합니다
+     */
+    private fun getCurrentDateInConfiguredTimezone(): LocalDate {
+        return LocalDate.now(ZoneId.of(notificationDeadlineProperties.timezone))
+    }
+
+    /**
      * 설정된 advance-days 기준으로 모든 마감일 알림을 생성하고 전송합니다
      */
     fun sendAllConfiguredDeadlineNotifications(): Map<Int, Int> {
         logger.info("마감일 알림 전송 시작: ${notificationDeadlineProperties.advanceDays} 일 전 대상")
         
+        val baseDate = getCurrentDateInConfiguredTimezone()
         val results = notificationDeadlineProperties.advanceDays.associateWith { days ->
-            val sentCount = sendDeadlineNotificationsForDays(days)
+            val sentCount = sendDeadlineNotificationsForDays(baseDate, days)
             logger.info("마감 ${days}일 전 알림: $sentCount 건 전송 완료")
             sentCount
         }
@@ -47,8 +57,8 @@ class ActivityDeadlineNotificationService(
     /**
      * 특정 일수 후 마감되는 활동들에 대한 알림을 생성하고 전송합니다
      */
-    fun sendDeadlineNotificationsForDays(daysUntilDeadline: Int): Int {
-        val activities = activityService.getActivitiesEndingInDays(daysUntilDeadline)
+    fun sendDeadlineNotificationsForDays(baseDate: LocalDate, daysUntilDeadline: Int): Int {
+        val activities = activityService.getActivitiesEndingInDays(baseDate, daysUntilDeadline)
         return sendDeadlineNotifications(activities, daysUntilDeadline)
     }
 

@@ -2,6 +2,7 @@ package picklab.backend.notification.infrastructure.scheduler
 
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.dao.DataAccessException
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.scheduling.annotation.Scheduled
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 import picklab.backend.common.util.logger
 import picklab.backend.notification.domain.repository.NotificationRepository
 import picklab.backend.notification.domain.service.ActivityDeadlineNotificationService
+import java.sql.SQLException
 import java.time.LocalDateTime
 
 /**
@@ -121,15 +123,11 @@ class NotificationScheduler(
             val duration = System.currentTimeMillis() - startTime
             val errorType = when (exception) {
                 is IllegalStateException -> "데이터 처리 오류"
-                is org.springframework.dao.DataAccessException -> "데이터베이스 오류"
-                is java.sql.SQLException -> "SQL 실행 오류"
+                is DataAccessException -> "데이터베이스 오류"
+                is SQLException -> "SQL 실행 오류"
                 else -> "예상치 못한 오류"
             }
-            
             logger.error("활동 마감일 알림 배치 작업 실패 - $errorType (소요시간: ${duration}ms): ${exception.message}", exception)
-            
-            // 배치 작업 실패 시에도 애플리케이션이 중단되지 않도록 예외를 다시 던지지 않음
-            // TODO: 필요시 모니터링 시스템이나 Slack 등에 알림을 보낼 수 있음
         }
     }
 } 

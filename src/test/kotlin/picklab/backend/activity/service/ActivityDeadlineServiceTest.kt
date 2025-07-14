@@ -49,14 +49,25 @@ class ActivityDeadlineServiceTest : IntegrationTest() {
     }
 
     @Test
-    @DisplayName("설정된 시간대 기준 현재 날짜를 정확히 반환한다")
-    fun `getCurrentDateInKST_should_return_current_date_in_configured_timezone`() {
+    @DisplayName("특정 마감일에 해당하는 활동들을 조회한다")
+    fun `getActivitiesEndingOnDate_should_return_activities_ending_on_specific_date`() {
+        // Given
+        val targetDate = LocalDate.now().plusDays(5)
+        val activity1 = createTestActivity("마감일 활동 1", targetDate)
+        val activity2 = createTestActivity("마감일 활동 2", targetDate)
+        val activity3 = createTestActivity("다른 날 활동", targetDate.plusDays(1))
+
+        activityRepository.saveAll(listOf(activity1, activity2, activity3))
+
         // When
-        val currentDate = activityService.getCurrentDateInKST()
-        val expectedDate = LocalDate.now(ZoneId.of("Asia/Seoul")) // 기본 설정값 사용
+        val result = activityService.getActivitiesEndingOnDate(targetDate)
 
         // Then
-        assertThat(currentDate).isEqualTo(expectedDate)
+        assertThat(result).hasSize(2)
+        assertThat(result.map { it.title }).containsExactlyInAnyOrder(
+            "마감일 활동 1",
+            "마감일 활동 2"
+        )
     }
 
 
@@ -65,14 +76,15 @@ class ActivityDeadlineServiceTest : IntegrationTest() {
     @DisplayName("마감된 활동은 조회되지 않는다")
     fun `getActivitiesEndingInDays_should_not_return_closed_activities`() {
         // Given
-        val threeDaysLater = activityService.getCurrentDateInKST().plusDays(3)
+        val baseDate = LocalDate.now()
+        val threeDaysLater = baseDate.plusDays(3)
         val openActivity = createTestActivity("모집 중 활동", threeDaysLater, RecruitmentStatus.OPEN)
         val closedActivity = createTestActivity("마감된 활동", threeDaysLater, RecruitmentStatus.CLOSED)
 
         activityRepository.saveAll(listOf(openActivity, closedActivity))
 
         // When
-        val result = activityService.getActivitiesEndingInDays(3)
+        val result = activityService.getActivitiesEndingInDays(baseDate, 3)
 
         // Then
         assertThat(result).hasSize(1)
@@ -81,20 +93,20 @@ class ActivityDeadlineServiceTest : IntegrationTest() {
     }
 
     @Test
-    @DisplayName("특정 일수 후의 마감일에 해당하는 활동들을 조회한다")
+    @DisplayName("기준 날짜로부터 특정 일수 후의 마감일에 해당하는 활동들을 조회한다")
     fun `getActivitiesEndingInDays_should_return_activities_for_specific_days`() {
         // Given
-        val currentDate = activityService.getCurrentDateInKST()
-        val activity5Days = createTestActivity("5일 후 마감", currentDate.plusDays(5))
-        val activity7Days = createTestActivity("7일 후 마감", currentDate.plusDays(7))
-        val activity10Days = createTestActivity("10일 후 마감", currentDate.plusDays(10))
+        val baseDate = LocalDate.now()
+        val activity5Days = createTestActivity("5일 후 마감", baseDate.plusDays(5))
+        val activity7Days = createTestActivity("7일 후 마감", baseDate.plusDays(7))
+        val activity10Days = createTestActivity("10일 후 마감", baseDate.plusDays(10))
 
         activityRepository.saveAll(listOf(activity5Days, activity7Days, activity10Days))
 
         // When
-        val result5Days = activityService.getActivitiesEndingInDays(5)
-        val result7Days = activityService.getActivitiesEndingInDays(7)
-        val result10Days = activityService.getActivitiesEndingInDays(10)
+        val result5Days = activityService.getActivitiesEndingInDays(baseDate, 5)
+        val result7Days = activityService.getActivitiesEndingInDays(baseDate, 7)
+        val result10Days = activityService.getActivitiesEndingInDays(baseDate, 10)
 
         // Then
         assertThat(result5Days).hasSize(1)
@@ -111,21 +123,21 @@ class ActivityDeadlineServiceTest : IntegrationTest() {
     @DisplayName("동적으로 설정된 advance-days 값으로 활동을 조회한다")
     fun `getActivitiesEndingInDays_should_work_dynamically_with_any_days`() {
         // Given
-        val currentDate = activityService.getCurrentDateInKST()
+        val baseDate = LocalDate.now()
         val testDays = listOf(2, 4, 6, 8) // 임의의 일수들
         val activities = testDays.map { days ->
-            createTestActivity("${days}일 후 마감", currentDate.plusDays(days.toLong()))
+            createTestActivity("${days}일 후 마감", baseDate.plusDays(days.toLong()))
         }
 
         activityRepository.saveAll(activities)
 
         // When & Then
         testDays.forEach { days ->
-            val result = activityService.getActivitiesEndingInDays(days)
+            val result = activityService.getActivitiesEndingInDays(baseDate, days)
             
             assertThat(result).hasSize(1)
             assertThat(result[0].title).isEqualTo("${days}일 후 마감")
-            assertThat(result[0].recruitmentEndDate).isEqualTo(currentDate.plusDays(days.toLong()))
+            assertThat(result[0].recruitmentEndDate).isEqualTo(baseDate.plusDays(days.toLong()))
         }
     }
 

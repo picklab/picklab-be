@@ -18,7 +18,6 @@ interface ActivityRepository :
         SELECT a FROM Activity a 
         WHERE a.recruitmentEndDate = :targetDate 
         AND a.status = :status 
-        AND a.deletedAt IS NULL
         ORDER BY a.id ASC
     """)
     fun findByRecruitmentEndDateAndStatus(
