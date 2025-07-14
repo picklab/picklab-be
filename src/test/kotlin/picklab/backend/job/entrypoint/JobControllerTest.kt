@@ -12,7 +12,7 @@ import picklab.backend.helper.extractBody
 import picklab.backend.job.domain.enums.JobDetail
 import picklab.backend.job.entrypoint.response.JobDetailResponse
 import picklab.backend.job.entrypoint.response.JobResponse
-import picklab.backend.job.template.IntegrationTest
+import picklab.backend.template.IntegrationTest
 import kotlin.test.Test
 
 @WithMockUser

@@ -11,7 +11,7 @@ import picklab.backend.auth.infrastructure.JwtTokenProvider
 import picklab.backend.common.model.ErrorCode
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.helper.extractBody
-import picklab.backend.job.template.IntegrationTest
+import picklab.backend.template.IntegrationTest
 
 class JwtFilterTest : IntegrationTest() {
     @Autowired

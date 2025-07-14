@@ -28,19 +28,15 @@ import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
 import picklab.backend.activity.entrypoint.response.GetActivityListResponse
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.common.model.SuccessCode
-import picklab.backend.helper.CleanUp
 import picklab.backend.helper.WithMockUser
 import picklab.backend.helper.extractBody
-import picklab.backend.job.template.IntegrationTest
 import picklab.backend.member.domain.entity.Member
 import picklab.backend.member.domain.repository.MemberRepository
+import picklab.backend.template.IntegrationTest
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 class ActivityIntegrationTest : IntegrationTest() {
-    @Autowired
-    private lateinit var cleanUp: CleanUp
-
     @Autowired
     lateinit var activityRepository: ActivityRepository
 
