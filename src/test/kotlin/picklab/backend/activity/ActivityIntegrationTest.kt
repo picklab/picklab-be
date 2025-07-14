@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.web.servlet.get
+import picklab.backend.activity.domain.entity.ActivityBookmark
 import picklab.backend.activity.domain.entity.ActivityGroup
 import picklab.backend.activity.domain.entity.CompetitionActivity
 import picklab.backend.activity.domain.entity.EducationActivity
@@ -20,12 +21,11 @@ import picklab.backend.activity.domain.enums.LocationType
 import picklab.backend.activity.domain.enums.OrganizerType
 import picklab.backend.activity.domain.enums.ParticipantType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
+import picklab.backend.activity.domain.repository.ActivityBookmarkRepository
 import picklab.backend.activity.domain.repository.ActivityGroupRepository
 import picklab.backend.activity.domain.repository.ActivityRepository
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
 import picklab.backend.activity.entrypoint.response.GetActivityListResponse
-import picklab.backend.bookmark.domain.entity.Bookmark
-import picklab.backend.bookmark.domain.repository.BookmarkRepository
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.common.model.SuccessCode
 import picklab.backend.helper.CleanUp
@@ -51,7 +51,7 @@ class ActivityIntegrationTest : IntegrationTest() {
     private lateinit var memberRepository: MemberRepository
 
     @Autowired
-    lateinit var bookmarkRepository: BookmarkRepository
+    lateinit var activityBookmarkRepository: ActivityBookmarkRepository
 
     lateinit var activityGroup: ActivityGroup
 
@@ -179,29 +179,28 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-
-                    activityRepository.save(
-                        ExternalActivity(
-                            title = "테스트 대외활동2",
-                            organizer = OrganizerType.LARGE_CORPORATION,
-                            targetAudience = ParticipantType.WORKER,
-                            location = LocationType.SEOUL_INCHEON,
-                            recruitmentStartDate = LocalDate.now().plusDays(1),
-                            recruitmentEndDate = LocalDate.now().plusMonths(1),
-                            startDate = LocalDate.now().plusMonths(3),
-                            endDate = LocalDate.now().plusMonths(6),
-                            status = RecruitmentStatus.OPEN,
-                            viewCount = 0L,
-                            duration =
-                                ChronoUnit.DAYS
-                                    .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
-                                    .toInt(),
-                            activityThumbnailUrl = null,
-                            activityGroup = activityGroup,
-                            activityField = ActivityFieldType.MENTORING,
-                            benefit = "",
-                        ),
-                    )
+                activityRepository.save(
+                    ExternalActivity(
+                        title = "테스트 대외활동2",
+                        organizer = OrganizerType.LARGE_CORPORATION,
+                        targetAudience = ParticipantType.WORKER,
+                        location = LocationType.SEOUL_INCHEON,
+                        recruitmentStartDate = LocalDate.now().plusDays(1),
+                        recruitmentEndDate = LocalDate.now().plusMonths(1),
+                        startDate = LocalDate.now().plusMonths(3),
+                        endDate = LocalDate.now().plusMonths(6),
+                        status = RecruitmentStatus.OPEN,
+                        viewCount = 0L,
+                        duration =
+                            ChronoUnit.DAYS
+                                .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
+                                .toInt(),
+                        activityThumbnailUrl = null,
+                        activityGroup = activityGroup,
+                        activityField = ActivityFieldType.MENTORING,
+                        benefit = "",
+                    ),
+                )
 
                 // When
                 val result =
@@ -257,29 +256,28 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-
-                    activityRepository.save(
-                        ExternalActivity(
-                            title = "테스트 대외활동2",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
-                            targetAudience = ParticipantType.UNIVERSITY_STUDENT,
-                            location = LocationType.SEOUL_INCHEON,
-                            recruitmentStartDate = LocalDate.now().plusDays(1),
-                            recruitmentEndDate = LocalDate.now().plusMonths(1),
-                            startDate = LocalDate.now().plusMonths(3),
-                            endDate = LocalDate.now().plusMonths(6),
-                            status = RecruitmentStatus.OPEN,
-                            viewCount = 0L,
-                            duration =
-                                ChronoUnit.DAYS
-                                    .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
-                                    .toInt(),
-                            activityThumbnailUrl = null,
-                            activityGroup = activityGroup,
-                            activityField = ActivityFieldType.MENTORING,
-                            benefit = "",
-                        ),
-                    )
+                activityRepository.save(
+                    ExternalActivity(
+                        title = "테스트 대외활동2",
+                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                        targetAudience = ParticipantType.UNIVERSITY_STUDENT,
+                        location = LocationType.SEOUL_INCHEON,
+                        recruitmentStartDate = LocalDate.now().plusDays(1),
+                        recruitmentEndDate = LocalDate.now().plusMonths(1),
+                        startDate = LocalDate.now().plusMonths(3),
+                        endDate = LocalDate.now().plusMonths(6),
+                        status = RecruitmentStatus.OPEN,
+                        viewCount = 0L,
+                        duration =
+                            ChronoUnit.DAYS
+                                .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
+                                .toInt(),
+                        activityThumbnailUrl = null,
+                        activityGroup = activityGroup,
+                        activityField = ActivityFieldType.MENTORING,
+                        benefit = "",
+                    ),
+                )
 
                 // When
                 val result =
@@ -335,29 +333,28 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-
-                    activityRepository.save(
-                        ExternalActivity(
-                            title = "테스트 대외활동2",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
-                            targetAudience = ParticipantType.WORKER,
-                            location = LocationType.BUSAN_DAEGU_GYEONGSANG,
-                            recruitmentStartDate = LocalDate.now().plusDays(1),
-                            recruitmentEndDate = LocalDate.now().plusMonths(1),
-                            startDate = LocalDate.now().plusMonths(3),
-                            endDate = LocalDate.now().plusMonths(6),
-                            status = RecruitmentStatus.OPEN,
-                            viewCount = 0L,
-                            duration =
-                                ChronoUnit.DAYS
-                                    .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
-                                    .toInt(),
-                            activityThumbnailUrl = null,
-                            activityGroup = activityGroup,
-                            activityField = ActivityFieldType.MENTORING,
-                            benefit = "",
-                        ),
-                    )
+                activityRepository.save(
+                    ExternalActivity(
+                        title = "테스트 대외활동2",
+                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                        targetAudience = ParticipantType.WORKER,
+                        location = LocationType.BUSAN_DAEGU_GYEONGSANG,
+                        recruitmentStartDate = LocalDate.now().plusDays(1),
+                        recruitmentEndDate = LocalDate.now().plusMonths(1),
+                        startDate = LocalDate.now().plusMonths(3),
+                        endDate = LocalDate.now().plusMonths(6),
+                        status = RecruitmentStatus.OPEN,
+                        viewCount = 0L,
+                        duration =
+                            ChronoUnit.DAYS
+                                .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
+                                .toInt(),
+                        activityThumbnailUrl = null,
+                        activityGroup = activityGroup,
+                        activityField = ActivityFieldType.MENTORING,
+                        benefit = "",
+                    ),
+                )
 
                 // When
                 val result =
@@ -413,29 +410,28 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-
-                    activityRepository.save(
-                        ExternalActivity(
-                            title = "테스트 대외활동2",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
-                            targetAudience = ParticipantType.WORKER,
-                            location = LocationType.SEOUL_INCHEON,
-                            recruitmentStartDate = LocalDate.now().plusDays(1),
-                            recruitmentEndDate = LocalDate.now().plusMonths(1),
-                            startDate = LocalDate.now().plusMonths(3),
-                            endDate = LocalDate.now().plusMonths(6),
-                            status = RecruitmentStatus.OPEN,
-                            viewCount = 0L,
-                            duration =
-                                ChronoUnit.DAYS
-                                    .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
-                                    .toInt(),
-                            activityThumbnailUrl = null,
-                            activityGroup = activityGroup,
-                            activityField = ActivityFieldType.DOMESTIC_VOLUNTEER,
-                            benefit = "",
-                        ),
-                    )
+                activityRepository.save(
+                    ExternalActivity(
+                        title = "테스트 대외활동2",
+                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                        targetAudience = ParticipantType.WORKER,
+                        location = LocationType.SEOUL_INCHEON,
+                        recruitmentStartDate = LocalDate.now().plusDays(1),
+                        recruitmentEndDate = LocalDate.now().plusMonths(1),
+                        startDate = LocalDate.now().plusMonths(3),
+                        endDate = LocalDate.now().plusMonths(6),
+                        status = RecruitmentStatus.OPEN,
+                        viewCount = 0L,
+                        duration =
+                            ChronoUnit.DAYS
+                                .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
+                                .toInt(),
+                        activityThumbnailUrl = null,
+                        activityGroup = activityGroup,
+                        activityField = ActivityFieldType.DOMESTIC_VOLUNTEER,
+                        benefit = "",
+                    ),
+                )
 
                 // When
                 val result =
@@ -496,31 +492,30 @@ class ActivityIntegrationTest : IntegrationTest() {
                             ),
                         )
 
-
-                        activityRepository.save(
-                            EducationActivity(
-                                title = "테스트 교육활동",
-                                organizer = OrganizerType.PUBLIC_ORGANIZATION,
-                                targetAudience = ParticipantType.WORKER,
-                                location = LocationType.SEOUL_INCHEON,
-                                recruitmentStartDate = LocalDate.now().plusDays(1),
-                                recruitmentEndDate = LocalDate.now().plusMonths(1),
-                                startDate = LocalDate.now().plusMonths(3),
-                                endDate = LocalDate.now().plusMonths(6),
-                                status = RecruitmentStatus.OPEN,
-                                viewCount = 0L,
-                                duration =
-                                    ChronoUnit.DAYS
-                                        .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
-                                        .toInt(),
-                                activityThumbnailUrl = null,
-                                activityGroup = activityGroup,
-                                cost = 0L,
-                                costType = EducationCostType.FULLY_GOVERNMENT,
-                                format = EducationFormatType.OFFLINE,
-                                benefit = "",
-                            ),
-                        )
+                    activityRepository.save(
+                        EducationActivity(
+                            title = "테스트 교육활동",
+                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            targetAudience = ParticipantType.WORKER,
+                            location = LocationType.SEOUL_INCHEON,
+                            recruitmentStartDate = LocalDate.now().plusDays(1),
+                            recruitmentEndDate = LocalDate.now().plusMonths(1),
+                            startDate = LocalDate.now().plusMonths(3),
+                            endDate = LocalDate.now().plusMonths(6),
+                            status = RecruitmentStatus.OPEN,
+                            viewCount = 0L,
+                            duration =
+                                ChronoUnit.DAYS
+                                    .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
+                                    .toInt(),
+                            activityThumbnailUrl = null,
+                            activityGroup = activityGroup,
+                            cost = 0L,
+                            costType = EducationCostType.FULLY_GOVERNMENT,
+                            format = EducationFormatType.OFFLINE,
+                            benefit = "",
+                        ),
+                    )
 
                     // When
                     val result =
@@ -578,31 +573,30 @@ class ActivityIntegrationTest : IntegrationTest() {
                             ),
                         )
 
-
-                        activityRepository.save(
-                            EducationActivity(
-                                title = "테스트 교육활동2",
-                                organizer = OrganizerType.PUBLIC_ORGANIZATION,
-                                targetAudience = ParticipantType.WORKER,
-                                location = LocationType.SEOUL_INCHEON,
-                                recruitmentStartDate = LocalDate.now().plusDays(1),
-                                recruitmentEndDate = LocalDate.now().plusMonths(1),
-                                startDate = LocalDate.now().plusMonths(3),
-                                endDate = LocalDate.now().plusMonths(6),
-                                status = RecruitmentStatus.OPEN,
-                                viewCount = 0L,
-                                duration =
-                                    ChronoUnit.DAYS
-                                        .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
-                                        .toInt(),
-                                activityThumbnailUrl = null,
-                                activityGroup = activityGroup,
-                                cost = 0L,
-                                costType = EducationCostType.FULLY_GOVERNMENT,
-                                format = EducationFormatType.OFFLINE,
-                                benefit = "",
-                            ),
-                        )
+                    activityRepository.save(
+                        EducationActivity(
+                            title = "테스트 교육활동2",
+                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            targetAudience = ParticipantType.WORKER,
+                            location = LocationType.SEOUL_INCHEON,
+                            recruitmentStartDate = LocalDate.now().plusDays(1),
+                            recruitmentEndDate = LocalDate.now().plusMonths(1),
+                            startDate = LocalDate.now().plusMonths(3),
+                            endDate = LocalDate.now().plusMonths(6),
+                            status = RecruitmentStatus.OPEN,
+                            viewCount = 0L,
+                            duration =
+                                ChronoUnit.DAYS
+                                    .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
+                                    .toInt(),
+                            activityThumbnailUrl = null,
+                            activityGroup = activityGroup,
+                            cost = 0L,
+                            costType = EducationCostType.FULLY_GOVERNMENT,
+                            format = EducationFormatType.OFFLINE,
+                            benefit = "",
+                        ),
+                    )
 
                     // When
                     val result =
@@ -661,31 +655,30 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-
-                    activityRepository.save(
-                        EducationActivity(
-                            title = "테스트 교육활동2",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
-                            targetAudience = ParticipantType.WORKER,
-                            location = LocationType.SEOUL_INCHEON,
-                            recruitmentStartDate = LocalDate.now().plusDays(1),
-                            recruitmentEndDate = LocalDate.now().plusMonths(1),
-                            startDate = LocalDate.now().plusMonths(3),
-                            endDate = LocalDate.now().plusMonths(6),
-                            status = RecruitmentStatus.OPEN,
-                            viewCount = 0L,
-                            duration =
-                                ChronoUnit.DAYS
-                                    .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
-                                    .toInt(),
-                            activityThumbnailUrl = null,
-                            activityGroup = activityGroup,
-                            cost = 0L,
-                            costType = EducationCostType.FREE,
-                            format = EducationFormatType.OFFLINE,
-                            benefit = "",
-                        ),
-                    )
+                activityRepository.save(
+                    EducationActivity(
+                        title = "테스트 교육활동2",
+                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                        targetAudience = ParticipantType.WORKER,
+                        location = LocationType.SEOUL_INCHEON,
+                        recruitmentStartDate = LocalDate.now().plusDays(1),
+                        recruitmentEndDate = LocalDate.now().plusMonths(1),
+                        startDate = LocalDate.now().plusMonths(3),
+                        endDate = LocalDate.now().plusMonths(6),
+                        status = RecruitmentStatus.OPEN,
+                        viewCount = 0L,
+                        duration =
+                            ChronoUnit.DAYS
+                                .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
+                                .toInt(),
+                        activityThumbnailUrl = null,
+                        activityGroup = activityGroup,
+                        cost = 0L,
+                        costType = EducationCostType.FREE,
+                        format = EducationFormatType.OFFLINE,
+                        benefit = "",
+                    ),
+                )
 
                 // When
                 val result =
@@ -743,31 +736,30 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-
-                    activityRepository.save(
-                        EducationActivity(
-                            title = "테스트 교육활동2",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
-                            targetAudience = ParticipantType.WORKER,
-                            location = LocationType.SEOUL_INCHEON,
-                            recruitmentStartDate = LocalDate.now().plusDays(1),
-                            recruitmentEndDate = LocalDate.now().plusMonths(1),
-                            startDate = LocalDate.now().plusMonths(3),
-                            endDate = LocalDate.now().plusMonths(6),
-                            status = RecruitmentStatus.OPEN,
-                            viewCount = 0L,
-                            duration =
-                                ChronoUnit.DAYS
-                                    .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
-                                    .toInt(),
-                            activityThumbnailUrl = null,
-                            activityGroup = activityGroup,
-                            cost = 0L,
-                            costType = EducationCostType.FULLY_GOVERNMENT,
-                            format = EducationFormatType.OFFLINE,
-                            benefit = "",
-                        ),
-                    )
+                activityRepository.save(
+                    EducationActivity(
+                        title = "테스트 교육활동2",
+                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                        targetAudience = ParticipantType.WORKER,
+                        location = LocationType.SEOUL_INCHEON,
+                        recruitmentStartDate = LocalDate.now().plusDays(1),
+                        recruitmentEndDate = LocalDate.now().plusMonths(1),
+                        startDate = LocalDate.now().plusMonths(3),
+                        endDate = LocalDate.now().plusMonths(6),
+                        status = RecruitmentStatus.OPEN,
+                        viewCount = 0L,
+                        duration =
+                            ChronoUnit.DAYS
+                                .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
+                                .toInt(),
+                        activityThumbnailUrl = null,
+                        activityGroup = activityGroup,
+                        cost = 0L,
+                        costType = EducationCostType.FULLY_GOVERNMENT,
+                        format = EducationFormatType.OFFLINE,
+                        benefit = "",
+                    ),
+                )
 
                 // When
                 val result =
@@ -822,29 +814,28 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-
-                    activityRepository.save(
-                        CompetitionActivity(
-                            title = "테스트 공모전2",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
-                            targetAudience = ParticipantType.UNIVERSITY_STUDENT,
-                            recruitmentStartDate = LocalDate.now().plusDays(1),
-                            recruitmentEndDate = LocalDate.now().plusMonths(1),
-                            startDate = LocalDate.now().plusMonths(3),
-                            endDate = LocalDate.now().plusMonths(6),
-                            status = RecruitmentStatus.OPEN,
-                            viewCount = 0L,
-                            duration =
-                                ChronoUnit.DAYS
-                                    .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
-                                    .toInt(),
-                            activityThumbnailUrl = null,
-                            activityGroup = activityGroup,
-                            domain = DomainType.SAAS,
-                            cost = 10000000,
-                            benefit = "",
-                        ),
-                    )
+                activityRepository.save(
+                    CompetitionActivity(
+                        title = "테스트 공모전2",
+                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                        targetAudience = ParticipantType.UNIVERSITY_STUDENT,
+                        recruitmentStartDate = LocalDate.now().plusDays(1),
+                        recruitmentEndDate = LocalDate.now().plusMonths(1),
+                        startDate = LocalDate.now().plusMonths(3),
+                        endDate = LocalDate.now().plusMonths(6),
+                        status = RecruitmentStatus.OPEN,
+                        viewCount = 0L,
+                        duration =
+                            ChronoUnit.DAYS
+                                .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
+                                .toInt(),
+                        activityThumbnailUrl = null,
+                        activityGroup = activityGroup,
+                        domain = DomainType.SAAS,
+                        cost = 10000000,
+                        benefit = "",
+                    ),
+                )
 
                 // When
                 val result =
@@ -899,29 +890,28 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-
-                    activityRepository.save(
-                        CompetitionActivity(
-                            title = "테스트 공모전2",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
-                            targetAudience = ParticipantType.UNIVERSITY_STUDENT,
-                            recruitmentStartDate = LocalDate.now().plusDays(1),
-                            recruitmentEndDate = LocalDate.now().plusMonths(1),
-                            startDate = LocalDate.now().plusMonths(3),
-                            endDate = LocalDate.now().plusMonths(6),
-                            status = RecruitmentStatus.OPEN,
-                            viewCount = 0L,
-                            duration =
-                                ChronoUnit.DAYS
-                                    .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
-                                    .toInt(),
-                            activityThumbnailUrl = null,
-                            activityGroup = activityGroup,
-                            domain = DomainType.SAAS,
-                            cost = 9000000,
-                            benefit = "",
-                        ),
-                    )
+                activityRepository.save(
+                    CompetitionActivity(
+                        title = "테스트 공모전2",
+                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                        targetAudience = ParticipantType.UNIVERSITY_STUDENT,
+                        recruitmentStartDate = LocalDate.now().plusDays(1),
+                        recruitmentEndDate = LocalDate.now().plusMonths(1),
+                        startDate = LocalDate.now().plusMonths(3),
+                        endDate = LocalDate.now().plusMonths(6),
+                        status = RecruitmentStatus.OPEN,
+                        viewCount = 0L,
+                        duration =
+                            ChronoUnit.DAYS
+                                .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
+                                .toInt(),
+                        activityThumbnailUrl = null,
+                        activityGroup = activityGroup,
+                        domain = DomainType.SAAS,
+                        cost = 9000000,
+                        benefit = "",
+                    ),
+                )
 
                 // When
                 val result =
@@ -953,29 +943,28 @@ class ActivityIntegrationTest : IntegrationTest() {
             @Test
             @DisplayName("[성공] 활동 조회 시 마감 임박 순 정렬을 적용한다.")
             fun `마감 임박 순 정렬 테스트`() {
-
-                    activityRepository.save(
-                        ExternalActivity(
-                            title = "테스트 대외활동1",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
-                            targetAudience = ParticipantType.WORKER,
-                            location = LocationType.SEOUL_INCHEON,
-                            recruitmentStartDate = LocalDate.now().plusDays(1),
-                            recruitmentEndDate = LocalDate.now().plusMonths(1),
-                            startDate = LocalDate.now().plusMonths(3),
-                            endDate = LocalDate.now().plusMonths(6),
-                            status = RecruitmentStatus.OPEN,
-                            viewCount = 0L,
-                            duration =
-                                ChronoUnit.DAYS
-                                    .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
-                                    .toInt(),
-                            activityThumbnailUrl = null,
-                            activityGroup = activityGroup,
-                            activityField = ActivityFieldType.MENTORING,
-                            benefit = "",
-                        ),
-                    )
+                activityRepository.save(
+                    ExternalActivity(
+                        title = "테스트 대외활동1",
+                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                        targetAudience = ParticipantType.WORKER,
+                        location = LocationType.SEOUL_INCHEON,
+                        recruitmentStartDate = LocalDate.now().plusDays(1),
+                        recruitmentEndDate = LocalDate.now().plusMonths(1),
+                        startDate = LocalDate.now().plusMonths(3),
+                        endDate = LocalDate.now().plusMonths(6),
+                        status = RecruitmentStatus.OPEN,
+                        viewCount = 0L,
+                        duration =
+                            ChronoUnit.DAYS
+                                .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
+                                .toInt(),
+                        activityThumbnailUrl = null,
+                        activityGroup = activityGroup,
+                        activityField = ActivityFieldType.MENTORING,
+                        benefit = "",
+                    ),
+                )
 
                 val given2 =
                     activityRepository.save(
@@ -1053,29 +1042,28 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-
-                    activityRepository.save(
-                        ExternalActivity(
-                            title = "테스트 대외활동2",
-                            organizer = OrganizerType.LARGE_CORPORATION,
-                            targetAudience = ParticipantType.WORKER,
-                            location = LocationType.SEOUL_INCHEON,
-                            recruitmentStartDate = LocalDate.now().plusDays(1),
-                            recruitmentEndDate = LocalDate.now().plusDays(1),
-                            startDate = LocalDate.now().plusMonths(3),
-                            endDate = LocalDate.now().plusMonths(6),
-                            status = RecruitmentStatus.OPEN,
-                            viewCount = 0L,
-                            duration =
-                                ChronoUnit.DAYS
-                                    .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
-                                    .toInt(),
-                            activityThumbnailUrl = null,
-                            activityGroup = activityGroup,
-                            activityField = ActivityFieldType.MENTORING,
-                            benefit = "",
-                        ),
-                    )
+                activityRepository.save(
+                    ExternalActivity(
+                        title = "테스트 대외활동2",
+                        organizer = OrganizerType.LARGE_CORPORATION,
+                        targetAudience = ParticipantType.WORKER,
+                        location = LocationType.SEOUL_INCHEON,
+                        recruitmentStartDate = LocalDate.now().plusDays(1),
+                        recruitmentEndDate = LocalDate.now().plusDays(1),
+                        startDate = LocalDate.now().plusMonths(3),
+                        endDate = LocalDate.now().plusMonths(6),
+                        status = RecruitmentStatus.OPEN,
+                        viewCount = 0L,
+                        duration =
+                            ChronoUnit.DAYS
+                                .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
+                                .toInt(),
+                        activityThumbnailUrl = null,
+                        activityGroup = activityGroup,
+                        activityField = ActivityFieldType.MENTORING,
+                        benefit = "",
+                    ),
+                )
 
                 // When
                 val result =
@@ -1138,13 +1126,12 @@ class ActivityIntegrationTest : IntegrationTest() {
                         ),
                     )
 
-
-                    bookmarkRepository.save(
-                        Bookmark(
-                            member = member,
-                            activity = given1,
-                        ),
-                    )
+                activityBookmarkRepository.save(
+                    ActivityBookmark(
+                        member = member,
+                        activity = given1,
+                    ),
+                )
 
                 // When
                 val result =
@@ -1209,8 +1196,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                     ),
                 )
 
-            bookmarkRepository.save(
-                Bookmark(
+            activityBookmarkRepository.save(
+                ActivityBookmark(
                     member = member,
                     activity = given,
                 ),

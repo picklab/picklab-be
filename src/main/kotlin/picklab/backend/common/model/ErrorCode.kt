@@ -44,6 +44,12 @@ enum class ErrorCode(
     NOT_FOUND_ARCHIVE(HttpStatus.NOT_FOUND, "아카이브 정보를 찾을 수 없습니다."),
 
     /**
+     * 북마크 도메인 관련
+     */
+    ALREADY_EXISTS_ACTIVITY_BOOKMARK(HttpStatus.BAD_REQUEST, "이미 북마크된 활동입니다."),
+    NOT_FOUND_ACTIVITY_BOOKMARK(HttpStatus.NOT_FOUND, "북마크된 활동을 찾을 수 없습니다."),
+
+    /**
      * 알림 도메인 관련
      */
     NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "알림 정보를 찾을 수 없습니다."),

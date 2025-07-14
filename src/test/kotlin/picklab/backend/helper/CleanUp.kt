@@ -18,7 +18,7 @@ class CleanUp(
                 "archive",
                 "archive_reference_url",
                 "archive_upload_file_url",
-                "bookmark",
+                "activity_bookmark",
                 "job_category",
                 "member",
                 "member_agreement",
