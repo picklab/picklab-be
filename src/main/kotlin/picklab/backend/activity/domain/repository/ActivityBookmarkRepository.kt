@@ -1,15 +1,15 @@
-package picklab.backend.bookmark.domain.repository
+package picklab.backend.activity.domain.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
 import picklab.backend.activity.domain.entity.Activity
-import picklab.backend.bookmark.domain.entity.Bookmark
+import picklab.backend.activity.domain.entity.ActivityBookmark
 import picklab.backend.member.domain.entity.Member
 
-interface BookmarkRepository : JpaRepository<Bookmark, Long> {
+interface ActivityBookmarkRepository : JpaRepository<ActivityBookmark, Long> {
     fun findAllByMemberIdAndActivityIdIn(
         memberId: Long?,
         activityIds: List<Long>,
-    ): List<Bookmark>
+    ): List<ActivityBookmark>
 
     fun countByActivityId(activityId: Long): Long
 

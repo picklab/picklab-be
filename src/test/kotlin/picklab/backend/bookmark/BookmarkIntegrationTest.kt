@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.web.servlet.delete
-import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import picklab.backend.activity.domain.entity.Activity
+import picklab.backend.activity.domain.entity.ActivityBookmark
 import picklab.backend.activity.domain.entity.ActivityGroup
 import picklab.backend.activity.domain.entity.ExternalActivity
 import picklab.backend.activity.domain.enums.ActivityFieldType
@@ -17,10 +17,9 @@ import picklab.backend.activity.domain.enums.LocationType
 import picklab.backend.activity.domain.enums.OrganizerType
 import picklab.backend.activity.domain.enums.ParticipantType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
+import picklab.backend.activity.domain.repository.ActivityBookmarkRepository
 import picklab.backend.activity.domain.repository.ActivityGroupRepository
 import picklab.backend.activity.domain.repository.ActivityRepository
-import picklab.backend.bookmark.domain.entity.Bookmark
-import picklab.backend.bookmark.domain.repository.BookmarkRepository
 import picklab.backend.common.model.ErrorCode
 import picklab.backend.common.model.SuccessCode
 import picklab.backend.helper.CleanUp
@@ -45,7 +44,7 @@ class BookmarkIntegrationTest : IntegrationTest() {
     lateinit var activityGroupRepository: ActivityGroupRepository
 
     @Autowired
-    lateinit var bookmarkRepository: BookmarkRepository
+    lateinit var activityBookmarkRepository: ActivityBookmarkRepository
 
     lateinit var member: Member
 
@@ -116,7 +115,7 @@ class BookmarkIntegrationTest : IntegrationTest() {
                         .andReturn()
 
                 // then
-                val exist = bookmarkRepository.existsByMemberAndActivity(member, activity)
+                val exist = activityBookmarkRepository.existsByMemberAndActivity(member, activity)
                 assertThat(exist).isTrue
             }
 
@@ -124,8 +123,8 @@ class BookmarkIntegrationTest : IntegrationTest() {
             @DisplayName("[실패] 이미 북마크가 존재한다면 ALREADY_EXISTS_ACTIVITY_BOOKMARK 에러코드가 발생한다")
             fun alreadyExistBookmarkTest() {
                 // given
-                bookmarkRepository.save(
-                    Bookmark(
+                activityBookmarkRepository.save(
+                    ActivityBookmark(
                         member = member,
                         activity = activity,
                     ),
@@ -147,8 +146,8 @@ class BookmarkIntegrationTest : IntegrationTest() {
             @DisplayName("[성공] 활동 북마크를 해제한다")
             fun removeActivityBookmarkSuccess() {
                 // given
-                bookmarkRepository.save(
-                    Bookmark(
+                activityBookmarkRepository.save(
+                    ActivityBookmark(
                         member = member,
                         activity = activity,
                     ),
@@ -161,7 +160,7 @@ class BookmarkIntegrationTest : IntegrationTest() {
                     .andExpect { jsonPath("$.message") { value(SuccessCode.ACTIVITY_BOOKMARK_REMOVED.message) } }
 
                 // then
-                val exist = bookmarkRepository.existsByMemberAndActivity(member, activity)
+                val exist = activityBookmarkRepository.existsByMemberAndActivity(member, activity)
                 assertThat(exist).isFalse
             }
 

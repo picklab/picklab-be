@@ -4,15 +4,15 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
 import picklab.backend.activity.application.model.ActivityItemWithBookmark
 import picklab.backend.activity.application.model.ActivitySearchCommand
+import picklab.backend.activity.domain.service.ActivityBookmarkService
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
 import picklab.backend.activity.entrypoint.response.GetActivityListResponse
-import picklab.backend.bookmark.domain.BookmarkService
 
 @Component
 class ActivityUseCase(
     private val activityService: ActivityService,
-    private val bookmarkService: BookmarkService,
+    private val activityBookmarkService: ActivityBookmarkService,
 ) {
     fun getActivities(
         queryParams: ActivitySearchCommand,
@@ -33,7 +33,7 @@ class ActivityUseCase(
         val activityIds = activityItems.map { it.id }
 
         val bookmarkedActivityIds =
-            bookmarkService.getMyBookmarkedActivityIds(
+            activityBookmarkService.getMyBookmarkedActivityIds(
                 memberId = memberId,
                 activityIds = activityIds,
             )
@@ -58,8 +58,8 @@ class ActivityUseCase(
     ): GetActivityDetailResponse {
         // TODO 조회수 증가 로직 추가 필요
         val activity = activityService.mustFindById(activityId)
-        val bookmarkCount = bookmarkService.countByActivityId(activityId)
-        val isBookmarked = memberId?.let { bookmarkService.existsByMemberIdAndActivityId(memberId, activityId) } ?: false
+        val bookmarkCount = activityBookmarkService.countByActivityId(activityId)
+        val isBookmarked = memberId?.let { activityBookmarkService.existsByMemberIdAndActivityId(memberId, activityId) } ?: false
 
         return GetActivityDetailResponse.from(
             activity = activity,

@@ -1,4 +1,4 @@
-package picklab.backend.bookmark.entrypoint
+package picklab.backend.activity.entrypoint
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.ResponseWrapper
 
-interface BookmarkApi {
+interface ActivityBookmarkApi {
     @Operation(
         summary = "활동 북마크 생성",
         description = "해당 유저가 특정 활동 ID값에 대한 북마크를 생성합니다.",

@@ -1,4 +1,4 @@
-package picklab.backend.bookmark.entrypoint
+package picklab.backend.activity.entrypoint
 
 import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.http.HttpStatus
@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
-import picklab.backend.bookmark.application.BookmarkUseCase
+import picklab.backend.activity.application.BookmarkUseCase
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.common.model.SuccessCode
 
 @RestController
-class BookmarkController(
+class ActivityBookmarkController(
     private val bookmarkUseCase: BookmarkUseCase,
-) : BookmarkApi {
+) : ActivityBookmarkApi {
     @PostMapping("/v1/activities/{activityId}/bookmarks")
     override fun createActivityBookmark(
         @AuthenticationPrincipal member: MemberPrincipal,

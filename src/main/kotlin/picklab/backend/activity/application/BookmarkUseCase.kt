@@ -1,14 +1,14 @@
-package picklab.backend.bookmark.application
+package picklab.backend.activity.application
 
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import picklab.backend.activity.domain.service.ActivityBookmarkService
 import picklab.backend.activity.domain.service.ActivityService
-import picklab.backend.bookmark.domain.BookmarkService
 import picklab.backend.member.domain.MemberService
 
 @Component
 class BookmarkUseCase(
-    private val bookmarkService: BookmarkService,
+    private val activityBookmarkService: ActivityBookmarkService,
     private val memberService: MemberService,
     private val activityService: ActivityService,
 ) {
@@ -20,7 +20,7 @@ class BookmarkUseCase(
         val member = memberService.findActiveMember(memberId)
         val activity = activityService.mustFindActiveActivity(activityId)
 
-        bookmarkService.createActivityBookmark(member, activity)
+        activityBookmarkService.createActivityBookmark(member, activity)
     }
 
     @Transactional
@@ -31,6 +31,6 @@ class BookmarkUseCase(
         val member = memberService.findActiveMember(memberId)
         val activity = activityService.mustFindActiveActivity(activityId)
 
-        bookmarkService.removeActivityBookmark(member, activity)
+        activityBookmarkService.removeActivityBookmark(member, activity)
     }
 }
