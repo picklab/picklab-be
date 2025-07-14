@@ -15,18 +15,26 @@ class CleanUp(
 ) {
     @Transactional
     fun all() {
-        val tables = mutableListOf<String>()
+        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0")
 
-        entityManager.metamodel.entities
-            .stream()
-            .filter { entity -> entity.javaType.getAnnotation(Entity::class.java) != null }
-            .filter { entity -> entity.javaType.getAnnotation(DiscriminatorValue::class.java) == null }
-            .map { entity -> entity.javaType.getAnnotation(Table::class.java).name }
-            .forEach { tables.add(it) }
+        try {
+            val tables =
+                entityManager.metamodel.entities
+                    .filter { entity -> entity.javaType.getAnnotation(Entity::class.java) != null }
+                    .filter { entity -> entity.javaType.getAnnotation(DiscriminatorValue::class.java) == null }
+                    .mapNotNull { entity -> entity.javaType.getAnnotation(Table::class.java).name }
+                    .toSet()
 
-        tables
-            .forEach { table ->
-                jdbcTemplate.execute("TRUNCATE TABLE $table")
-            }
+            tables
+                .forEach { table ->
+                    try {
+                        jdbcTemplate.execute("TRUNCATE TABLE $table")
+                    } catch (e: Exception) {
+                        println("Failed to clean table: $table, error: ${e.message}")
+                    }
+                }
+        } finally {
+            jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1")
+        }
     }
 }
