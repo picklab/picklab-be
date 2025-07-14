@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS activity_upload_file
   DEFAULT CHARSET = utf8mb4 COMMENT ='활동에 관련된 업로드 파일 테이블';
 
 -- 북마크 테이블
-CREATE TABLE IF NOT EXISTS bookmark
+CREATE TABLE IF NOT EXISTS activity_bookmark
 (
     id          BIGINT   NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '북마크 ID',
     member_id   BIGINT   NOT NULL COMMENT '회원 ID',
