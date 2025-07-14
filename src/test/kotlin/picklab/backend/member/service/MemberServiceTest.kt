@@ -7,12 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import picklab.backend.auth.domain.OAuthUserInfo
 import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
-import picklab.backend.helper.CleanUp
 import picklab.backend.job.domain.JobCategoryRepository
 import picklab.backend.job.domain.entity.JobCategory
 import picklab.backend.job.domain.enums.JobDetail
 import picklab.backend.job.domain.enums.JobGroup
-import picklab.backend.job.template.IntegrationTest
 import picklab.backend.member.domain.MemberService
 import picklab.backend.member.domain.entity.*
 import picklab.backend.member.domain.enums.EmploymentType
@@ -21,12 +19,10 @@ import picklab.backend.member.domain.enums.SocialType
 import picklab.backend.member.domain.enums.WithdrawalType
 import picklab.backend.member.domain.repository.*
 import picklab.backend.member.entrypoint.request.*
+import picklab.backend.template.IntegrationTest
 import java.time.LocalDateTime
 
 class MemberServiceTest : IntegrationTest() {
-    @Autowired
-    lateinit var cleanUp: CleanUp
-
     @Autowired
     lateinit var memberService: MemberService
 
@@ -100,7 +96,6 @@ class MemberServiceTest : IntegrationTest() {
                         email = "test@example.com",
                     ),
                 )
-
 
             socialLoginRepository.save(
                 SocialLogin(
