@@ -1,5 +1,9 @@
 package picklab.backend.helper
 
+import jakarta.persistence.DiscriminatorValue
+import jakarta.persistence.Entity
+import jakarta.persistence.EntityManager
+import jakarta.persistence.Table
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -7,33 +11,22 @@ import org.springframework.transaction.annotation.Transactional
 @Component
 class CleanUp(
     private val jdbcTemplate: JdbcTemplate,
+    private val entityManager: EntityManager,
 ) {
     @Transactional
     fun all() {
-        val tables =
-            listOf(
-                "activity",
-                "activity_group",
-                "activity_job_category",
-                "archive",
-                "archive_reference_url",
-                "archive_upload_file_url",
-                "activity_bookmark",
-                "job_category",
-                "member",
-                "member_agreement",
-                "member_auth_code",
-                "member_interest_job_category",
-                "member_notification_preference",
-                "member_verification",
-                "member_withdrawal",
-                "notification",
-                "review",
-                "social_login",
-            )
+        val tables = mutableListOf<String>()
 
-        tables.forEach { table ->
-            jdbcTemplate.execute("TRUNCATE TABLE $table")
-        }
+        entityManager.metamodel.entities
+            .stream()
+            .filter { entity -> entity.javaType.getAnnotation(Entity::class.java) != null }
+            .filter { entity -> entity.javaType.getAnnotation(DiscriminatorValue::class.java) == null }
+            .map { entity -> entity.javaType.getAnnotation(Table::class.java).name }
+            .forEach { tables.add(it) }
+
+        tables
+            .forEach { table ->
+                jdbcTemplate.execute("TRUNCATE TABLE $table")
+            }
     }
 }
