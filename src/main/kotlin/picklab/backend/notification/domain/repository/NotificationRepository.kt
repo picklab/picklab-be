@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import picklab.backend.member.domain.entity.Member
 import picklab.backend.notification.domain.entity.Notification
+import picklab.backend.notification.domain.entity.NotificationType
 import java.time.LocalDateTime
 
 @Repository
@@ -54,4 +55,6 @@ interface NotificationRepository : JpaRepository<Notification, Long> {
     fun findByIdIgnoreDelete(id: Long): Notification?
 
     fun findAllByMember(member: Member) : List<Notification>
+
+    fun existsByTypeAndReferenceIdAndMemberId(type: NotificationType, referenceId: String, memberId: Long): Boolean
 }

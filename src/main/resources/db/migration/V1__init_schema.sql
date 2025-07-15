@@ -1,24 +1,24 @@
 -- Picklab 회원 테이블 생성
 CREATE TABLE IF NOT EXISTS member
 (
-    id                       BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '회원 ID',
-    name                     VARCHAR(20)   NOT NULL COMMENT '회원 이름',
-    email                    VARCHAR(100)  NOT NULL COMMENT '회원 이메일',
-    company                  VARCHAR(50)   NOT NULL COMMENT '재직중인 회사',
-    school                   VARCHAR(50)   NOT NULL COMMENT '최종 학교',
-    department               VARCHAR(50)   NOT NULL COMMENT '전공',
-    birth_date               DATE          NULL COMMENT '생년월일',
-    nickname                 VARCHAR(50)   NOT NULL COMMENT '닉네임',
-    profile_image_url        VARCHAR(255)  NULL COMMENT '프로필 이미지 url',
-    education_level          VARCHAR(50)   NOT NULL COMMENT '최종 학력',
-    graduation_status        VARCHAR(50)   NOT NULL COMMENT '학업 상태',
-    employment_status        VARCHAR(50)   NOT NULL COMMENT '재직 상태',
-    employment_type          VARCHAR(50)   NULL COMMENT '고용 형태',
-    refresh_token            VARCHAR(255)  NULL COMMENT '리프레시 토큰',
-    is_completed             BOOLEAN       NOT NULL DEFAULT FALSE COMMENT '회원 가입 완료 여부',
-    created_at               DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
-    updated_at               DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
-    deleted_at               DATETIME      NULL COMMENT '삭제일'
+    id                BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '회원 ID',
+    name              VARCHAR(20)  NOT NULL COMMENT '회원 이름',
+    email             VARCHAR(100) NOT NULL COMMENT '회원 이메일',
+    company           VARCHAR(50)  NOT NULL COMMENT '재직중인 회사',
+    school            VARCHAR(50)  NOT NULL COMMENT '최종 학교',
+    department        VARCHAR(50)  NOT NULL COMMENT '전공',
+    birth_date        DATE         NULL COMMENT '생년월일',
+    nickname          VARCHAR(50)  NOT NULL COMMENT '닉네임',
+    profile_image_url VARCHAR(255) NULL COMMENT '프로필 이미지 url',
+    education_level   VARCHAR(50)  NOT NULL COMMENT '최종 학력',
+    graduation_status VARCHAR(50)  NOT NULL COMMENT '학업 상태',
+    employment_status VARCHAR(50)  NOT NULL COMMENT '재직 상태',
+    employment_type   VARCHAR(50)  NULL COMMENT '고용 형태',
+    refresh_token     VARCHAR(255) NULL COMMENT '리프레시 토큰',
+    is_completed      BOOLEAN      NOT NULL DEFAULT FALSE COMMENT '회원 가입 완료 여부',
+    created_at        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    updated_at        DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    deleted_at        DATETIME     NULL COMMENT '삭제일'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='회원 테이블';
 
@@ -96,12 +96,12 @@ CREATE TABLE IF NOT EXISTS member_notification_preference
 -- 회원 탈퇴 사유 관리 테이블
 CREATE TABLE IF NOT EXISTS member_withdrawal
 (
-    id                       BIGINT   NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '탈퇴 사유 ID',
-    member_id                BIGINT   NULL COMMENT '회원 ID',
+    id                       BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '탈퇴 사유 ID',
+    member_id                BIGINT        NULL COMMENT '회원 ID',
     withdrawal_reason        VARCHAR(255)  NOT NULL COMMENT '탈퇴 사유',
     withdrawal_reason_detail VARCHAR(2000) NULL COMMENT '탈퇴 상세 사유',
-    created_at               DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
-    updated_at               DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'
+    created_at               DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    updated_at               DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='회원 관심 직무 조인 테이블';
 
@@ -162,12 +162,12 @@ CREATE TABLE IF NOT EXISTS activity_job_category
 -- 활동 파일 업로드 테이블
 CREATE TABLE IF NOT EXISTS activity_upload_file
 (
-    id              BIGINT   NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '활동-직무 연결 ID',
-    activity_id     BIGINT   NOT NULL COMMENT '활동 ID',
-    name            VARCHAR(255)  NOT NULL COMMENT '파일명(ex. 지원 PDF)',
-    url             VARCHAR(2084) NOT NULL COMMENT '업로드 파일 URL',
-    created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
-    updated_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'
+    id          BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '활동-직무 연결 ID',
+    activity_id BIGINT        NOT NULL COMMENT '활동 ID',
+    name        VARCHAR(255)  NOT NULL COMMENT '파일명(ex. 지원 PDF)',
+    url         VARCHAR(2084) NOT NULL COMMENT '업로드 파일 URL',
+    created_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    updated_at  DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='활동에 관련된 업로드 파일 테이블';
 
@@ -187,21 +187,21 @@ CREATE TABLE IF NOT EXISTS activity_bookmark
 -- activity 테이블과 1(활동):N(아카이브) 관계
 CREATE TABLE IF NOT EXISTS archive
 (
-    id                       BIGINT         NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '아카이브 ID',
-    member_id                BIGINT         NOT NULL COMMENT '회원 ID',
-    activity_id              BIGINT         NOT NULL COMMENT '활동 ID',
-    user_start_date          DATE           NOT NULL COMMENT '활동 시작일',
-    user_end_date            DATE           NOT NULL COMMENT '활동 종료일',
-    role                     VARCHAR(50)    NOT NULL COMMENT '활동 역할 (기획 / 디자인 / 개발 / 마케팅 / AI)',
-    detail_role              VARCHAR(50)    NOT NULL COMMENT '상세 역할',
-    custom_role              VARCHAR(255)   NULL     COMMENT '상세 역할에서 기타를 선택하여 직접 입력한 역할',
-    activity_record          TEXT           NOT NULL COMMENT '활동 기록',
-    activity_type            VARCHAR(50)    NOT NULL COMMENT '활동 구분 (대외활동 / 강연 / 세미나 / 교육 / 공모전/해커톤)',
-    activity_progress_status VARCHAR(50)    NOT NULL COMMENT '활동 진행 상태 (수료 완료 / 중도 포기)',
-    write_status             VARCHAR(50)    NOT NULL COMMENT '작성 상태 (미작성 / 작성 중 / 작성 완료)',
-    created_at               DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
-    updated_at               DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
-    deleted_at               DATETIME       NULL     COMMENT '삭제일'
+    id                       BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '아카이브 ID',
+    member_id                BIGINT       NOT NULL COMMENT '회원 ID',
+    activity_id              BIGINT       NOT NULL COMMENT '활동 ID',
+    user_start_date          DATE         NOT NULL COMMENT '활동 시작일',
+    user_end_date            DATE         NOT NULL COMMENT '활동 종료일',
+    role                     VARCHAR(50)  NOT NULL COMMENT '활동 역할 (기획 / 디자인 / 개발 / 마케팅 / AI)',
+    detail_role              VARCHAR(50)  NOT NULL COMMENT '상세 역할',
+    custom_role              VARCHAR(255) NULL COMMENT '상세 역할에서 기타를 선택하여 직접 입력한 역할',
+    activity_record          TEXT         NOT NULL COMMENT '활동 기록',
+    activity_type            VARCHAR(50)  NOT NULL COMMENT '활동 구분 (대외활동 / 강연 / 세미나 / 교육 / 공모전/해커톤)',
+    activity_progress_status VARCHAR(50)  NOT NULL COMMENT '활동 진행 상태 (수료 완료 / 중도 포기)',
+    write_status             VARCHAR(50)  NOT NULL COMMENT '작성 상태 (미작성 / 작성 중 / 작성 완료)',
+    created_at               DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    updated_at               DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    deleted_at               DATETIME     NULL COMMENT '삭제일'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='아카이브 테이블';
 
@@ -210,23 +210,23 @@ CREATE TABLE IF NOT EXISTS archive
 -- activity 테이블과 1(활동):N(리뷰) 관계
 CREATE TABLE IF NOT EXISTS review
 (
-    id                   BIGINT         NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '리뷰 ID',
-    member_id            BIGINT         NOT NULL  COMMENT '회원 ID',
-    activity_id          BIGINT         NOT NULL  COMMENT '활동 ID',
-    overall_score        TINYINT        NOT NULL  COMMENT '총 평점',
-    info_score           TINYINT        NOT NULL  COMMENT '정보 점수',
-    difficulty_score     TINYINT        NOT NULL  COMMENT '강도 점수',
-    benefit_score        TINYINT        NOT NULL  COMMENT '혜택 점수',
-    summary              VARCHAR(255)   NOT NULL  COMMENT '한줄 평',
-    strength             VARCHAR(1000)  NOT NULL  COMMENT '장점',
-    weakness             VARCHAR(1000)  NOT NULL  COMMENT '단점',
-    tips                 VARCHAR(1000)  NULL      COMMENT '꿀팁',
-    job_relevance_score  TINYINT        NOT NULL  COMMENT '직무 연관성 점수',
-    url                  VARCHAR(255)   NULL      COMMENT '인증 자료 URL',
-    approval_status      VARCHAR(50)    NOT NULL  COMMENT '승인 여부 상태(미승인 / 승인 / 승인 중)',
-    created_at           DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
-    updated_at           DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
-    deleted_at           DATETIME       NULL      COMMENT '삭제일'
+    id                  BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '리뷰 ID',
+    member_id           BIGINT        NOT NULL COMMENT '회원 ID',
+    activity_id         BIGINT        NOT NULL COMMENT '활동 ID',
+    overall_score       TINYINT       NOT NULL COMMENT '총 평점',
+    info_score          TINYINT       NOT NULL COMMENT '정보 점수',
+    difficulty_score    TINYINT       NOT NULL COMMENT '강도 점수',
+    benefit_score       TINYINT       NOT NULL COMMENT '혜택 점수',
+    summary             VARCHAR(255)  NOT NULL COMMENT '한줄 평',
+    strength            VARCHAR(1000) NOT NULL COMMENT '장점',
+    weakness            VARCHAR(1000) NOT NULL COMMENT '단점',
+    tips                VARCHAR(1000) NULL COMMENT '꿀팁',
+    job_relevance_score TINYINT       NOT NULL COMMENT '직무 연관성 점수',
+    url                 VARCHAR(255)  NULL COMMENT '인증 자료 URL',
+    approval_status     VARCHAR(50)   NOT NULL COMMENT '승인 여부 상태(미승인 / 승인 / 승인 중)',
+    created_at          DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    updated_at          DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    deleted_at          DATETIME      NULL COMMENT '삭제일'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='리뷰 테이블';
 
@@ -234,15 +234,16 @@ CREATE TABLE IF NOT EXISTS review
 -- member 테이블과 1(회원):N(알림) 관계
 CREATE TABLE IF NOT EXISTS notification
 (
-    id          BIGINT         NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '알림 ID',
-    member_id   BIGINT         NOT NULL COMMENT '회원 ID',
-    title       VARCHAR(255)   NOT NULL COMMENT '알림 제목',
-    type        VARCHAR(50)    NOT NULL COMMENT '알림 타입',
-    link        VARCHAR(255)   NOT NULL COMMENT '클릭 시 이동할 링크',
-    is_read     BOOLEAN        NOT NULL DEFAULT FALSE COMMENT '읽음 여부',
-    created_at  DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
-    updated_at  DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
-    deleted_at  DATETIME       NULL     COMMENT '삭제일'
+    id           BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '알림 ID',
+    member_id    BIGINT       NOT NULL COMMENT '회원 ID',
+    title        VARCHAR(255) NOT NULL COMMENT '알림 제목',
+    type         VARCHAR(50)  NOT NULL COMMENT '알림 타입',
+    link         VARCHAR(255) NOT NULL COMMENT '클릭 시 이동할 링크',
+    is_read      BOOLEAN      NOT NULL DEFAULT FALSE COMMENT '읽음 여부',
+    reference_id VARCHAR(50)  NULL     DEFAULT NULL COMMENT "참조값",
+    created_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    updated_at   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    deleted_at   DATETIME     NULL COMMENT '삭제일'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='알림 테이블';
 
@@ -250,11 +251,11 @@ CREATE TABLE IF NOT EXISTS notification
 -- archive 테이블과 1(아카이브):N(참고 URL) 관계
 CREATE TABLE IF NOT EXISTS archive_reference_url
 (
-    id                       BIGINT         NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '아카이브 참고 URL ID',
-    archive_id               BIGINT         NOT NULL COMMENT '아카이브 ID',
-    url                      VARCHAR(2084)  NOT NULL COMMENT '참고 URL',
-    created_at               DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
-    updated_at               DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'
+    id         BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '아카이브 참고 URL ID',
+    archive_id BIGINT        NOT NULL COMMENT '아카이브 ID',
+    url        VARCHAR(2084) NOT NULL COMMENT '참고 URL',
+    created_at DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    updated_at DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='아카이브 참고 URL 테이블';
 
@@ -262,11 +263,11 @@ CREATE TABLE IF NOT EXISTS archive_reference_url
 -- archive 테이블과 1(아카이브):N(업로드 파일 URL) 관계
 CREATE TABLE IF NOT EXISTS archive_upload_file_url
 (
-    id                       BIGINT         NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '아카이브 업로드 파일 URL ID',
-    archive_id               BIGINT         NOT NULL COMMENT '아카이브 ID',
-    url                      VARCHAR(2084)  NOT NULL COMMENT '업로드 파일 URL',
-    created_at               DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
-    updated_at               DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'
+    id         BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '아카이브 업로드 파일 URL ID',
+    archive_id BIGINT        NOT NULL COMMENT '아카이브 ID',
+    url        VARCHAR(2084) NOT NULL COMMENT '업로드 파일 URL',
+    created_at DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    updated_at DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='아카이브 업로드 파일 URL 테이블';
 
@@ -275,13 +276,13 @@ CREATE TABLE IF NOT EXISTS archive_upload_file_url
 -- 멤버 테이블과 1(회원):N(활동 참여) 관계
 CREATE TABLE IF NOT EXISTS activity_participation
 (
-    id                       BIGINT         NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '활동 참여 ID',
-    member_id                BIGINT         NOT NULL COMMENT '회원 ID',
-    activity_id              BIGINT         NOT NULL COMMENT '활동 ID',
-    application_status       VARCHAR(50)    NOT NULL COMMENT '지원 상태 (지원 완료 / 최종 합격 / 불합격)',
-    progress_status          VARCHAR(50)    NOT NULL COMMENT '진행 상태 (진행 중 / 수료 완료 / 중도 포기)',
-    created_at               DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
-    updated_at               DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
-    deleted_at               DATETIME       NULL     COMMENT '삭제일'
+    id                 BIGINT      NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '활동 참여 ID',
+    member_id          BIGINT      NOT NULL COMMENT '회원 ID',
+    activity_id        BIGINT      NOT NULL COMMENT '활동 ID',
+    application_status VARCHAR(50) NOT NULL COMMENT '지원 상태 (지원 완료 / 최종 합격 / 불합격)',
+    progress_status    VARCHAR(50) NOT NULL COMMENT '진행 상태 (진행 중 / 수료 완료 / 중도 포기)',
+    created_at         DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    updated_at         DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    deleted_at         DATETIME    NULL COMMENT '삭제일'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='활동 참여 테이블';

@@ -9,7 +9,7 @@ import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.common.util.logger
 import picklab.backend.member.domain.MemberService
 import picklab.backend.member.domain.service.NotificationPreferenceService
-import picklab.backend.notification.domain.config.NotificationDeadlineProperties
+import picklab.backend.notification.domain.config.NotificationProperties
 import picklab.backend.notification.domain.entity.Notification
 import picklab.backend.notification.domain.entity.NotificationType
 import picklab.backend.notification.domain.repository.NotificationRepository
@@ -25,7 +25,7 @@ class ActivityDeadlineNotificationService(
     private val sseEmitterService: SseEmitterService,
     private val memberService: MemberService,
     private val notificationPreferenceService: NotificationPreferenceService,
-    private val notificationDeadlineProperties: NotificationDeadlineProperties
+    private val notificationProperties: NotificationProperties
 ) {
 
     private val logger = this.logger()
@@ -34,10 +34,10 @@ class ActivityDeadlineNotificationService(
      * 설정된 advance-days 기준으로 모든 마감일 알림을 생성하고 전송합니다
      */
     fun sendAllConfiguredDeadlineNotifications(): Map<Int, Int> {
-        logger.info("마감일 알림 전송 시작: ${notificationDeadlineProperties.advanceDays} 일 전 대상")
+        logger.info("마감일 알림 전송 시작: ${notificationProperties.deadline.advanceDays} 일 전 대상")
         
-        val baseDate = LocalDate.now(ZoneId.of(notificationDeadlineProperties.timezone))
-        val results = notificationDeadlineProperties.advanceDays.associateWith { days ->
+        val baseDate = LocalDate.now(ZoneId.of(notificationProperties.deadline.timezone))
+        val results = notificationProperties.deadline.advanceDays.associateWith { days ->
             val sentCount = sendDeadlineNotificationsForDays(baseDate, days)
             logger.info("마감 ${days}일 전 알림: $sentCount 건 전송 완료")
             sentCount
