@@ -20,7 +20,6 @@ import picklab.backend.activity.domain.enums.ParticipantType
 import picklab.backend.activity.domain.repository.ActivityRepository
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.job.domain.enums.JobDetail
-import picklab.backend.notification.domain.config.NotificationDeadlineProperties
 import kotlin.test.Test
 
 @DisplayName("활동 분야에 따른 쿼리 보정 로직 테스트")
@@ -31,8 +30,6 @@ class ActivityQuerySanitizeTest {
 
     @Mock
     private lateinit var activityRepository: ActivityRepository
-    @Mock
-    private lateinit var notificationDeadlineProperties: NotificationDeadlineProperties
 
     @Test
     fun `대외활동 활동의 경우 온,오프라인 여부, 비용, 상금, 기간, 도메인이 null로 보정된다`() {

@@ -150,4 +150,10 @@ class ActivityService(
         val targetDate = baseDate.plusDays(daysUntilDeadline.toLong())
         return getActivitiesEndingOnDate(targetDate)
     }
+
+    /**
+     * 현재 모집 중인 활동 중 가장 인기 있는 활동을 조회합니다.
+     * 인기도는 조회수와 북마크 수를 합산하여 계산합니다.
+     */
+    fun getMostPopularActivity(): Activity? = activityRepository.findMostPopularActivity()
 }

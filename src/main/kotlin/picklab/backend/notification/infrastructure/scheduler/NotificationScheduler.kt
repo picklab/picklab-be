@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional
 import picklab.backend.common.util.logger
 import picklab.backend.notification.domain.repository.NotificationRepository
 import picklab.backend.notification.domain.service.ActivityDeadlineNotificationService
+import picklab.backend.notification.domain.service.PopularActivityNotificationService
+import picklab.backend.notification.domain.config.NotificationProperties
 import java.sql.SQLException
 import java.time.LocalDateTime
 
@@ -26,6 +28,8 @@ import java.time.LocalDateTime
 class NotificationScheduler(
     private val notificationRepository: NotificationRepository,
     private val activityDeadlineNotificationService: ActivityDeadlineNotificationService,
+    private val popularActivityNotificationService: PopularActivityNotificationService,
+    private val notificationProperties: NotificationProperties,
     @Value("\${app.notification.cleanup.retention-days:30}")
     private val retentionDays: Long,
     @Value("\${app.notification.cleanup.batch-size:100}")
@@ -128,6 +132,48 @@ class NotificationScheduler(
                 else -> "예상치 못한 오류"
             }
             logger.error("활동 마감일 알림 배치 작업 실패 - $errorType (소요시간: ${duration}ms): ${exception.message}", exception)
+        }
+    }
+
+    /**
+     * 인기 공고 알림을 전송합니다.
+     * KST 기준 매일 12시에 실행되며, 가장 인기 있는 공고를 알림으로 전송합니다.
+     * 한번 발송된 공고는 중복 발송되지 않습니다.
+     */
+    @Scheduled(
+        cron = "\${app.notification.popular.schedule:0 0 12 * * *}",
+        zone = "\${app.notification.popular.timezone:Asia/Seoul}"
+    )
+    @ConditionalOnProperty(
+        name = ["app.notification.popular.enabled"],
+        havingValue = "true",
+        matchIfMissing = true
+    )
+    @Transactional
+    fun sendPopularActivityNotifications() {
+        val startTime = System.currentTimeMillis()
+        
+        runCatching {
+            logger.info("인기 공고 알림 배치 작업 시작")
+            
+            val sentCount = popularActivityNotificationService.sendPopularActivityNotifications()
+            val duration = System.currentTimeMillis() - startTime
+            
+            if (sentCount > 0) {
+                logger.info("인기 공고 알림 배치 작업 완료: $sentCount 건 전송 (소요시간: ${duration}ms)")
+            } else {
+                logger.info("인기 공고 알림 배치 작업 완료: 전송할 알림 없음 (소요시간: ${duration}ms)")
+            }
+            
+        }.onFailure { exception ->
+            val duration = System.currentTimeMillis() - startTime
+            val errorType = when (exception) {
+                is IllegalStateException -> "데이터 처리 오류"
+                is DataAccessException -> "데이터베이스 오류"
+                is SQLException -> "SQL 실행 오류"
+                else -> "예상치 못한 오류"
+            }
+            logger.error("인기 공고 알림 배치 작업 실패 - $errorType (소요시간: ${duration}ms): ${exception.message}", exception)
         }
     }
 } 

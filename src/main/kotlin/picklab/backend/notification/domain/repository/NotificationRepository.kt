@@ -54,4 +54,14 @@ interface NotificationRepository : JpaRepository<Notification, Long> {
     fun findByIdIgnoreDelete(id: Long): Notification?
 
     fun findAllByMember(member: Member) : List<Notification>
+
+    /**
+     * 특정 활동에 대해 인기 공고 알림이 이미 발송되었는지 확인합니다
+     */
+    @Query("""
+        SELECT COUNT(n) > 0 FROM Notification n 
+        WHERE n.type = 'POPULAR_ACTIVITY' 
+        AND n.link = CONCAT('/activities/', :activityId)
+    """)
+    fun existsPopularActivityNotificationByActivityId(@Param("activityId") activityId: Long): Boolean
 }

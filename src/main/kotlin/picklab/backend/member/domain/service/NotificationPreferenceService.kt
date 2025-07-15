@@ -1,5 +1,7 @@
 package picklab.backend.member.domain.service
 
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import picklab.backend.member.domain.entity.NotificationPreference
@@ -34,6 +36,22 @@ class NotificationPreferenceService(
         val preferences = getNotificationPreferences(memberIds)
         return memberIds
             .filter { memberId -> preferences[memberId]?.notifyBookmarkedActivity == true }
+    }
+
+    /**
+     * 인기 공고 알림 수신에 동의한 모든 사용자들을 조회합니다
+     */
+    fun getMembersWithPopularNotificationEnabled(): List<Long> {
+        return notificationPreferenceRepository.findAll()
+            .filter { it.notifyPopularActivity }
+            .map { it.member.id }
+    }
+
+    /**
+     * 인기 공고 알림 수신에 동의한 사용자들을 페이징으로 조회합니다 (성능 최적화용)
+     */
+    fun getMembersWithPopularNotificationEnabledPaged(pageable: Pageable): Page<Long> {
+        return notificationPreferenceRepository.findMemberIdsWithPopularNotificationEnabled(pageable)
     }
 
     /**
