@@ -2,6 +2,8 @@ package picklab.backend.review.domain.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
@@ -50,6 +52,7 @@ class Review(
     @Comment("인증 자료 URL")
     var url: String? = null,
     @Column(name = "approval_status")
+    @Enumerated(EnumType.STRING)
     @Comment("승인 여부 상태(미승인 / 승인 / 승인 중)")
     var reviewApprovalStatus: ReviewApprovalStatus,
     @ManyToOne(fetch = FetchType.LAZY)
@@ -58,4 +61,38 @@ class Review(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "activity_id", nullable = false)
     val activity: Activity,
-) : SoftDeleteEntity()
+) : SoftDeleteEntity() {
+    companion object {
+        fun create(
+            overallScore: Int,
+            infoScore: Int,
+            difficultyScore: Int,
+            benefitScore: Int,
+            summary: String,
+            strength: String,
+            weakness: String,
+            tips: String? = null,
+            jobRelevanceScore: Int,
+            url: String? = null,
+            member: Member,
+            activity: Activity,
+        ): Review {
+            val reviewApprovalStatus = if (url == null) ReviewApprovalStatus.REJECTED else ReviewApprovalStatus.PENDING
+            return Review(
+                overallScore = overallScore,
+                infoScore = infoScore,
+                difficultyScore = difficultyScore,
+                benefitScore = benefitScore,
+                summary = summary,
+                strength = strength,
+                weakness = weakness,
+                tips = tips,
+                jobRelevanceScore = jobRelevanceScore,
+                url = url,
+                reviewApprovalStatus = reviewApprovalStatus,
+                member = member,
+                activity = activity,
+            )
+        }
+    }
+}
