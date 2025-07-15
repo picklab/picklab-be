@@ -60,11 +60,6 @@ class ActivityDeadlineNotificationServiceTest : IntegrationTest() {
         )
     }
 
-    @AfterEach
-    fun tearDown() {
-        cleanUp.all()
-    }
-
     @Test
     @DisplayName("북마크한 사용자만 마감일 알림을 받는다")
     fun `should send deadline notification only to bookmarked users`() {
