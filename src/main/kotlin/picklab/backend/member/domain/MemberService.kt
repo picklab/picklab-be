@@ -10,6 +10,7 @@ import picklab.backend.member.domain.entity.*
 import picklab.backend.member.domain.enums.NotificationType
 import picklab.backend.member.domain.enums.SocialType
 import picklab.backend.member.domain.repository.*
+import picklab.backend.member.domain.service.NotificationPreferenceService
 import picklab.backend.member.entrypoint.request.AdditionalInfoRequest
 import picklab.backend.member.entrypoint.request.MemberWithdrawalRequest
 import picklab.backend.member.entrypoint.request.UpdateInfoRequest
@@ -25,7 +26,7 @@ class MemberService(
     private val memberVerificationRepository: MemberVerificationRepository,
     private val memberAgreementRepository: MemberAgreementRepository,
     private val memberWithdrawalRepository: MemberWithdrawalRepository,
-    private val notificationPreferenceRepository: NotificationPreferenceRepository,
+    private val notificationPreferenceService: NotificationPreferenceService,
 ) {
     @Transactional
     fun loginOrSignup(
@@ -57,7 +58,7 @@ class MemberService(
                     notifyBookmarkedActivity = true,
                 )
 
-            notificationPreferenceRepository.save(notificationPreference)
+            notificationPreferenceService.createDefaultNotificationPreference(notificationPreference)
 
             return newMember
         }
@@ -257,16 +258,7 @@ class MemberService(
         type: NotificationType,
     ) {
         existActiveMember(memberId)
-
-        val notificationPreference = notificationPreferenceRepository.findByMemberId(memberId)
-
-        if (type == NotificationType.POPULAR) {
-            notificationPreference.togglePopular()
-        } else {
-            notificationPreference.toggleBookmarked()
-        }
-
-        notificationPreferenceRepository.save(notificationPreference)
+        notificationPreferenceService.toggleNotification(memberId, type)
     }
 
     fun findActiveMember(memberId: Long): Member =
