@@ -6,13 +6,18 @@ import picklab.backend.activity.application.model.ActivitySearchCommand
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.activity.domain.enums.ActivityType
 import picklab.backend.activity.domain.enums.EducationFormatType
+import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.activity.domain.repository.ActivityRepository
 import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
+import picklab.backend.notification.domain.config.NotificationDeadlineProperties
+import java.time.LocalDate
+import java.time.ZoneId
 
 @Service
 class ActivityService(
     private val activityRepository: ActivityRepository,
+    private val notificationDeadlineProperties: NotificationDeadlineProperties,
 ) {
     fun mustFindById(activityId: Long): Activity =
         activityRepository
@@ -129,5 +134,23 @@ class ActivityService(
         }
 
         return listOf(min, max)
+    }
+
+    /**
+     * 설정된 시간대 기준으로 현재 날짜를 반환합니다
+     */
+    fun getCurrentDateInKST(): LocalDate {
+        return LocalDate.now(ZoneId.of(notificationDeadlineProperties.timezone))
+    }
+
+    /**
+     * 특정 일수 후의 마감일에 해당하는 모집 중인 활동들을 조회합니다 (설정된 시간대 기준)
+     */
+    fun getActivitiesEndingInDays(daysUntilDeadline: Int): List<Activity> {
+        val targetDate = getCurrentDateInKST().plusDays(daysUntilDeadline.toLong())
+        return activityRepository.findByRecruitmentEndDateAndStatus(
+            targetDate = targetDate,
+            status = RecruitmentStatus.OPEN
+        )
     }
 }

@@ -37,4 +37,5 @@ class Notification(
 
 enum class NotificationType {
     ACTIVITY_CREATED,
+    ACTIVITY_DEADLINE_REMINDER,
 }
