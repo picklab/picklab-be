@@ -6,9 +6,11 @@ import picklab.backend.activity.application.model.ActivitySearchCommand
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.activity.domain.enums.ActivityType
 import picklab.backend.activity.domain.enums.EducationFormatType
+import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.activity.domain.repository.ActivityRepository
 import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
+import java.time.LocalDate
 
 @Service
 class ActivityService(
@@ -129,5 +131,23 @@ class ActivityService(
         }
 
         return listOf(min, max)
+    }
+
+    /**
+     * 특정 마감일에 해당하는 모집 중인 활동들을 조회합니다
+     */
+    fun getActivitiesEndingOnDate(targetDate: LocalDate): List<Activity> {
+        return activityRepository.findByRecruitmentEndDateAndStatus(
+            targetDate = targetDate,
+            status = RecruitmentStatus.OPEN
+        )
+    }
+
+    /**
+     * 기준 날짜로부터 특정 일수 후의 마감일에 해당하는 모집 중인 활동들을 조회합니다
+     */
+    fun getActivitiesEndingInDays(baseDate: LocalDate, daysUntilDeadline: Int): List<Activity> {
+        val targetDate = baseDate.plusDays(daysUntilDeadline.toLong())
+        return getActivitiesEndingOnDate(targetDate)
     }
 }

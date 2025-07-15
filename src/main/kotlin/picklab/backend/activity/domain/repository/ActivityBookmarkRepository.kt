@@ -27,4 +27,6 @@ interface ActivityBookmarkRepository : JpaRepository<ActivityBookmark, Long> {
         member: Member,
         activity: Activity,
     )
+
+    fun findAllByActivityId(id: Long) : List<ActivityBookmark>
 }

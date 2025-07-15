@@ -32,6 +32,11 @@ app:
       enabled: true # 알림 정리 배치 작업 활성화 여부
       retention-days: 30 # 알림 보관 기간 (일)
       batch-size: 100 # 배치 처리 시 한 번에 처리할 알림 개수
+    deadline:
+      enabled: true # 활동 마감일 알림 배치 작업 활성화 여부
+      schedule: "0 0 9 * * *" # 매일 KST 오전 9시 실행 (Cron 표현식)
+      timezone: "Asia/Seoul" # 한국 표준시 (KST)
+      advanceDays: [ 1, 3 ] # 알림을 보낼 마감일 전 일수
 
 logging:
   level:
@@ -115,8 +120,8 @@ spring:
 
 jwt:
   access:
-      secret: testAccessSecrettestAccessSecret
-      expiration: 2000 # 2초
+    secret: testAccessSecrettestAccessSecret
+    expiration: 2000 # 2초
   refresh:
-      secret: testRefreshSecrettestRefreshSecret
-      expiration: 2000 # 2초
+    secret: testRefreshSecrettestRefreshSecret
+    expiration: 2000 # 2초
