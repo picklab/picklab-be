@@ -56,10 +56,5 @@ interface NotificationRepository : JpaRepository<Notification, Long> {
 
     fun findAllByMember(member: Member) : List<Notification>
 
-    fun existsByTypeAndReferenceId(type: NotificationType, referenceId: String): Boolean
-    
-    /**
-     * 특정 사용자가 특정 활동에 대한 특정 타입의 알림을 이미 받았는지 확인합니다
-     */
     fun existsByTypeAndReferenceIdAndMemberId(type: NotificationType, referenceId: String, memberId: Long): Boolean
 }

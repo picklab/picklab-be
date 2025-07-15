@@ -2,8 +2,6 @@ package picklab.backend.notification.domain.service
 
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Propagation
-import org.springframework.transaction.annotation.Transactional
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.common.util.logger
 import picklab.backend.member.domain.MemberService
