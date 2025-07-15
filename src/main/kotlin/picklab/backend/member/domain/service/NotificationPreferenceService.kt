@@ -51,11 +51,6 @@ class NotificationPreferenceService(
         notificationPreferenceRepository.save(preference)
     }
 
-    /**
-     * 새로운 사용자의 알림 설정을 생성합니다
-     */
     @Transactional
-    fun createDefaultNotificationPreference(notificationPreference: NotificationPreference): NotificationPreference {
-        return notificationPreferenceRepository.save(notificationPreference)
-    }
+    fun save(entity: NotificationPreference) = notificationPreferenceRepository.save(entity)
 } 

@@ -58,7 +58,7 @@ class MemberService(
                     notifyBookmarkedActivity = true,
                 )
 
-            notificationPreferenceService.createDefaultNotificationPreference(notificationPreference)
+            notificationPreferenceService.save(notificationPreference)
 
             return newMember
         }
