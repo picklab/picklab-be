@@ -7,26 +7,24 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import picklab.backend.activity.domain.entity.Activity
+import picklab.backend.activity.domain.entity.ActivityBookmark
 import picklab.backend.activity.domain.entity.ActivityGroup
 import picklab.backend.activity.domain.entity.ExternalActivity
 import picklab.backend.activity.domain.enums.*
+import picklab.backend.activity.domain.repository.ActivityBookmarkRepository
 import picklab.backend.activity.domain.repository.ActivityGroupRepository
 import picklab.backend.activity.domain.repository.ActivityRepository
-import picklab.backend.bookmark.domain.entity.Bookmark
-import picklab.backend.bookmark.domain.repository.BookmarkRepository
-import picklab.backend.helper.CleanUp
-import picklab.backend.job.template.IntegrationTest
 import picklab.backend.member.domain.entity.Member
 import picklab.backend.member.domain.entity.NotificationPreference
 import picklab.backend.member.domain.repository.MemberRepository
 import picklab.backend.member.domain.repository.NotificationPreferenceRepository
 import picklab.backend.notification.domain.repository.NotificationRepository
+import picklab.backend.template.IntegrationTest
 import java.time.LocalDate
 
 class ActivityDeadlineNotificationServiceTest : IntegrationTest() {
 
-    @Autowired
-    lateinit var cleanUp: CleanUp
+
 
     @Autowired
     lateinit var activityDeadlineNotificationService: ActivityDeadlineNotificationService
@@ -41,7 +39,7 @@ class ActivityDeadlineNotificationServiceTest : IntegrationTest() {
     lateinit var activityGroupRepository: ActivityGroupRepository
 
     @Autowired
-    lateinit var bookmarkRepository: BookmarkRepository
+    lateinit var bookmarkRepository: ActivityBookmarkRepository
 
     @Autowired
     lateinit var notificationRepository: NotificationRepository
@@ -80,7 +78,7 @@ class ActivityDeadlineNotificationServiceTest : IntegrationTest() {
         createNotificationPreference(nonBookmarkedUser, bookmarkEnabled = true)
         
         // 한 명만 북마크
-        bookmarkRepository.save(Bookmark(bookmarkedUser, activity))
+        bookmarkRepository.save(ActivityBookmark(bookmarkedUser, activity))
 
         // when
         val result = activityDeadlineNotificationService.sendDeadlineNotificationsForDays(
@@ -110,8 +108,8 @@ class ActivityDeadlineNotificationServiceTest : IntegrationTest() {
         createNotificationPreference(userWithNotificationOn, bookmarkEnabled = true)
         
         // 둘 다 북마크
-        bookmarkRepository.save(Bookmark(userWithNotificationOff, activity))
-        bookmarkRepository.save(Bookmark(userWithNotificationOn, activity))
+        bookmarkRepository.save(ActivityBookmark(userWithNotificationOff, activity))
+        bookmarkRepository.save(ActivityBookmark(userWithNotificationOn, activity))
 
         // when
         val result = activityDeadlineNotificationService.sendDeadlineNotificationsForDays(
@@ -159,8 +157,8 @@ class ActivityDeadlineNotificationServiceTest : IntegrationTest() {
         createNotificationPreference(user2, bookmarkEnabled = false)
         
         // 모두 북마크
-        bookmarkRepository.save(Bookmark(user1, activity))
-        bookmarkRepository.save(Bookmark(user2, activity))
+        bookmarkRepository.save(ActivityBookmark(user1, activity))
+        bookmarkRepository.save(ActivityBookmark(user2, activity))
 
         // when
         val result = activityDeadlineNotificationService.sendDeadlineNotificationsForDays(

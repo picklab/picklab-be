@@ -16,16 +16,13 @@ import picklab.backend.activity.domain.repository.ActivityGroupRepository
 import picklab.backend.activity.domain.repository.ActivityRepository
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.helper.CleanUp
-import picklab.backend.job.template.IntegrationTest
+import picklab.backend.template.IntegrationTest
+
 import java.time.LocalDate
 import java.time.ZoneId
 
 @DisplayName("활동 마감일 서비스 테스트")
 class ActivityDeadlineServiceTest : IntegrationTest() {
-
-    @Autowired
-    private lateinit var cleanUp: CleanUp
-
     @Autowired
     private lateinit var activityService: ActivityService
 
