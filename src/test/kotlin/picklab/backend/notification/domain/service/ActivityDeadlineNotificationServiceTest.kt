@@ -124,7 +124,7 @@ class ActivityDeadlineNotificationServiceTest : IntegrationTest() {
     @DisplayName("북마크한 사용자가 없으면 알림을 전송하지 않는다")
     fun `should not send notification when no users bookmarked`() {
         // given
-        val activity = createActivity(LocalDate.now().plusDays(1))
+        createActivity(LocalDate.now().plusDays(1))
         val user = createMember("사용자")
         createNotificationPreference(user, bookmarkEnabled = true)
         // 북마크하지 않음

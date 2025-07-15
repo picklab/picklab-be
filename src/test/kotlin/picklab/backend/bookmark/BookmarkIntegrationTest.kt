@@ -102,13 +102,13 @@ class BookmarkIntegrationTest : IntegrationTest() {
             @DisplayName("[성공] 활동 북마크를 생성한다")
             fun createActivityBookmarkSuccess() {
                 // when
-                val result =
-                    mockMvc
-                        .post("/v1/activities/${activity.id}/bookmarks") {
-                        }.andExpect { status { isCreated() } }
-                        .andExpect { jsonPath("$.code") { value(SuccessCode.ACTIVITY_BOOKMARK_CREATED.status.value()) } }
-                        .andExpect { jsonPath("$.message") { value(SuccessCode.ACTIVITY_BOOKMARK_CREATED.message) } }
-                        .andReturn()
+
+                mockMvc
+                    .post("/v1/activities/${activity.id}/bookmarks") {
+                    }.andExpect { status { isCreated() } }
+                    .andExpect { jsonPath("$.code") { value(SuccessCode.ACTIVITY_BOOKMARK_CREATED.status.value()) } }
+                    .andExpect { jsonPath("$.message") { value(SuccessCode.ACTIVITY_BOOKMARK_CREATED.message) } }
+                    .andReturn()
 
                 // then
                 val exist = activityBookmarkRepository.existsByMemberAndActivity(member, activity)

@@ -25,10 +25,6 @@ class PopularActivityNotificationService(
 
     private val logger = this.logger()
 
-    /**
-     * 인기 공고 알림을 전송합니다
-     * 각 배치별로 독립적인 트랜잭션으로 처리됩니다
-     */
     fun sendPopularActivityNotifications(): Int {
         logger.info("인기 공고 알림 전송 시작")
         
@@ -38,15 +34,7 @@ class PopularActivityNotificationService(
             logger.info("인기 공고 알림 전송 완료: 전송할 인기 공고 없음")
             return 0
         }
-        
-        // 2. 해당 활동에 대해 이미 인기 공고 알림이 발송되었는지 확인
-        val alreadySent = notificationRepository.existsPopularActivityNotificationByActivityId(popularActivity.id)
-        if (alreadySent) {
-            logger.info("인기 공고 알림 전송 완료: 이미 발송된 공고 (활동 ID: ${popularActivity.id})")
-            return 0
-        }
-        
-        // 3. 페이징을 통해 배치 단위로 알림 전송
+
         var totalSentCount = 0
         var currentPage = 0
         val batchSize = notificationProperties.popular.batchSize
@@ -60,8 +48,7 @@ class PopularActivityNotificationService(
             }
             
             val memberIds = memberIdsPage.content
-            
-            // 4. 배치 단위로 알림 생성 및 전송 (각 배치별로 독립적인 트랜잭션)
+
             val batchSentCount = runCatching {
                 sendNotificationBatch(popularActivity.id, popularActivity.title, memberIds, currentPage + 1)
             }.getOrElse { exception ->
@@ -91,8 +78,27 @@ class PopularActivityNotificationService(
     /**
      * 배치 단위로 알림을 전송합니다 (독립적인 트랜잭션)
      */
-    fun sendNotificationBatch(activityId: Long, activityTitle: String, memberIds: List<Long>, batchNumber: Int): Int {
-        val notifications = memberIds.map { memberId ->
+    fun sendNotificationBatch(
+        activityId: Long,
+        activityTitle: String,
+        memberIds: List<Long>,
+        batchNumber: Int
+    ): Int {
+        // 해당 활동에 대한 인기 공고 알림을 이미 받지 않은 사용자들만 필터링
+        val filteredMemberIds = memberIds.filter { memberId ->
+            !notificationRepository.existsByTypeAndReferenceIdAndMemberId(
+                NotificationType.POPULAR_ACTIVITY,
+                activityId.toString(),
+                memberId
+            )
+        }
+        
+        if (filteredMemberIds.isEmpty()) {
+            logger.info("인기 공고 알림 배치 $batchNumber 처리 완료: 0건 전송 (모든 사용자가 이미 알림 수신)")
+            return 0
+        }
+        
+        val notifications = filteredMemberIds.map { memberId ->
             createPopularActivityNotification(activityId, activityTitle, memberId)
         }
         
@@ -103,7 +109,7 @@ class PopularActivityNotificationService(
             sendRealtimeNotification(notification)
         }
         
-        logger.info("인기 공고 알림 배치 $batchNumber 처리 완료: ${savedNotifications.size}건 전송")
+        logger.info("인기 공고 알림 배치 $batchNumber 처리 완료: ${savedNotifications.size}건 전송 (전체 ${memberIds.size}명 중 ${filteredMemberIds.size}명에게 전송)")
         return savedNotifications.size
     }
 
@@ -118,7 +124,8 @@ class PopularActivityNotificationService(
             title = title,
             type = NotificationType.POPULAR_ACTIVITY,
             link = "/activities/$activityId",
-            member = member
+            member = member,
+            referenceId = activityId.toString()
         )
     }
 

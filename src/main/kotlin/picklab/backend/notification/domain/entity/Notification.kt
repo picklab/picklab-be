@@ -28,6 +28,9 @@ class Notification(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     val member: Member,
+    @Column(name = "reference_id")
+    @Comment("참조값")
+    val referenceId: String? = null,
 ) : SoftDeleteEntity() {
 
     fun read() {

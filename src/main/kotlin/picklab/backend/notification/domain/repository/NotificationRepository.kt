@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 import picklab.backend.member.domain.entity.Member
 import picklab.backend.notification.domain.entity.Notification
+import picklab.backend.notification.domain.entity.NotificationType
 import java.time.LocalDateTime
 
 @Repository
@@ -55,13 +56,10 @@ interface NotificationRepository : JpaRepository<Notification, Long> {
 
     fun findAllByMember(member: Member) : List<Notification>
 
+    fun existsByTypeAndReferenceId(type: NotificationType, referenceId: String): Boolean
+    
     /**
-     * 특정 활동에 대해 인기 공고 알림이 이미 발송되었는지 확인합니다
+     * 특정 사용자가 특정 활동에 대한 특정 타입의 알림을 이미 받았는지 확인합니다
      */
-    @Query("""
-        SELECT COUNT(n) > 0 FROM Notification n 
-        WHERE n.type = 'POPULAR_ACTIVITY' 
-        AND n.link = CONCAT('/activities/', :activityId)
-    """)
-    fun existsPopularActivityNotificationByActivityId(@Param("activityId") activityId: Long): Boolean
+    fun existsByTypeAndReferenceIdAndMemberId(type: NotificationType, referenceId: String, memberId: Long): Boolean
 }

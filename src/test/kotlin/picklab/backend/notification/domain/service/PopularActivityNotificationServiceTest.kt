@@ -118,10 +118,10 @@ class PopularActivityNotificationServiceTest : IntegrationTest() {
     }
 
     @Test
-    @DisplayName("이미 보낸 인기 공고 알림의 경우 2번 이상 발행되지 않는다")
-    fun `should not send duplicate notification for same popular activity`() {
+    @DisplayName("같은 사용자가 같은 인기 공고 알림을 2번 이상 받지 않는다")
+    fun `should not send duplicate notification for same popular activity to same user`() {
         // given
-        val popularActivity = createPopularActivity("인기 공고", viewCount = 200L, bookmarkCount = 10)
+        createPopularActivity("인기 공고", viewCount = 200L, bookmarkCount = 10)
         val user1 = createMember("사용자1")
         val user2 = createMember("사용자2")
         
@@ -139,9 +139,41 @@ class PopularActivityNotificationServiceTest : IntegrationTest() {
         // when - 두 번째 실행 (같은 인기 공고)
         val secondResult = popularActivityNotificationService.sendPopularActivityNotifications()
 
-        // then - 두 번째 실행에서는 중복 방지로 0건 전송
-        assertThat(secondResult).isEqualTo(0) // 0건 전송 (중복 방지)
+        // then - 두 번째 실행에서는 사용자별 중복 방지로 0건 전송
+        assertThat(secondResult).isEqualTo(0) // 0건 전송 (사용자별 중복 방지)
         assertThat(notificationRepository.findAll()).hasSize(2) // 여전히 2건만 존재
+    }
+
+    @Test
+    @DisplayName("다른 인기 공고가 나타나면 사용자들이 새로운 알림을 받을 수 있다")
+    fun `should send notification for different popular activity even after previous notification`() {
+        // given
+        val user1 = createMember("사용자1")
+        val user2 = createMember("사용자2")
+        
+        // 모든 사용자 알림 설정 ON
+        createNotificationPreference(user1, popularEnabled = true)
+        createNotificationPreference(user2, popularEnabled = true)
+
+        // 첫 번째 인기 공고
+        createPopularActivity("첫 번째 인기 공고", viewCount = 200L, bookmarkCount = 10)
+
+        // when - 첫 번째 인기 공고 알림 전송
+        val firstResult = popularActivityNotificationService.sendPopularActivityNotifications()
+
+        // then
+        assertThat(firstResult).isEqualTo(2)
+        assertThat(notificationRepository.findAll()).hasSize(2)
+
+        // given - 두 번째 인기 공고가 더 인기해짐
+        createPopularActivity("두 번째 인기 공고", viewCount = 300L, bookmarkCount = 15)
+
+        // when - 두 번째 인기 공고 알림 전송
+        val secondResult = popularActivityNotificationService.sendPopularActivityNotifications()
+
+        // then - 새로운 활동이므로 다시 알림 전송
+        assertThat(secondResult).isEqualTo(2) // 새로운 활동에 대해 2건 전송
+        assertThat(notificationRepository.findAll()).hasSize(4) // 총 4건 존재
     }
 
     @Test
@@ -164,7 +196,7 @@ class PopularActivityNotificationServiceTest : IntegrationTest() {
     @DisplayName("모든 사용자가 인기 공고 알림을 끈 경우 알림을 전송하지 않는다")
     fun `should not send notification when all users disabled popular activity notification`() {
         // given
-        val popularActivity = createPopularActivity("인기 공고", viewCount = 100L, bookmarkCount = 5)
+        createPopularActivity("인기 공고", viewCount = 100L, bookmarkCount = 5)
         val user1 = createMember("사용자1")
         val user2 = createMember("사용자2")
         
