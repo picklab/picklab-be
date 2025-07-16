@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.CacheManager
 import org.springframework.test.web.servlet.get
 import picklab.backend.activity.domain.entity.ActivityBookmark
 import picklab.backend.activity.domain.entity.ActivityGroup
@@ -48,6 +49,9 @@ class ActivityIntegrationTest : IntegrationTest() {
 
     @Autowired
     lateinit var activityBookmarkRepository: ActivityBookmarkRepository
+
+    @Autowired
+    lateinit var cacheManager: CacheManager
 
     lateinit var activityGroup: ActivityGroup
 
@@ -1220,6 +1224,71 @@ class ActivityIntegrationTest : IntegrationTest() {
             assertThat(got.regions).isEqualTo(listOf("서울", "인천"))
             assertThat(got.benefits).isEqualTo("테스트 혜택")
             assertThat(got.isBookmarked).isTrue
+        }
+    }
+
+    @Nested
+    @DisplayName("활동 조회 수 증가 중복 방지 테스트")
+    inner class IncreaseViewCountTest {
+        @BeforeEach
+        fun cacheClear() {
+            cacheManager.getCache("activityViewCount")?.clear()
+        }
+
+        @Test
+        @DisplayName("[성공] 2개의 다른 ip + user-agent 에서 각각 30번의 요청을 날려도 조회수는 20 증가한다")
+        fun increaseViewCountLimitOtherUserAgentIp() {
+            // given
+            val given =
+                activityRepository.save(
+                    ExternalActivity(
+                        title = "테스트 대외활동",
+                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                        targetAudience = ParticipantType.WORKER,
+                        location = LocationType.SEOUL_INCHEON,
+                        recruitmentStartDate = LocalDate.now().plusDays(1),
+                        recruitmentEndDate = LocalDate.now().plusMonths(1),
+                        startDate = LocalDate.now().plusMonths(3),
+                        endDate = LocalDate.now().plusMonths(6),
+                        status = RecruitmentStatus.OPEN,
+                        viewCount = 0L,
+                        duration =
+                            ChronoUnit.DAYS
+                                .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
+                                .toInt(),
+                        activityThumbnailUrl = null,
+                        activityGroup = activityGroup,
+                        activityField = ActivityFieldType.MENTORING,
+                        benefit = "테스트 혜택",
+                    ),
+                )
+            assertThat(given.viewCount).isEqualTo(0)
+
+            var requestCount = 0
+
+            // when
+            // 1번째 30회 조회
+            repeat(30) {
+                requestCount++
+                mockMvc
+                    .get("/v1/activities/${given.id}") {
+                        header("User-Agent", "Test1")
+                    }.andExpect { status { isOk() } }
+            }
+
+            // 2번째 30회 조회
+            repeat(30) {
+                requestCount++
+                mockMvc
+                    .get("/v1/activities/${given.id}") {
+                        header("User-Agent", "Test2")
+                    }.andExpect { status { isOk() } }
+            }
+
+            // then
+            val updated = activityRepository.findById(given.id).get()
+            assertThat(requestCount).isEqualTo(60)
+            assertThat(updated.viewCount).isEqualTo(20)
         }
     }
 }
