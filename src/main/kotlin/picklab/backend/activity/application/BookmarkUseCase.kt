@@ -18,7 +18,7 @@ class BookmarkUseCase(
         activityId: Long,
     ) {
         val member = memberService.findActiveMember(memberId)
-        val activity = activityService.mustFindActiveActivity(activityId)
+        val activity = activityService.mustFindById(activityId)
 
         activityBookmarkService.createActivityBookmark(member, activity)
     }
@@ -29,7 +29,7 @@ class BookmarkUseCase(
         activityId: Long,
     ) {
         val member = memberService.findActiveMember(memberId)
-        val activity = activityService.mustFindActiveActivity(activityId)
+        val activity = activityService.mustFindById(activityId)
 
         activityBookmarkService.removeActivityBookmark(member, activity)
     }

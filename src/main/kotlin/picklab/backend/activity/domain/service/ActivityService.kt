@@ -16,16 +16,17 @@ import java.time.LocalDate
 class ActivityService(
     private val activityRepository: ActivityRepository,
 ) {
+    /**
+     * 활동 ID 값을 바탕으로 삭제되지 않은 활동을 반환합니다
+     */
     fun mustFindById(activityId: Long): Activity =
         activityRepository
             .findById(activityId)
             .orElseThrow { throw BusinessException(ErrorCode.NOT_FOUND_ACTIVITY) }
 
-    fun mustFindActiveActivity(activityId: Long): Activity =
-        activityRepository
-            .findById(activityId)
-            .orElseThrow { throw BusinessException(ErrorCode.NOT_FOUND_ACTIVITY) }
-
+    /**
+     * 조건과 일치하는 활동 리스트를 페이징으로 가져옵니다
+     */
     fun getActivities(
         queryData: ActivitySearchCommand,
         pageable: PageRequest,
@@ -34,6 +35,9 @@ class ActivityService(
         pageable = pageable,
     )
 
+    /**
+     * 활동 카테고리 별, 불필요한 데이터가 파라미터로 넘어올 경우 이를 제거하고 정의된 규격에 맞게 파라미터 값을 조정합니다
+     */
     fun adjustQueryByCategory(query: ActivitySearchCommand): ActivitySearchCommand =
         when (query.category) {
             ActivityType.EXTRACURRICULAR -> {
@@ -88,6 +92,9 @@ class ActivityService(
             }
         }
 
+    /**
+     * 기간의 범위가 임의로 들어 왔을 때 이를 조정합니다.
+     */
     private fun sanitizeDurationRange(duration: List<Long>?): List<Long>? {
         val filteredDuration = duration?.filter { it >= 0 } ?: return null
         if (filteredDuration.isEmpty()) return null
@@ -98,6 +105,9 @@ class ActivityService(
         return if (min == max) listOf(min) else listOf(min, max)
     }
 
+    /**
+     * 상금의 범위가 임의로 들어 왔을 때 이를 조정합니다
+     */
     private fun sanitizeAwardRange(award: List<Long>?): List<Long>? {
         val filteredAward = award?.filter { it >= 0 } ?: return null
         if (filteredAward.isEmpty()) return null
@@ -136,17 +146,19 @@ class ActivityService(
     /**
      * 특정 마감일에 해당하는 모집 중인 활동들을 조회합니다
      */
-    fun getActivitiesEndingOnDate(targetDate: LocalDate): List<Activity> {
-        return activityRepository.findByRecruitmentEndDateAndStatus(
+    fun getActivitiesEndingOnDate(targetDate: LocalDate): List<Activity> =
+        activityRepository.findByRecruitmentEndDateAndStatus(
             targetDate = targetDate,
-            status = RecruitmentStatus.OPEN
+            status = RecruitmentStatus.OPEN,
         )
-    }
 
     /**
      * 기준 날짜로부터 특정 일수 후의 마감일에 해당하는 모집 중인 활동들을 조회합니다
      */
-    fun getActivitiesEndingInDays(baseDate: LocalDate, daysUntilDeadline: Int): List<Activity> {
+    fun getActivitiesEndingInDays(
+        baseDate: LocalDate,
+        daysUntilDeadline: Int,
+    ): List<Activity> {
         val targetDate = baseDate.plusDays(daysUntilDeadline.toLong())
         return getActivitiesEndingOnDate(targetDate)
     }
@@ -156,4 +168,11 @@ class ActivityService(
      * 인기도는 조회수와 북마크 수를 합산하여 계산합니다.
      */
     fun getMostPopularActivity(): Activity? = activityRepository.findMostPopularActivity()
+
+    /**
+     * 활동 조회수를 증가시킵니다
+     */
+    fun increaseViewCount(activity: Activity) {
+        activity.increaseViewCount()
+    }
 }

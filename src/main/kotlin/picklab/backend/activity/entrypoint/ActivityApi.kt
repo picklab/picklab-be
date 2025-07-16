@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.ModelAttribute
@@ -64,6 +65,7 @@ interface ActivityApi {
     )
     fun getActivitiesDetail(
         @Parameter(description = "활동 ID값") @PathVariable activityId: Long,
+        request: HttpServletRequest,
     ): ResponseEntity<ResponseWrapper<GetActivityDetailResponse>>
 
     @Operation(
