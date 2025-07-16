@@ -61,38 +61,4 @@ class Review(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "activity_id", nullable = false)
     val activity: Activity,
-) : SoftDeleteEntity() {
-    companion object {
-        fun create(
-            overallScore: Int,
-            infoScore: Int,
-            difficultyScore: Int,
-            benefitScore: Int,
-            summary: String,
-            strength: String,
-            weakness: String,
-            tips: String? = null,
-            jobRelevanceScore: Int,
-            url: String? = null,
-            member: Member,
-            activity: Activity,
-        ): Review {
-            val reviewApprovalStatus = if (url == null) ReviewApprovalStatus.REJECTED else ReviewApprovalStatus.PENDING
-            return Review(
-                overallScore = overallScore,
-                infoScore = infoScore,
-                difficultyScore = difficultyScore,
-                benefitScore = benefitScore,
-                summary = summary,
-                strength = strength,
-                weakness = weakness,
-                tips = tips,
-                jobRelevanceScore = jobRelevanceScore,
-                url = url,
-                reviewApprovalStatus = reviewApprovalStatus,
-                member = member,
-                activity = activity,
-            )
-        }
-    }
-}
+) : SoftDeleteEntity()
