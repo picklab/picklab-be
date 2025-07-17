@@ -47,6 +47,7 @@ class SecurityConfig(
             authorizeHttpRequests {
                 authorize(HttpMethod.OPTIONS, "/**", permitAll)
                 readOnlyUrl.forEach { path -> authorize(HttpMethod.GET, path, permitAll) }
+                authorize(HttpMethod.POST, "/v1/activities/{activityId}/view", permitAll)
                 authorize(anyRequest, authenticated)
             }
             exceptionHandling {
