@@ -43,13 +43,21 @@ class ActivityController(
     @GetMapping("/{activityId}")
     override fun getActivitiesDetail(
         @Parameter(description = "활동 ID값") @PathVariable activityId: Long,
-        request: HttpServletRequest,
     ): ResponseEntity<ResponseWrapper<GetActivityDetailResponse>> {
         val authentication = SecurityContextHolder.getContext().authentication
         val memberId: Long? = (authentication?.principal as? MemberPrincipal)?.memberId
 
-        val data = activityUseCase.getActivityDetail(activityId, memberId, request)
+        val data = activityUseCase.getActivityDetail(activityId, memberId)
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.GET_ACTIVITY_DETAIL, data))
+    }
+
+    @PostMapping("/{activityId}/view")
+    override fun increaseViewCount(
+        @Parameter(description = "활동 ID값") @PathVariable activityId: Long,
+        request: HttpServletRequest,
+    ): ResponseEntity<ResponseWrapper<Unit>> {
+        activityUseCase.increaseViewCount(activityId, request)
+        return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.INCREASE_VIEW_COUNT))
     }
 
     override fun applyActivity(

@@ -61,21 +61,11 @@ class ActivityUseCase(
     /**
      * 활동 ID에 해당하는 활동의 상세 데이터를 가져옵니다.
      */
-    @Transactional
     fun getActivityDetail(
         activityId: Long,
         memberId: Long?,
-        request: HttpServletRequest,
     ): GetActivityDetailResponse {
         val activity = activityService.mustFindById(activityId)
-
-        val ip = request.remoteAddr
-        val userAgent = request.getHeader("User-Agent")
-        val viewIdentifier = "activity:${activity.id}:ip:$ip:userAgent:$userAgent"
-
-        if (viewCountLimiterPort.isViewCountUpAllowed(activityId, viewIdentifier)) {
-            activityService.increaseViewCount(activity)
-        }
 
         val bookmarkCount = activityBookmarkService.countByActivityId(activityId)
         val isBookmarked = memberId?.let { activityBookmarkService.existsByMemberIdAndActivityId(memberId, activityId) } ?: false
@@ -85,5 +75,21 @@ class ActivityUseCase(
             bookmarkCount = bookmarkCount,
             isBookmarked = isBookmarked,
         )
+    }
+
+    @Transactional
+    fun increaseViewCount(
+        activityId: Long,
+        request: HttpServletRequest,
+    ) {
+        val activity = activityService.mustFindById(activityId)
+
+        val ip = request.remoteAddr
+        val userAgent = request.getHeader("User-Agent")
+        val viewIdentifier = "activity:${activity.id}:ip:$ip:userAgent:$userAgent"
+
+        if (viewCountLimiterPort.isViewCountUpAllowed(activityId, viewIdentifier)) {
+            activityService.increaseViewCount(activity)
+        }
     }
 }
