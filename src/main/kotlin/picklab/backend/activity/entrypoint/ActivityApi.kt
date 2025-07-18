@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.ModelAttribute
@@ -65,6 +66,20 @@ interface ActivityApi {
     fun getActivitiesDetail(
         @Parameter(description = "활동 ID값") @PathVariable activityId: Long,
     ): ResponseEntity<ResponseWrapper<GetActivityDetailResponse>>
+
+    @Operation(
+        summary = "활동 조회수 증가",
+        description = "해당 활동의 조회수를 1 증가시킵니다.",
+        responses = [
+            ApiResponse(responseCode = "200", description = "조회수 증가에 성공했습니다."),
+            ApiResponse(responseCode = "404", description = "해당 활동을 찾을 수 없습니다."),
+            ApiResponse(responseCode = "500", description = "서버 오류입니다."),
+        ],
+    )
+    fun increaseViewCount(
+        @Parameter(description = "활동 ID값") @PathVariable activityId: Long,
+        request: HttpServletRequest,
+    ): ResponseEntity<ResponseWrapper<Unit>>
 
     @Operation(
         summary = "활동 지원",

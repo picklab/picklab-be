@@ -1,6 +1,7 @@
 package picklab.backend.activity.entrypoint
 
 import io.swagger.v3.oas.annotations.Parameter
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.context.SecurityContextHolder
@@ -48,6 +49,15 @@ class ActivityController(
 
         val data = activityUseCase.getActivityDetail(activityId, memberId)
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.GET_ACTIVITY_DETAIL, data))
+    }
+
+    @PostMapping("/{activityId}/view")
+    override fun increaseViewCount(
+        @Parameter(description = "활동 ID값") @PathVariable activityId: Long,
+        request: HttpServletRequest,
+    ): ResponseEntity<ResponseWrapper<Unit>> {
+        activityUseCase.increaseViewCount(activityId, request)
+        return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.INCREASE_VIEW_COUNT))
     }
 
     override fun applyActivity(

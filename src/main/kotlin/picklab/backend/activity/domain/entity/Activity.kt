@@ -83,4 +83,8 @@ abstract class Activity(
     companion object {
         const val UNLIMITED_DURATION = -1
     }
+
+    fun increaseViewCount() {
+        this.viewCount++
+    }
 }

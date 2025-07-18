@@ -13,6 +13,8 @@ version = "0.0.1-SNAPSHOT"
 val swaggerVersion = "2.8.8"
 val jjwtVersion = "0.12.6"
 val queryDSLVersion = "7.0"
+val archUnitVersion = "1.4.1"
+val caffeineCacheVersion = "3.2.2"
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
@@ -60,7 +62,10 @@ dependencies {
     annotationProcessor("io.github.openfeign.querydsl:querydsl-apt:$queryDSLVersion:jakarta")
 
     // archunit
-    testImplementation("com.tngtech.archunit:archunit-junit5:1.4.1")
+    testImplementation("com.tngtech.archunit:archunit-junit5:$archUnitVersion")
+
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+    implementation("com.github.ben-manes.caffeine:caffeine:$caffeineCacheVersion")
 }
 
 kotlin {
@@ -90,35 +95,39 @@ tasks.jacocoTestReport {
         csv.required.set(false)
         html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
     }
-    
+
     classDirectories.setFrom(
-        files(classDirectories.files.map {
-            fileTree(it) {
-                exclude(
-                    "**/entrypoint/request/**",
-                    "**/entrypoint/response/**",
-                    "**/domain/entity/**"
-                )
-            }
-        })
+        files(
+            classDirectories.files.map {
+                fileTree(it) {
+                    exclude(
+                        "**/entrypoint/request/**",
+                        "**/entrypoint/response/**",
+                        "**/domain/entity/**",
+                    )
+                }
+            },
+        ),
     )
 }
 
 tasks.jacocoTestCoverageVerification {
     dependsOn(tasks.jacocoTestReport)
-    
+
     classDirectories.setFrom(
-        files(classDirectories.files.map {
-            fileTree(it) {
-                exclude(
-                    "**/entrypoint/request/**",
-                    "**/entrypoint/response/**",
-                    "**/domain/entity/**"
-                )
-            }
-        })
+        files(
+            classDirectories.files.map {
+                fileTree(it) {
+                    exclude(
+                        "**/entrypoint/request/**",
+                        "**/entrypoint/response/**",
+                        "**/domain/entity/**",
+                    )
+                }
+            },
+        ),
     )
-    
+
     violationRules {
         rule {
             limit {

@@ -1,7 +1,9 @@
 package picklab.backend.activity.application
 
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import picklab.backend.activity.application.model.ActivityItemWithBookmark
 import picklab.backend.activity.application.model.ActivitySearchCommand
 import picklab.backend.activity.domain.service.ActivityBookmarkService
@@ -13,7 +15,11 @@ import picklab.backend.activity.entrypoint.response.GetActivityListResponse
 class ActivityUseCase(
     private val activityService: ActivityService,
     private val activityBookmarkService: ActivityBookmarkService,
+    private val viewCountLimiterPort: ViewCountLimiterPort,
 ) {
+    /**
+     * 검색 필터에 일치하는 활동 리스트 및 북마크 여부를 페이징으로 가져옵니다.
+     */
     fun getActivities(
         queryParams: ActivitySearchCommand,
         size: Int,
@@ -52,12 +58,15 @@ class ActivityUseCase(
         )
     }
 
+    /**
+     * 활동 ID에 해당하는 활동의 상세 데이터를 가져옵니다.
+     */
     fun getActivityDetail(
         activityId: Long,
         memberId: Long?,
     ): GetActivityDetailResponse {
-        // TODO 조회수 증가 로직 추가 필요
         val activity = activityService.mustFindById(activityId)
+
         val bookmarkCount = activityBookmarkService.countByActivityId(activityId)
         val isBookmarked = memberId?.let { activityBookmarkService.existsByMemberIdAndActivityId(memberId, activityId) } ?: false
 
@@ -68,5 +77,19 @@ class ActivityUseCase(
         )
     }
 
-    fun mustFindActivity(activityId: Long) = activityService.mustFindActiveActivity(activityId)
+    @Transactional
+    fun increaseViewCount(
+        activityId: Long,
+        request: HttpServletRequest,
+    ) {
+        val activity = activityService.mustFindById(activityId)
+
+        val ip = request.remoteAddr
+        val userAgent = request.getHeader("User-Agent")
+        val viewIdentifier = "activity:${activity.id}:ip:$ip:userAgent:$userAgent"
+
+        if (viewCountLimiterPort.isViewCountUpAllowed(activityId, viewIdentifier)) {
+            activity.increaseViewCount()
+        }
+    }
 }
