@@ -41,4 +41,7 @@ enum class SuccessCode(
     MARK_NOTIFICATION_READ_SUCCESS(HttpStatus.OK, "알림 읽음 처리에 성공했습니다."),
     MARK_ALL_NOTIFICATIONS_READ_SUCCESS(HttpStatus.OK, "모든 알림 읽음 처리에 성공했습니다."),
     DELETE_ALL_MEMBER_NOTIFICATION(HttpStatus.OK, "모든 알림이 삭제되었습니다."),
+
+    // Review 도메인 관련
+    CREATE_REVIEW_SUCCESS(HttpStatus.OK, "리뷰 생성에 성공했습니다."),
 }

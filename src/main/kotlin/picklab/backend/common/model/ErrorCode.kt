@@ -39,6 +39,11 @@ enum class ErrorCode(
     NOT_FOUND_ACTIVITY(HttpStatus.BAD_REQUEST, "활동 정보를 찾을 수 없습니다."),
 
     /**
+     * 활동 참여 도메인 관련
+     */
+    NOT_FOUND_ACTIVITY_PARTICIPATION(HttpStatus.NOT_FOUND, "해당 활동에 대한 참여 이력이 존재하지 않습니다."),
+
+    /**
      * 아카이브 도메인 관련
      */
     NOT_FOUND_ARCHIVE(HttpStatus.NOT_FOUND, "아카이브 정보를 찾을 수 없습니다."),
@@ -53,4 +58,11 @@ enum class ErrorCode(
      * 알림 도메인 관련
      */
     NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "알림 정보를 찾을 수 없습니다."),
+
+    /**
+     * 리뷰 도메인 관련
+     */
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰 정보를 찾을 수 없습니다."),
+    CANNOT_WRITE_REVIEW(HttpStatus.BAD_REQUEST, "해당 활동에 대해 리뷰를 작성할 수 없는 상태입니다."),
+    ALREADY_EXISTS_REVIEW(HttpStatus.BAD_REQUEST, "이미 해당 활동에 대해 리뷰를 작성했습니다."),
 }
