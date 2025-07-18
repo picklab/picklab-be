@@ -89,7 +89,7 @@ class ActivityUseCase(
         val viewIdentifier = "activity:${activity.id}:ip:$ip:userAgent:$userAgent"
 
         if (viewCountLimiterPort.isViewCountUpAllowed(activityId, viewIdentifier)) {
-            activityService.increaseViewCount(activity)
+            activity.increaseViewCount()
         }
     }
 }

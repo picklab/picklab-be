@@ -168,11 +168,4 @@ class ActivityService(
      * 인기도는 조회수와 북마크 수를 합산하여 계산합니다.
      */
     fun getMostPopularActivity(): Activity? = activityRepository.findMostPopularActivity()
-
-    /**
-     * 활동 조회수를 증가시킵니다
-     */
-    fun increaseViewCount(activity: Activity) {
-        activity.increaseViewCount()
-    }
 }
