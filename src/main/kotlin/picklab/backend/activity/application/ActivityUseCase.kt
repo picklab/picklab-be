@@ -77,6 +77,10 @@ class ActivityUseCase(
         )
     }
 
+    /**
+     * 조회수를 증가시킵니다. 로컬 캐시에 "activity:{activity.id}:ip:{ip}:userAgent:{userAgent}의 키 값을 이용하여
+     * 일정 기간 내 일정 횟수의 조회수 증가만 가능합니다.
+     */
     @Transactional
     fun increaseViewCount(
         activityId: Long,

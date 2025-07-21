@@ -42,6 +42,9 @@ enum class ErrorCode(
      * 활동 참여 도메인 관련
      */
     NOT_FOUND_ACTIVITY_PARTICIPATION(HttpStatus.NOT_FOUND, "해당 활동에 대한 참여 이력이 존재하지 않습니다."),
+    ALREADY_APPLIED_ACTIVITY(HttpStatus.BAD_REQUEST, "이미 지원한 활동입니다."),
+    RECRUITMENT_NOT_STARTED(HttpStatus.BAD_REQUEST, "아직 모집이 시작되지 않았습니다."),
+    RECRUITMENT_ENDED(HttpStatus.BAD_REQUEST, "모집이 마감되었습니다."),
 
     /**
      * 아카이브 도메인 관련
