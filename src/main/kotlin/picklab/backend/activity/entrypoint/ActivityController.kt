@@ -3,7 +3,6 @@ package picklab.backend.activity.entrypoint
 import io.swagger.v3.oas.annotations.Parameter
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.ResponseEntity
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import picklab.backend.activity.application.ActivityUseCase
@@ -58,12 +57,5 @@ class ActivityController(
     ): ResponseEntity<ResponseWrapper<Unit>> {
         activityUseCase.increaseViewCount(activityId, request)
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.INCREASE_VIEW_COUNT))
-    }
-
-    override fun applyActivity(
-        @AuthenticationPrincipal member: MemberPrincipal,
-        @Parameter(description = "활동 ID값") @PathVariable activityId: Long,
-    ): ResponseEntity<ResponseWrapper<Unit>> {
-        TODO("Not yet implemented")
     }
 }
