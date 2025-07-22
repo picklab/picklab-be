@@ -12,7 +12,7 @@ import picklab.backend.member.domain.MemberService
 import picklab.backend.participation.domain.service.ActivityParticipationService
 import picklab.backend.review.application.model.MyReviewListQueryRequest
 import picklab.backend.review.application.model.ReviewCreateCommand
-import picklab.backend.review.application.service.ReviewQueryService
+import picklab.backend.review.application.service.ReviewOverviewQueryService
 import picklab.backend.review.domain.policy.ReviewApprovalDecider
 import picklab.backend.review.domain.service.ReviewService
 import picklab.backend.review.entrypoint.response.MyReviewsResponse
@@ -24,7 +24,7 @@ class ReviewUseCase(
     private val activityService: ActivityService,
     private val activityParticipationService: ActivityParticipationService,
     private val reviewCreateConverter: ReviewCreateConverter,
-    private val reviewQueryService: ReviewQueryService,
+    private val reviewOverviewQueryService: ReviewOverviewQueryService,
 ) {
     fun createReview(command: ReviewCreateCommand) {
         val member = memberService.findActiveMember(command.memberId)
@@ -46,7 +46,7 @@ class ReviewUseCase(
                 req.size,
                 Sort.by("createdAt").descending(),
             )
-        val page = reviewQueryService.findMyReviews(member.id, pageable)
+        val page = reviewOverviewQueryService.findMyReviews(member.id, pageable)
         val responsePage: Page<MyReviewsResponse> = page.map { MyReviewsResponse.from(it) }
 
         return PageResponse.from(responsePage)

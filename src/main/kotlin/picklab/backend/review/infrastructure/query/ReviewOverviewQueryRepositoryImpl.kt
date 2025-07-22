@@ -8,15 +8,15 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Repository
 import picklab.backend.activity.domain.entity.QActivity.Companion.activity
-import picklab.backend.review.application.query.ReviewQueryRepository
+import picklab.backend.review.application.query.ReviewOverviewQueryRepository
 import picklab.backend.review.application.query.model.MyReviewListItem
 import picklab.backend.review.application.query.model.QMyReviewListItem
 import picklab.backend.review.domain.entity.QReview.Companion.review
 
 @Repository
-class ReviewQueryRepositoryImpl(
+class ReviewOverviewQueryRepositoryImpl(
     private val jpaQueryFactory: JPAQueryFactory,
-) : ReviewQueryRepository {
+) : ReviewOverviewQueryRepository {
     override fun findMyReviews(
         memberId: Long,
         pageable: Pageable,
