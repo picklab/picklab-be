@@ -1,5 +1,8 @@
 package picklab.backend.common.config
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
+import io.swagger.v3.core.jackson.ModelResolver
 import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
@@ -30,4 +33,10 @@ class SwaggerConfig {
             .title("PickLab API")
             .description("PickLab API 명세서")
             .version("v1.0.0")
+
+    @Bean
+    fun modelResolver(objectMapper: ObjectMapper): ModelResolver {
+        objectMapper.propertyNamingStrategy = PropertyNamingStrategies.SNAKE_CASE
+        return ModelResolver(objectMapper)
+    }
 }
