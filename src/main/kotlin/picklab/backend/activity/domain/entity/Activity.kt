@@ -67,6 +67,12 @@ abstract class Activity(
     @Column(name = "duration", nullable = false)
     @Comment("활동 기간(일)")
     var duration: Int = UNLIMITED_DURATION,
+    @Column(name = "activity_homepage_url")
+    @Comment("활동 홈페이지 URL")
+    var activityHomepageUrl: String? = null,
+    @Column(name = "activity_application_url")
+    @Comment("활동 신청 URL")
+    var activityApplicationUrl: String? = null,
     @Column(name = "activity_thumbnail_url")
     @Comment("활동 썸네일 이미지 URL")
     var activityThumbnailUrl: String? = null,
