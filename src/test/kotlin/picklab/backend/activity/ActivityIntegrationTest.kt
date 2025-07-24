@@ -97,6 +97,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                                 ChronoUnit.DAYS
                                     .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                     .toInt(),
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
@@ -121,6 +123,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                                 ChronoUnit.DAYS
                                     .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                     .toInt(),
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
@@ -174,6 +178,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                                 ChronoUnit.DAYS
                                     .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                     .toInt(),
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
@@ -197,6 +203,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                             ChronoUnit.DAYS
                                 .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                 .toInt(),
+                        activityHomepageUrl = null,
+                        activityApplicationUrl = null,
                         activityThumbnailUrl = null,
                         activityGroup = activityGroup,
                         activityField = ActivityFieldType.MENTORING,
@@ -251,6 +259,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                                 ChronoUnit.DAYS
                                     .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                     .toInt(),
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
@@ -274,6 +284,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                             ChronoUnit.DAYS
                                 .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                 .toInt(),
+                        activityHomepageUrl = null,
+                        activityApplicationUrl = null,
                         activityThumbnailUrl = null,
                         activityGroup = activityGroup,
                         activityField = ActivityFieldType.MENTORING,
@@ -328,6 +340,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                                 ChronoUnit.DAYS
                                     .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                     .toInt(),
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
@@ -351,6 +365,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                             ChronoUnit.DAYS
                                 .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                 .toInt(),
+                        activityHomepageUrl = null,
+                        activityApplicationUrl = null,
                         activityThumbnailUrl = null,
                         activityGroup = activityGroup,
                         activityField = ActivityFieldType.MENTORING,
@@ -405,6 +421,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                                 ChronoUnit.DAYS
                                     .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                     .toInt(),
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
@@ -428,6 +446,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                             ChronoUnit.DAYS
                                 .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                 .toInt(),
+                        activityHomepageUrl = null,
+                        activityApplicationUrl = null,
                         activityThumbnailUrl = null,
                         activityGroup = activityGroup,
                         activityField = ActivityFieldType.DOMESTIC_VOLUNTEER,
@@ -485,6 +505,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                                     ChronoUnit.DAYS
                                         .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                         .toInt(),
+                                activityHomepageUrl = null,
+                                activityApplicationUrl = null,
                                 activityThumbnailUrl = null,
                                 activityGroup = activityGroup,
                                 cost = 0L,
@@ -510,6 +532,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                                 ChronoUnit.DAYS
                                     .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                     .toInt(),
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             cost = 0L,
@@ -566,6 +590,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                                     ChronoUnit.DAYS
                                         .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                         .toInt(),
+                                activityHomepageUrl = null,
+                                activityApplicationUrl = null,
                                 activityThumbnailUrl = null,
                                 activityGroup = activityGroup,
                                 cost = 0L,
@@ -591,6 +617,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                                 ChronoUnit.DAYS
                                     .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                     .toInt(),
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             cost = 0L,
@@ -648,6 +676,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                                 ChronoUnit.DAYS
                                     .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                     .toInt(),
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             cost = 0L,
@@ -673,6 +703,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                             ChronoUnit.DAYS
                                 .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                 .toInt(),
+                        activityHomepageUrl = null,
+                        activityApplicationUrl = null,
                         activityThumbnailUrl = null,
                         activityGroup = activityGroup,
                         cost = 0L,
@@ -729,6 +761,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                                 ChronoUnit.DAYS
                                     .between(LocalDate.of(2025, 6, 27), LocalDate.of(2025, 6, 30))
                                     .toInt(),
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             cost = 0L,
@@ -754,6 +788,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                             ChronoUnit.DAYS
                                 .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                 .toInt(),
+                        activityHomepageUrl = null,
+                        activityApplicationUrl = null,
                         activityThumbnailUrl = null,
                         activityGroup = activityGroup,
                         cost = 0L,
@@ -808,6 +844,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                                 ChronoUnit.DAYS
                                     .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                     .toInt(),
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             domain = DomainType.EDUCATION,
@@ -831,6 +869,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                             ChronoUnit.DAYS
                                 .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                 .toInt(),
+                        activityHomepageUrl = null,
+                        activityApplicationUrl = null,
                         activityThumbnailUrl = null,
                         activityGroup = activityGroup,
                         domain = DomainType.SAAS,
@@ -884,6 +924,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                                 ChronoUnit.DAYS
                                     .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                     .toInt(),
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             domain = DomainType.EDUCATION,
@@ -907,6 +949,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                             ChronoUnit.DAYS
                                 .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                 .toInt(),
+                        activityHomepageUrl = null,
+                        activityApplicationUrl = null,
                         activityThumbnailUrl = null,
                         activityGroup = activityGroup,
                         domain = DomainType.SAAS,
@@ -961,6 +1005,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                             ChronoUnit.DAYS
                                 .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                 .toInt(),
+                        activityHomepageUrl = null,
+                        activityApplicationUrl = null,
                         activityThumbnailUrl = null,
                         activityGroup = activityGroup,
                         activityField = ActivityFieldType.MENTORING,
@@ -985,6 +1031,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                                 ChronoUnit.DAYS
                                     .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                     .toInt(),
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
@@ -1037,6 +1085,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                                 ChronoUnit.DAYS
                                     .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                     .toInt(),
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
@@ -1060,6 +1110,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                             ChronoUnit.DAYS
                                 .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                 .toInt(),
+                        activityHomepageUrl = null,
+                        activityApplicationUrl = null,
                         activityThumbnailUrl = null,
                         activityGroup = activityGroup,
                         activityField = ActivityFieldType.MENTORING,
@@ -1113,6 +1165,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                                 ChronoUnit.DAYS
                                     .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                     .toInt(),
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
@@ -1183,6 +1237,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                             ChronoUnit.DAYS
                                 .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                 .toInt(),
+                        activityHomepageUrl = null,
+                        activityApplicationUrl = null,
                         activityThumbnailUrl = null,
                         activityGroup = activityGroup,
                         activityField = ActivityFieldType.MENTORING,
@@ -1258,6 +1314,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                             ChronoUnit.DAYS
                                 .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                                 .toInt(),
+                        activityHomepageUrl = null,
+                        activityApplicationUrl = null,
                         activityThumbnailUrl = null,
                         activityGroup = activityGroup,
                         activityField = ActivityFieldType.MENTORING,
