@@ -3,8 +3,11 @@ package picklab.backend.participation.application
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import picklab.backend.activity.domain.service.ActivityService
+import picklab.backend.common.model.BusinessException
+import picklab.backend.common.model.ErrorCode
 import picklab.backend.member.domain.MemberService
 import picklab.backend.participation.domain.service.ActivityParticipationService
+import picklab.backend.participation.entrypoint.response.GetActivityApplicationUrlResponse
 
 @Component
 class ActivityParticipationUseCase(
@@ -13,17 +16,18 @@ class ActivityParticipationUseCase(
     private val activityParticipationService: ActivityParticipationService,
 ) {
     /**
-     * 지원가능한 활동인지 검사하고, 지원 가능할 시 활동에 지원합니다.
+     * 유효한 활동인지 확인하고, 해당 활동에 지원할 수 있는 링크를 반환합니다.
      */
     @Transactional
-    fun applyToActivity(
-        memberId: Long,
-        activityId: Long,
-    ) {
-        val member = memberService.findActiveMember(memberId)
+    fun getActivityApplicationUrl(activityId: Long): GetActivityApplicationUrlResponse {
         val activity = activityService.mustFindById(activityId)
 
-        activityParticipationService.validateCanApply(member.id, activity)
-        activityParticipationService.applyToActivity(member, activity)
+        val applicationUrl = activity.activityApplicationUrl
+
+        if (applicationUrl.isNullOrBlank()) {
+            throw BusinessException(ErrorCode.NOT_FOUND_ACTIVITY_APPLICATION_URL)
+        }
+
+        return GetActivityApplicationUrlResponse(applicationUrl)
     }
 }

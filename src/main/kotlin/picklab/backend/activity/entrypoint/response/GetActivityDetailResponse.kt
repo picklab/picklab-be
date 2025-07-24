@@ -35,10 +35,12 @@ data class GetActivityDetailResponse(
     val views: Long,
     @Schema(description = "북마크")
     val bookmarks: Long,
-    @Schema(description = "미리보기")
-    val thumbnail: String?,
-    @Schema(description = "홈페이지 URL")
+    @Schema(description = "활동 홈페이지 URL")
     val homepageUrl: String?,
+    @Schema(description = "활동 신청 URL")
+    val applicationUrl: String? = null,
+    @Schema(description = "활동 썸네일 URL")
+    val thumbnail: String?,
     @Schema(description = "지원 상태")
     val applyStatus: String,
     @Schema(description = "북마크 여부")
@@ -103,8 +105,9 @@ data class GetActivityDetailResponse(
             jobTags = null,
             views = activity.viewCount,
             bookmarks = bookmarkCount,
+            homepageUrl = activity.activityHomepageUrl,
+            applicationUrl = activity.activityApplicationUrl,
             thumbnail = activity.activityThumbnailUrl,
-            homepageUrl = null,
             applyStatus = activity.status.name,
             isBookmarked = isBookmarked,
             description = activity.description,
