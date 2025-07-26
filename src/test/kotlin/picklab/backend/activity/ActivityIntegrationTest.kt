@@ -1279,6 +1279,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                             status = RecruitmentStatus.OPEN,
                             viewCount = 10L,
                             duration = 90,
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
@@ -1300,6 +1302,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                             status = RecruitmentStatus.OPEN,
                             viewCount = 10L,
                             duration = 90,
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
@@ -1347,6 +1351,8 @@ class ActivityIntegrationTest : IntegrationTest() {
                             status = RecruitmentStatus.OPEN,
                             viewCount = 200L,
                             duration = 90,
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
                             activityThumbnailUrl = null,
                             activityGroup = activityGroup,
                             activityField = ActivityFieldType.MENTORING,
@@ -1383,39 +1389,39 @@ class ActivityIntegrationTest : IntegrationTest() {
             }
         }
 
-    @Nested
-    @DisplayName("활동 상세 조회 통합 테스트")
-    inner class GetActivityDetailTest {
-        @Test
-        @WithMockUser
-        @DisplayName("[성공] 활동 상세 조회 - 유저 북마크 포함")
-        fun `활동 상세 조회`() {
-            // Given
-            val given =
-                activityRepository.save(
-                    ExternalActivity(
-                        title = "테스트 대외활동",
-                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
-                        targetAudience = ParticipantType.WORKER,
-                        location = LocationType.SEOUL_INCHEON,
-                        recruitmentStartDate = LocalDate.now().plusDays(1),
-                        recruitmentEndDate = LocalDate.now().plusMonths(1),
-                        startDate = LocalDate.now().plusMonths(3),
-                        endDate = LocalDate.now().plusMonths(6),
-                        status = RecruitmentStatus.OPEN,
-                        viewCount = 0L,
-                        duration =
-                            ChronoUnit.DAYS
-                                .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
-                                .toInt(),
-                        activityHomepageUrl = null,
-                        activityApplicationUrl = null,
-                        activityThumbnailUrl = null,
-                        activityGroup = activityGroup,
-                        activityField = ActivityFieldType.MENTORING,
-                        benefit = "테스트 혜택",
-                    ),
-                )
+        @Nested
+        @DisplayName("활동 상세 조회 통합 테스트")
+        inner class GetActivityDetailTest {
+            @Test
+            @WithMockUser
+            @DisplayName("[성공] 활동 상세 조회 - 유저 북마크 포함")
+            fun `활동 상세 조회`() {
+                // Given
+                val given =
+                    activityRepository.save(
+                        ExternalActivity(
+                            title = "테스트 대외활동",
+                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            targetAudience = ParticipantType.WORKER,
+                            location = LocationType.SEOUL_INCHEON,
+                            recruitmentStartDate = LocalDate.now().plusDays(1),
+                            recruitmentEndDate = LocalDate.now().plusMonths(1),
+                            startDate = LocalDate.now().plusMonths(3),
+                            endDate = LocalDate.now().plusMonths(6),
+                            status = RecruitmentStatus.OPEN,
+                            viewCount = 0L,
+                            duration =
+                                ChronoUnit.DAYS
+                                    .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
+                                    .toInt(),
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
+                            activityThumbnailUrl = null,
+                            activityGroup = activityGroup,
+                            activityField = ActivityFieldType.MENTORING,
+                            benefit = "테스트 혜택",
+                        ),
+                    )
 
                 val member =
                     memberRepository.save(
@@ -1464,36 +1470,36 @@ class ActivityIntegrationTest : IntegrationTest() {
                 cacheManager.getCache("activityViewCount")?.clear()
             }
 
-        @Test
-        @DisplayName("[성공] 2개의 다른 ip + user-agent 에서 짧은 시간 내에 대량의 요청을 날려도 조회수에 제한이 걸린다")
-        fun increaseViewCountLimitOtherUserAgentIp() {
-            // given
-            val given =
-                activityRepository.save(
-                    ExternalActivity(
-                        title = "테스트 대외활동",
-                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
-                        targetAudience = ParticipantType.WORKER,
-                        location = LocationType.SEOUL_INCHEON,
-                        recruitmentStartDate = LocalDate.now().plusDays(1),
-                        recruitmentEndDate = LocalDate.now().plusMonths(1),
-                        startDate = LocalDate.now().plusMonths(3),
-                        endDate = LocalDate.now().plusMonths(6),
-                        status = RecruitmentStatus.OPEN,
-                        viewCount = 0L,
-                        duration =
-                            ChronoUnit.DAYS
-                                .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
-                                .toInt(),
-                        activityHomepageUrl = null,
-                        activityApplicationUrl = null,
-                        activityThumbnailUrl = null,
-                        activityGroup = activityGroup,
-                        activityField = ActivityFieldType.MENTORING,
-                        benefit = "테스트 혜택",
-                    ),
-                )
-            assertThat(given.viewCount).isEqualTo(0)
+            @Test
+            @DisplayName("[성공] 2개의 다른 ip + user-agent 에서 짧은 시간 내에 대량의 요청을 날려도 조회수에 제한이 걸린다")
+            fun increaseViewCountLimitOtherUserAgentIp() {
+                // given
+                val given =
+                    activityRepository.save(
+                        ExternalActivity(
+                            title = "테스트 대외활동",
+                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            targetAudience = ParticipantType.WORKER,
+                            location = LocationType.SEOUL_INCHEON,
+                            recruitmentStartDate = LocalDate.now().plusDays(1),
+                            recruitmentEndDate = LocalDate.now().plusMonths(1),
+                            startDate = LocalDate.now().plusMonths(3),
+                            endDate = LocalDate.now().plusMonths(6),
+                            status = RecruitmentStatus.OPEN,
+                            viewCount = 0L,
+                            duration =
+                                ChronoUnit.DAYS
+                                    .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
+                                    .toInt(),
+                            activityHomepageUrl = null,
+                            activityApplicationUrl = null,
+                            activityThumbnailUrl = null,
+                            activityGroup = activityGroup,
+                            activityField = ActivityFieldType.MENTORING,
+                            benefit = "테스트 혜택",
+                        ),
+                    )
+                assertThat(given.viewCount).isEqualTo(0)
 
                 // when
                 var requestCount = 0
