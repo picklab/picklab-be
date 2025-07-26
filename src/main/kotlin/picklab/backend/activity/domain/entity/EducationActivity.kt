@@ -31,6 +31,8 @@ class EducationActivity(
     status: RecruitmentStatus,
     viewCount: Long,
     duration: Int,
+    activityHomepageUrl: String?,
+    activityApplicationUrl: String?,
     activityThumbnailUrl: String?,
     benefit: String,
     @Column(name = "cost")
@@ -56,6 +58,8 @@ class EducationActivity(
         status = status,
         viewCount = viewCount,
         duration = duration,
+        activityHomepageUrl = activityHomepageUrl,
+        activityApplicationUrl = activityApplicationUrl,
         activityThumbnailUrl = activityThumbnailUrl,
         benefit = benefit,
         activityGroup = activityGroup,

@@ -83,6 +83,8 @@ class BookmarkIntegrationTest : IntegrationTest() {
                         ChronoUnit.DAYS
                             .between(LocalDate.of(2025, 9, 1), LocalDate.of(2025, 12, 31))
                             .toInt(),
+                    activityHomepageUrl = null,
+                    activityApplicationUrl = null,
                     activityThumbnailUrl = null,
                     activityGroup = activityGroup,
                     activityField = ActivityFieldType.MENTORING,

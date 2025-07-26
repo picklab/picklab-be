@@ -8,18 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired
 import picklab.backend.activity.domain.entity.ActivityGroup
 import picklab.backend.activity.domain.entity.ExternalActivity
 import picklab.backend.activity.domain.enums.ActivityFieldType
+import picklab.backend.activity.domain.enums.LocationType
 import picklab.backend.activity.domain.enums.OrganizerType
 import picklab.backend.activity.domain.enums.ParticipantType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
-import picklab.backend.activity.domain.enums.LocationType
 import picklab.backend.activity.domain.repository.ActivityGroupRepository
 import picklab.backend.activity.domain.repository.ActivityRepository
 import picklab.backend.activity.domain.service.ActivityService
-import picklab.backend.helper.CleanUp
 import picklab.backend.template.IntegrationTest
-
 import java.time.LocalDate
-import java.time.ZoneId
 
 @DisplayName("활동 마감일 서비스 테스트")
 class ActivityDeadlineServiceTest : IntegrationTest() {
@@ -37,12 +34,13 @@ class ActivityDeadlineServiceTest : IntegrationTest() {
     @BeforeEach
     fun setUp() {
         cleanUp.all()
-        activityGroup = activityGroupRepository.save(
-            ActivityGroup(
-                name = "테스트 그룹",
-                description = "테스트 그룹 설명"
+        activityGroup =
+            activityGroupRepository.save(
+                ActivityGroup(
+                    name = "테스트 그룹",
+                    description = "테스트 그룹 설명",
+                ),
             )
-        )
     }
 
     @Test
@@ -63,11 +61,9 @@ class ActivityDeadlineServiceTest : IntegrationTest() {
         assertThat(result).hasSize(2)
         assertThat(result.map { it.title }).containsExactlyInAnyOrder(
             "마감일 활동 1",
-            "마감일 활동 2"
+            "마감일 활동 2",
         )
     }
-
-
 
     @Test
     @DisplayName("마감된 활동은 조회되지 않는다")
@@ -122,16 +118,17 @@ class ActivityDeadlineServiceTest : IntegrationTest() {
         // Given
         val baseDate = LocalDate.now()
         val testDays = listOf(2, 4, 6, 8) // 임의의 일수들
-        val activities = testDays.map { days ->
-            createTestActivity("${days}일 후 마감", baseDate.plusDays(days.toLong()))
-        }
+        val activities =
+            testDays.map { days ->
+                createTestActivity("${days}일 후 마감", baseDate.plusDays(days.toLong()))
+            }
 
         activityRepository.saveAll(activities)
 
         // When & Then
         testDays.forEach { days ->
             val result = activityService.getActivitiesEndingInDays(baseDate, days)
-            
+
             assertThat(result).hasSize(1)
             assertThat(result[0].title).isEqualTo("${days}일 후 마감")
             assertThat(result[0].recruitmentEndDate).isEqualTo(baseDate.plusDays(days.toLong()))
@@ -141,9 +138,9 @@ class ActivityDeadlineServiceTest : IntegrationTest() {
     private fun createTestActivity(
         title: String,
         recruitmentEndDate: LocalDate,
-        status: RecruitmentStatus = RecruitmentStatus.OPEN
-    ): ExternalActivity {
-        return ExternalActivity(
+        status: RecruitmentStatus = RecruitmentStatus.OPEN,
+    ): ExternalActivity =
+        ExternalActivity(
             title = title,
             organizer = OrganizerType.PUBLIC_ORGANIZATION,
             targetAudience = ParticipantType.ALL,
@@ -155,10 +152,11 @@ class ActivityDeadlineServiceTest : IntegrationTest() {
             status = status,
             viewCount = 0L,
             duration = 30,
+            activityHomepageUrl = null,
+            activityApplicationUrl = null,
             activityThumbnailUrl = null,
             activityGroup = activityGroup,
             activityField = ActivityFieldType.MENTORING,
-            benefit = "테스트 혜택"
+            benefit = "테스트 혜택",
         )
-    }
 } 

@@ -1,7 +1,6 @@
 package picklab.backend.notification.domain.service
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -23,9 +22,6 @@ import picklab.backend.template.IntegrationTest
 import java.time.LocalDate
 
 class ActivityDeadlineNotificationServiceTest : IntegrationTest() {
-
-
-
     @Autowired
     lateinit var activityDeadlineNotificationService: ActivityDeadlineNotificationService
 
@@ -52,12 +48,13 @@ class ActivityDeadlineNotificationServiceTest : IntegrationTest() {
     @BeforeEach
     fun setUp() {
         cleanUp.all()
-        activityGroup = activityGroupRepository.save(
-            ActivityGroup(
-                name = "테스트 그룹",
-                description = "테스트 그룹 설명"
+        activityGroup =
+            activityGroupRepository.save(
+                ActivityGroup(
+                    name = "테스트 그룹",
+                    description = "테스트 그룹 설명",
+                ),
             )
-        )
     }
 
     @Test
@@ -67,18 +64,20 @@ class ActivityDeadlineNotificationServiceTest : IntegrationTest() {
         val activity = createActivity(LocalDate.now().plusDays(1)) // 내일 마감
         val bookmarkedUser = createMember("북마크한사용자")
         val nonBookmarkedUser = createMember("북마크안한사용자")
-        
+
         // 두 사용자 모두 알림 설정은 ON
         createNotificationPreference(bookmarkedUser, bookmarkEnabled = true)
         createNotificationPreference(nonBookmarkedUser, bookmarkEnabled = true)
-        
+
         // 한 명만 북마크
         bookmarkRepository.save(ActivityBookmark(bookmarkedUser, activity))
 
         // when
-        val result = activityDeadlineNotificationService.sendDeadlineNotificationsForDays(
-            LocalDate.now(), 1
-        )
+        val result =
+            activityDeadlineNotificationService.sendDeadlineNotificationsForDays(
+                LocalDate.now(),
+                1,
+            )
 
         // then
         assertThat(result).isEqualTo(1) // 1건 전송
@@ -97,19 +96,21 @@ class ActivityDeadlineNotificationServiceTest : IntegrationTest() {
         val activity = createActivity(LocalDate.now().plusDays(3)) // 3일 후 마감
         val userWithNotificationOff = createMember("알림끈사용자")
         val userWithNotificationOn = createMember("알림켠사용자")
-        
+
         // 알림 설정 - 한 명은 OFF, 한 명은 ON
         createNotificationPreference(userWithNotificationOff, bookmarkEnabled = false)
         createNotificationPreference(userWithNotificationOn, bookmarkEnabled = true)
-        
+
         // 둘 다 북마크
         bookmarkRepository.save(ActivityBookmark(userWithNotificationOff, activity))
         bookmarkRepository.save(ActivityBookmark(userWithNotificationOn, activity))
 
         // when
-        val result = activityDeadlineNotificationService.sendDeadlineNotificationsForDays(
-            LocalDate.now(), 3
-        )
+        val result =
+            activityDeadlineNotificationService.sendDeadlineNotificationsForDays(
+                LocalDate.now(),
+                3,
+            )
 
         // then
         assertThat(result).isEqualTo(1) // 1건만 전송 (알림 켠 사용자만)
@@ -130,9 +131,11 @@ class ActivityDeadlineNotificationServiceTest : IntegrationTest() {
         // 북마크하지 않음
 
         // when
-        val result = activityDeadlineNotificationService.sendDeadlineNotificationsForDays(
-            LocalDate.now(), 1
-        )
+        val result =
+            activityDeadlineNotificationService.sendDeadlineNotificationsForDays(
+                LocalDate.now(),
+                1,
+            )
 
         // then
         assertThat(result).isEqualTo(0)
@@ -146,27 +149,29 @@ class ActivityDeadlineNotificationServiceTest : IntegrationTest() {
         val activity = createActivity(LocalDate.now().plusDays(1))
         val user1 = createMember("사용자1")
         val user2 = createMember("사용자2")
-        
+
         // 모든 사용자 알림 설정 OFF
         createNotificationPreference(user1, bookmarkEnabled = false)
         createNotificationPreference(user2, bookmarkEnabled = false)
-        
+
         // 모두 북마크
         bookmarkRepository.save(ActivityBookmark(user1, activity))
         bookmarkRepository.save(ActivityBookmark(user2, activity))
 
         // when
-        val result = activityDeadlineNotificationService.sendDeadlineNotificationsForDays(
-            LocalDate.now(), 1
-        )
+        val result =
+            activityDeadlineNotificationService.sendDeadlineNotificationsForDays(
+                LocalDate.now(),
+                1,
+            )
 
         // then
         assertThat(result).isEqualTo(0)
         assertThat(notificationRepository.findAll()).isEmpty()
     }
 
-    private fun createActivity(recruitmentEndDate: LocalDate): Activity {
-        return activityRepository.save(
+    private fun createActivity(recruitmentEndDate: LocalDate): Activity =
+        activityRepository.save(
             ExternalActivity(
                 title = "테스트 활동",
                 organizer = OrganizerType.PUBLIC_ORGANIZATION,
@@ -179,33 +184,35 @@ class ActivityDeadlineNotificationServiceTest : IntegrationTest() {
                 status = RecruitmentStatus.OPEN,
                 viewCount = 0L,
                 duration = 30,
+                activityHomepageUrl = null,
+                activityApplicationUrl = null,
                 activityThumbnailUrl = null,
                 activityGroup = activityGroup,
                 activityField = ActivityFieldType.MENTORING,
-                benefit = "테스트 혜택"
-            )
+                benefit = "테스트 혜택",
+            ),
         )
-    }
 
-    private fun createMember(nickname: String): Member {
-        return memberRepository.save(
+    private fun createMember(nickname: String): Member =
+        memberRepository.save(
             Member(
                 name = "테스트",
-                email = "${nickname}@test.com",
-                nickname = nickname
+                email = "$nickname@test.com",
+                nickname = nickname,
             ).apply {
                 this.isCompleted = true
-            }
+            },
         )
-    }
 
-    private fun createNotificationPreference(member: Member, bookmarkEnabled: Boolean): NotificationPreference {
-        return notificationPreferenceRepository.save(
+    private fun createNotificationPreference(
+        member: Member,
+        bookmarkEnabled: Boolean,
+    ): NotificationPreference =
+        notificationPreferenceRepository.save(
             NotificationPreference(
                 member = member,
                 notifyPopularActivity = true,
-                notifyBookmarkedActivity = bookmarkEnabled
-            )
+                notifyBookmarkedActivity = bookmarkEnabled,
+            ),
         )
-    }
 }
