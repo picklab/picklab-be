@@ -6,13 +6,17 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import picklab.backend.activity.application.model.ActivityItemWithBookmark
 import picklab.backend.activity.application.model.ActivitySearchCommand
+import picklab.backend.activity.application.model.RecommendActivitiesCommand
 import picklab.backend.activity.domain.service.ActivityBookmarkService
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
 import picklab.backend.activity.entrypoint.response.GetActivityListResponse
+import picklab.backend.common.model.PageResponse
+import picklab.backend.member.domain.MemberService
 
 @Component
 class ActivityUseCase(
+    private val memberService: MemberService,
     private val activityService: ActivityService,
     private val activityBookmarkService: ActivityBookmarkService,
     private val viewCountLimiterPort: ViewCountLimiterPort,
@@ -95,5 +99,34 @@ class ActivityUseCase(
         if (viewCountLimiterPort.isViewCountUpAllowed(activityId, viewIdentifier)) {
             activity.increaseViewCount()
         }
+    }
+
+    /**
+     * 사용자의 직무에 해당하는 추천 활동을 조회합니다.
+     */
+    fun getRecommendationActivities(command: RecommendActivitiesCommand): PageResponse<ActivityItemWithBookmark> {
+        val member = memberService.findActiveMember(command.memberId)
+
+        val pageable = PageRequest.of(command.page - 1, command.size)
+        val myJobIds = memberService.findMyInterestedJobCategoryIds(member)
+
+        val activityPage = activityService.getRecommendationActivities(myJobIds, pageable)
+        val activityItems = activityPage.content
+        val activityIds = activityItems.map { it.id }
+
+        val bookmarkedActivityIds =
+            activityBookmarkService.getMyBookmarkedActivityIds(
+                memberId = command.memberId,
+                activityIds = activityIds,
+            )
+
+        val itemsPage = activityPage.map {
+            ActivityItemWithBookmark.from(
+                item = it,
+                isBookmarked = bookmarkedActivityIds.contains(it.id),
+            )
+        }
+
+        return PageResponse.from(itemsPage)
     }
 }
