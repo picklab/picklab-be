@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
@@ -15,7 +16,9 @@ import picklab.backend.common.model.PageResponse
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.common.model.SuccessCode
 import picklab.backend.review.application.ReviewUseCase
-import picklab.backend.review.application.model.MyReviewListRequest
+import picklab.backend.review.entrypoint.request.ActivityReviewListRequest
+import picklab.backend.review.entrypoint.request.MyReviewListRequest
+import picklab.backend.review.entrypoint.response.ActivityReviewResponse
 import picklab.backend.review.entrypoint.response.MyReviewsResponse
 
 @RestController
@@ -37,6 +40,23 @@ class ReviewController(
         @Valid @ModelAttribute request: MyReviewListRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<MyReviewsResponse>>> {
         val res = reviewUseCase.getMyReviews(request.toQueryRequest(member.memberId))
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.success(SuccessCode.GET_REVIEWS, res))
+    }
+
+    @GetMapping("/v1/activities/{activityId}/reviews")
+    override fun getReviewsByActivity(
+        @PathVariable activityId: Long,
+        @AuthenticationPrincipal member: MemberPrincipal?,
+        @Valid @ModelAttribute request: ActivityReviewListRequest,
+    ): ResponseEntity<ResponseWrapper<PageResponse<ActivityReviewResponse>>> {
+        val res =
+            reviewUseCase.getReviewsByActivity(
+                request.toQueryRequest(),
+                activityId,
+                member?.memberId,
+                request.page,
+                request.size,
+            )
         return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.success(SuccessCode.GET_REVIEWS, res))
     }
 }
