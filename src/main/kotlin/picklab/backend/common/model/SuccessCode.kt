@@ -48,4 +48,7 @@ enum class SuccessCode(
     // Review 도메인 관련
     GET_REVIEWS(HttpStatus.OK, "리뷰 목록 조회에 성공했습니다."),
     CREATE_REVIEW_SUCCESS(HttpStatus.OK, "리뷰 생성에 성공했습니다."),
+
+    // Search 도메인 관련
+    SEARCH_AUTOCOMPLETE_SUCCESS(HttpStatus.OK, "자동완성 검색에 성공했습니다."),
 }
