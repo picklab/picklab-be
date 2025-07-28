@@ -9,42 +9,33 @@ import picklab.backend.search.domain.entity.MemberSearchHistory
 import java.time.LocalDateTime
 
 interface MemberSearchHistoryRepository : JpaRepository<MemberSearchHistory, Long> {
-    
+
     /**
      * 특정 회원의 검색 기록을 최신순으로 조회
      */
     fun findByMemberIdOrderBySearchedAtDesc(memberId: Long, pageable: Pageable): Page<MemberSearchHistory>
-    
-    /**
-     * 특정 회원의 최근 검색 기록 조회 (중복 제거)
-     */
-    @Query("""
-        SELECT DISTINCT msh.keyword 
-        FROM MemberSearchHistory msh 
-        WHERE msh.member.id = :memberId 
-        ORDER BY msh.searchedAt DESC
-    """)
-    fun findRecentKeywordsByMemberId(@Param("memberId") memberId: Long, pageable: Pageable): List<String>
-    
+
     /**
      * 인기 검색어 조회 (전체 사용자 기준)
      */
-    @Query("""
+    @Query(
+        """
         SELECT msh.keyword, COUNT(msh.keyword) as searchCount
         FROM MemberSearchHistory msh 
         WHERE msh.searchedAt >= :fromDate
         GROUP BY msh.keyword 
         ORDER BY searchCount DESC
-    """)
+    """
+    )
     fun findPopularKeywords(@Param("fromDate") fromDate: LocalDateTime, pageable: Pageable): List<Array<Any>>
-    
+
     /**
      * 특정 회원의 특정 키워드 검색 기록이 있는지 확인
      */
     fun existsByMemberIdAndKeyword(memberId: Long, keyword: String): Boolean
-    
+
     /**
-     * 특정 회원의 특정 키워드 최근 검색 기록 조회
+     * 특정 회원의 특정 키워드 검색 기록 조회 (unique constraint로 인해 최대 1개)
      */
-    fun findFirstByMemberIdAndKeywordOrderBySearchedAtDesc(memberId: Long, keyword: String): MemberSearchHistory?
+    fun findByMemberIdAndKeyword(memberId: Long, keyword: String): MemberSearchHistory?
 } 
