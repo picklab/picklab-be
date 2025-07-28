@@ -1,28 +1,101 @@
 package picklab.backend.search.application
 
 import org.springframework.stereotype.Component
-import picklab.backend.activity.domain.repository.ActivityRepository
-import picklab.backend.search.entrypoint.response.AutocompleteResponse
+import org.springframework.transaction.annotation.Transactional
+import picklab.backend.activity.domain.service.ActivityService
+import picklab.backend.member.domain.MemberService
+import picklab.backend.search.domain.service.MemberSearchHistoryService
+import picklab.backend.search.entrypoint.response.*
 
 @Component
 class SearchUseCase(
-    private val activityRepository: ActivityRepository,
+    private val activityService: ActivityService,
+    private val memberService: MemberService,
+    private val memberSearchHistoryService: MemberSearchHistoryService,
 ) {
-    
+
     /**
      * 활동명 자동완성 검색
      */
     fun getAutocompleteResults(keyword: String, limit: Int): AutocompleteResponse {
-        // 키워드가 비어있거나 공백만 있으면 빈 결과 반환
-        val trimmedKeyword = keyword.trim()
-        if (trimmedKeyword.isEmpty()) {
-            return AutocompleteResponse(emptyList())
-        }
-        
-        // limit 값 검증 및 제한 (1~50 사이로 제한)
-        val validatedLimit = limit.coerceIn(1, 50)
-        
-        val suggestions = activityRepository.findActivityTitlesForAutocomplete(trimmedKeyword, validatedLimit)
+        val suggestions = activityService.getActivityTitlesForAutocomplete(keyword, limit)
         return AutocompleteResponse(suggestions)
+    }
+
+    /**
+     * 검색 기록 생성
+     */
+    @Transactional
+    fun createSearchHistory(memberId: Long, keyword: String): SearchHistoryResponse {
+        val member = memberService.findActiveMember(memberId)
+        val savedHistory = memberSearchHistoryService.createSearchHistory(member, keyword)
+
+        return SearchHistoryResponse(
+            id = savedHistory.id,
+            keyword = savedHistory.keyword,
+            searchedAt = savedHistory.searchedAt,
+            createdAt = savedHistory.createdAt
+        )
+    }
+
+    /**
+     * 개인 검색 기록 조회 (페이징)
+     */
+    @Transactional(readOnly = true)
+    fun getSearchHistory(memberId: Long, page: Int, size: Int): SearchHistoryListResponse {
+        val searchHistoryPage = memberSearchHistoryService.getSearchHistory(memberId, page, size)
+
+        val items = searchHistoryPage.content.map { history ->
+            SearchHistoryResponse(
+                id = history.id,
+                keyword = history.keyword,
+                searchedAt = history.searchedAt,
+                createdAt = history.createdAt
+            )
+        }
+
+        return SearchHistoryListResponse(
+            items = items,
+            currentPage = searchHistoryPage.number + 1,
+            pageSize = searchHistoryPage.size,
+            totalElements = searchHistoryPage.totalElements,
+            totalPages = searchHistoryPage.totalPages,
+            isFirst = searchHistoryPage.isFirst,
+            isLast = searchHistoryPage.isLast
+        )
+    }
+
+    /**
+     * 최근 검색어 조회 (최신순)
+     */
+    @Transactional(readOnly = true)
+    fun getRecentKeywords(memberId: Long, limit: Int): RecentKeywordsResponse {
+        val searchHistories = memberSearchHistoryService.getRecentKeywords(memberId, limit)
+
+        val keywords = searchHistories.map { history ->
+            RecentKeywordItem(
+                id = history.id,
+                keyword = history.keyword,
+                searchedAt = history.searchedAt
+            )
+        }
+
+        return RecentKeywordsResponse(keywords)
+    }
+
+    /**
+     * 개별 검색 기록 삭제
+     */
+    @Transactional
+    fun deleteSearchHistory(memberId: Long, historyId: Long) {
+        memberSearchHistoryService.deleteSearchHistory(memberId, historyId)
+    }
+
+    /**
+     * 전체 검색 기록 삭제
+     */
+    @Transactional
+    fun deleteAllSearchHistory(memberId: Long) {
+        memberSearchHistoryService.deleteAllSearchHistory(memberId)
     }
 } 
