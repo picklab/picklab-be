@@ -1,10 +1,8 @@
 package picklab.backend.activity.domain.service
 
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import picklab.backend.activity.application.ActivityQueryRepository
-import picklab.backend.activity.application.model.ActivityItem
 import picklab.backend.activity.application.model.ActivitySearchCommand
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.activity.domain.enums.ActivityType
@@ -172,9 +170,4 @@ class ActivityService(
      * 인기도는 조회수와 북마크 수를 합산하여 계산합니다.
      */
     fun getMostPopularActivity(): Activity? = activityRepository.findMostPopularActivity()
-
-    fun getRecommendationActivities(
-        jobIds: List<Long>,
-        pageable: PageRequest,
-    ): Page<ActivityItem> = activityQueryRepository.findAllByMemberJobRecommendation(jobIds, pageable)
 }

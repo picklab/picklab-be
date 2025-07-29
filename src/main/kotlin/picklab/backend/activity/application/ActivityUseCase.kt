@@ -19,6 +19,7 @@ class ActivityUseCase(
     private val memberService: MemberService,
     private val activityService: ActivityService,
     private val activityBookmarkService: ActivityBookmarkService,
+    private val activityQueryService: ActivityQueryService,
     private val viewCountLimiterPort: ViewCountLimiterPort,
 ) {
     /**
@@ -110,7 +111,7 @@ class ActivityUseCase(
         val pageable = PageRequest.of(command.page - 1, command.size)
         val myJobIds = memberService.findMyInterestedJobCategoryIds(member)
 
-        val activityPage = activityService.getRecommendationActivities(myJobIds, pageable)
+        val activityPage = activityQueryService.getRecommendationActivities(myJobIds, pageable)
         val activityItems = activityPage.content
         val activityIds = activityItems.map { it.id }
 
@@ -120,12 +121,13 @@ class ActivityUseCase(
                 activityIds = activityIds,
             )
 
-        val itemsPage = activityPage.map {
-            ActivityItemWithBookmark.from(
-                item = it,
-                isBookmarked = bookmarkedActivityIds.contains(it.id),
-            )
-        }
+        val itemsPage =
+            activityPage.map {
+                ActivityItemWithBookmark.from(
+                    item = it,
+                    isBookmarked = bookmarkedActivityIds.contains(it.id),
+                )
+            }
 
         return PageResponse.from(itemsPage)
     }
