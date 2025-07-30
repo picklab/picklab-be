@@ -9,5 +9,5 @@ data class CreateSearchHistoryRequest(
         example = "스프링 부트 개발자",
         required = true
     )
-    val keyword: String
+    val keyword: String,
 ) 
