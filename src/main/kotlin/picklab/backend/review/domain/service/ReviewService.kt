@@ -2,6 +2,8 @@ package picklab.backend.review.domain.service
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import picklab.backend.common.model.BusinessException
+import picklab.backend.common.model.ErrorCode
 import picklab.backend.review.domain.entity.Review
 import picklab.backend.review.domain.repository.ReviewRepository
 
@@ -16,4 +18,9 @@ class ReviewService(
         activityId: Long,
         memberId: Long,
     ): Boolean = reviewRepository.existsByActivityIdAndMemberId(activityId, memberId)
+
+    fun mustFindById(id: Long): Review =
+        reviewRepository
+            .findById(id)
+            .orElseThrow { throw BusinessException(ErrorCode.REVIEW_NOT_FOUND) }
 }
