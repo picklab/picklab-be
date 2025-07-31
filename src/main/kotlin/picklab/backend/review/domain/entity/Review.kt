@@ -60,5 +60,33 @@ class Review(
     val member: Member,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "activity_id", nullable = false)
-    val activity: Activity,
-) : SoftDeleteEntity()
+    var activity: Activity,
+) : SoftDeleteEntity() {
+    fun update(
+        overallScore: Int,
+        infoScore: Int,
+        difficultyScore: Int,
+        benefitScore: Int,
+        summary: String,
+        strength: String,
+        weakness: String,
+        tips: String?,
+        jobRelevanceScore: Int,
+        url: String?,
+        approvalStatus: ReviewApprovalStatus,
+        activity: Activity,
+    ) {
+        this.overallScore = overallScore
+        this.infoScore = infoScore
+        this.difficultyScore = difficultyScore
+        this.benefitScore = benefitScore
+        this.summary = summary
+        this.strength = strength
+        this.weakness = weakness
+        this.tips = tips
+        this.jobRelevanceScore = jobRelevanceScore
+        this.url = url
+        this.reviewApprovalStatus = approvalStatus
+        this.activity = activity
+    }
+}

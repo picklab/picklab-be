@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import picklab.backend.archive.entrypoint.request.ReviewCreateRequest
@@ -18,6 +19,7 @@ import picklab.backend.common.model.SuccessCode
 import picklab.backend.review.application.ReviewUseCase
 import picklab.backend.review.entrypoint.request.ActivityReviewListRequest
 import picklab.backend.review.entrypoint.request.MyReviewListRequest
+import picklab.backend.review.entrypoint.request.ReviewUpdateRequest
 import picklab.backend.review.entrypoint.response.ActivityReviewResponse
 import picklab.backend.review.entrypoint.response.MyReviewsResponse
 
@@ -58,5 +60,15 @@ class ReviewController(
                 request.size,
             )
         return ResponseEntity.status(HttpStatus.OK).body(ResponseWrapper.success(SuccessCode.GET_REVIEWS, res))
+    }
+
+    @PutMapping("/v1/reviews/{id}")
+    override fun updateReview(
+        @PathVariable id: Long,
+        @AuthenticationPrincipal member: MemberPrincipal,
+        @Valid @RequestBody request: ReviewUpdateRequest,
+    ): ResponseEntity<ResponseWrapper<Unit>> {
+        reviewUseCase.updateReview(request.toCommand(id, member.memberId))
+        return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.UPDATE_REVIEW_SUCCESS))
     }
 }
