@@ -35,7 +35,7 @@ class ReviewUseCase(
         if (reviewService.existsByActivityIdAndMemberId(activity.id, member.id)) {
             throw BusinessException(ErrorCode.ALREADY_EXISTS_REVIEW)
         }
-        val approvalStatus = ReviewApprovalDecider.decide(command.url)
+        val approvalStatus = ReviewApprovalDecider.decideOnCreate(command.url)
         val review = reviewCreateConverter.toEntity(command, approvalStatus, member, activity)
         reviewService.save(review)
     }
