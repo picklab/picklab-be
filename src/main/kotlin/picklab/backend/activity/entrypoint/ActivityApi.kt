@@ -5,13 +5,19 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletRequest
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
+import picklab.backend.activity.application.model.ActivityItemWithBookmark
 import picklab.backend.activity.entrypoint.request.ActivitySearchCondition
+import picklab.backend.activity.entrypoint.request.RecommendationActivitiesRequest
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
 import picklab.backend.activity.entrypoint.response.GetActivityListResponse
+import picklab.backend.common.model.MemberPrincipal
+import picklab.backend.common.model.PageResponse
 import picklab.backend.common.model.ResponseWrapper
 
 @Tag(name = "활동 API", description = "활동 관련 API")
@@ -78,4 +84,16 @@ interface ActivityApi {
         @Parameter(description = "활동 ID값") @PathVariable activityId: Long,
         request: HttpServletRequest,
     ): ResponseEntity<ResponseWrapper<Unit>>
+
+    @Operation(
+        summary = "직무 추천 활동 조회",
+        description = "직무 관련 추천 활동을 조회할 수 있다",
+        responses = [
+            ApiResponse(responseCode = "200", description = "직무 추천 활동 조회에 성공했습니다."),
+        ],
+    )
+    fun getRecommendationActivities(
+        @AuthenticationPrincipal member: MemberPrincipal,
+        @Valid @ModelAttribute request: RecommendationActivitiesRequest,
+    ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>>
 }

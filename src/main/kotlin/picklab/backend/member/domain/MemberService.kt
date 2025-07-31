@@ -97,6 +97,8 @@ class MemberService(
         return memberRepository.save(member)
     }
 
+    fun findMyInterestedJobCategoryIds(member: Member): List<Long> = interestedJobCategoryRepository.findJobCategoryIdsByMemberId(member.id)
+
     @Transactional
     fun registerInterestedJobCategories(
         member: Member,

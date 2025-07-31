@@ -2,6 +2,7 @@ package picklab.backend.activity.domain.service
 
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
+import picklab.backend.activity.application.ActivityQueryRepository
 import picklab.backend.activity.application.model.ActivitySearchCommand
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.activity.domain.enums.ActivityType
@@ -15,6 +16,7 @@ import java.time.LocalDate
 @Service
 class ActivityService(
     private val activityRepository: ActivityRepository,
+    private val activityQueryRepository: ActivityQueryRepository,
 ) {
     /**
      * 활동 ID 값을 바탕으로 삭제되지 않은 활동을 반환합니다

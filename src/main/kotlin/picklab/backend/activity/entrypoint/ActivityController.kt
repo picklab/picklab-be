@@ -2,15 +2,20 @@ package picklab.backend.activity.entrypoint
 
 import io.swagger.v3.oas.annotations.Parameter
 import jakarta.servlet.http.HttpServletRequest
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import picklab.backend.activity.application.ActivityUseCase
 import picklab.backend.activity.entrypoint.mapper.toCommand
 import picklab.backend.activity.entrypoint.request.ActivitySearchCondition
+import picklab.backend.activity.entrypoint.request.RecommendationActivitiesRequest
+import picklab.backend.activity.application.model.ActivityItemWithBookmark
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
 import picklab.backend.activity.entrypoint.response.GetActivityListResponse
 import picklab.backend.common.model.MemberPrincipal
+import picklab.backend.common.model.PageResponse
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.common.model.SuccessCode
 
@@ -57,5 +62,14 @@ class ActivityController(
     ): ResponseEntity<ResponseWrapper<Unit>> {
         activityUseCase.increaseViewCount(activityId, request)
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.INCREASE_VIEW_COUNT))
+    }
+
+    @GetMapping("/recommendations")
+    override fun getRecommendationActivities(
+        @AuthenticationPrincipal member: MemberPrincipal,
+        @Valid @ModelAttribute request: RecommendationActivitiesRequest,
+    ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>> {
+        val data = activityUseCase.getRecommendationActivities(request.toCommand(member.memberId))
+        return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.GET_ACTIVITIES, data))
     }
 }

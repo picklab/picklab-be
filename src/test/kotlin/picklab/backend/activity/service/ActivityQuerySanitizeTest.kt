@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
+import picklab.backend.activity.application.ActivityQueryRepository
 import picklab.backend.activity.application.model.ActivitySearchCommand
 import picklab.backend.activity.domain.enums.ActivityFieldType
 import picklab.backend.activity.domain.enums.ActivitySortType
@@ -30,6 +31,9 @@ class ActivityQuerySanitizeTest {
 
     @Mock
     private lateinit var activityRepository: ActivityRepository
+
+    @Mock
+    private lateinit var activityQueryRepository: ActivityQueryRepository
 
     @Test
     fun `대외활동 활동의 경우 온,오프라인 여부, 비용, 상금, 기간, 도메인이 null로 보정된다`() {
