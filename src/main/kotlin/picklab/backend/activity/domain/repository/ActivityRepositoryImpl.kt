@@ -137,6 +137,19 @@ class ActivityRepositoryImpl(
 
         return PageImpl(items, pageable, count)
     }
+    
+    override fun findActivityTitlesForAutocomplete(keyword: String, limit: Int): List<String> {
+        return jpaQueryFactory
+            .select(QActivity.activity.title)
+            .from(QActivity.activity)
+            .where(
+                QActivity.activity.deletedAt.isNull
+                    .and(QActivity.activity.title.startsWith(keyword))
+            )
+            .orderBy(QActivity.activity.title.asc())
+            .limit(limit.toLong())
+            .fetch()
+    }
 }
 
 inline fun <T> BooleanBuilder.andIfNotNullOrEmpty(
