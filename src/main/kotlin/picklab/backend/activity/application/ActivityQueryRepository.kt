@@ -9,4 +9,6 @@ interface ActivityQueryRepository {
         jobIds: List<Long>,
         pageable: PageRequest,
     ): Page<ActivityItem>
+
+    fun findPopularActivities(pageable: PageRequest): Page<ActivityItem>
 }

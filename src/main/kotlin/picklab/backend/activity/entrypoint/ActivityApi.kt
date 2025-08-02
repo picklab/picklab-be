@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import picklab.backend.activity.application.model.ActivityItemWithBookmark
 import picklab.backend.activity.entrypoint.request.ActivitySearchCondition
-import picklab.backend.activity.entrypoint.request.RecommendationActivitiesRequest
+import picklab.backend.activity.entrypoint.request.GetActivityPageRequest
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
 import picklab.backend.activity.entrypoint.response.GetActivityListResponse
 import picklab.backend.common.model.MemberPrincipal
@@ -94,6 +94,17 @@ interface ActivityApi {
     )
     fun getRecommendationActivities(
         @AuthenticationPrincipal member: MemberPrincipal,
-        @Valid @ModelAttribute request: RecommendationActivitiesRequest,
+        @Valid @ModelAttribute request: GetActivityPageRequest,
+    ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>>
+
+    @Operation(
+        summary = "인기 활동 조회",
+        description = "전체 활동 중 조회수와 북마크 수를 합산한 인기도 순으로 활동을 조회합니다.",
+        responses = [
+            ApiResponse(responseCode = "200", description = "인기 활동 조회에 성공했습니다."),
+        ],
+    )
+    fun getWeeklyPopularActivities(
+        @Valid @ModelAttribute request: GetActivityPageRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>>
 }
