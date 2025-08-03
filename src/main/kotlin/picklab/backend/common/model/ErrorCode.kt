@@ -11,6 +11,7 @@ enum class ErrorCode(
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류입니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증되지 않은 사용자입니다."),
     FORBIDDEN(HttpStatus.FORBIDDEN, "접근이 금지된 리소스입니다."),
+    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "입력값이 유효하지 않습니다."),
 
     /**
      * 소셜 로그인 관련
@@ -65,4 +66,9 @@ enum class ErrorCode(
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰 정보를 찾을 수 없습니다."),
     CANNOT_WRITE_REVIEW(HttpStatus.BAD_REQUEST, "해당 활동에 대해 리뷰를 작성할 수 없는 상태입니다."),
     ALREADY_EXISTS_REVIEW(HttpStatus.BAD_REQUEST, "이미 해당 활동에 대해 리뷰를 작성했습니다."),
+
+    /**
+     * 검색 도메인 관련
+     */
+    SEARCH_HISTORY_NOT_FOUND(HttpStatus.NOT_FOUND, "검색 기록을 찾을 수 없습니다."),
 }

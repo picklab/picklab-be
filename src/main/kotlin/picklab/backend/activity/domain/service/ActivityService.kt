@@ -2,6 +2,7 @@ package picklab.backend.activity.domain.service
 
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import picklab.backend.activity.application.ActivityQueryRepository
 import picklab.backend.activity.application.model.ActivitySearchCommand
 import picklab.backend.activity.domain.entity.Activity
@@ -170,4 +171,20 @@ class ActivityService(
      * 인기도는 조회수와 북마크 수를 합산하여 계산합니다.
      */
     fun getMostPopularActivity(): Activity? = activityRepository.findMostPopularActivity()
+
+    /**
+     * 활동명 자동완성 검색
+     */
+    @Transactional(readOnly = true)
+    fun getActivityTitlesForAutocomplete(keyword: String, limit: Int): List<String> {
+        val trimmedKeyword = keyword.trim()
+        if (trimmedKeyword.isEmpty()) {
+            return emptyList()
+        }
+
+        // limit 값 검증 및 제한 (1~50 사이로 제한)
+        val validatedLimit = limit.coerceIn(1, 50)
+
+        return activityRepository.findActivityTitlesForAutocomplete(trimmedKeyword, validatedLimit)
+    }
 }
