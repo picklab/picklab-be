@@ -9,7 +9,15 @@ import picklab.backend.member.domain.entity.Member
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "member_search_history")
+@Table(
+    name = "member_search_history",
+    uniqueConstraints = [
+        UniqueConstraint(
+            name = "uk_member_search_history_member_keyword",
+            columnNames = ["member_id", "keyword"]
+        )
+    ]
+)
 @SQLDelete(sql = "UPDATE member_search_history SET deleted_at = NOW() WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
 class MemberSearchHistory(
@@ -36,12 +44,11 @@ class MemberSearchHistory(
             )
         }
     }
-    
+
     /**
-     * 키워드 업데이트 (재검색 시)
+     * 검색 시간 업데이트 (동일 키워드 재검색 시)
      */
-    fun updateKeyword(newKeyword: String) {
-        this.keyword = newKeyword.trim()
+    fun updateSearchedAt() {
         this.searchedAt = LocalDateTime.now()
     }
-} 
+}
