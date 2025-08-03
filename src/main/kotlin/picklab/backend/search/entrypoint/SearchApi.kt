@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import picklab.backend.common.model.MemberPrincipal
+import picklab.backend.common.model.PageResponse
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.search.entrypoint.request.CreateSearchHistoryRequest
 import picklab.backend.search.entrypoint.response.AutocompleteResponse
@@ -65,7 +66,7 @@ interface SearchApi {
         page: Int = 1,
         @Parameter(description = "페이지 크기", example = "20")
         size: Int = 20
-    ): ResponseEntity<ResponseWrapper<SearchHistoryListResponse>>
+    ): ResponseEntity<ResponseWrapper<PageResponse<SearchHistoryResponse>>>
     
     @Operation(
         summary = "최근 검색어 조회", 

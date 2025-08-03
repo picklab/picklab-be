@@ -3,6 +3,7 @@ package picklab.backend.search.application
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import picklab.backend.activity.domain.service.ActivityService
+import picklab.backend.common.model.PageResponse
 import picklab.backend.member.domain.MemberService
 import picklab.backend.search.domain.service.MemberSearchHistoryService
 import picklab.backend.search.entrypoint.response.*
@@ -42,10 +43,14 @@ class SearchUseCase(
      * 개인 검색 기록 조회 (페이징)
      */
     @Transactional(readOnly = true)
-    fun getSearchHistory(memberId: Long, page: Int, size: Int): SearchHistoryListResponse {
+    fun getSearchHistory(
+        memberId: Long,
+        page: Int,
+        size: Int
+    ): PageResponse<SearchHistoryResponse> {
         val searchHistoryPage = memberSearchHistoryService.getSearchHistory(memberId, page, size)
 
-        val items = searchHistoryPage.content.map { history ->
+        val items = searchHistoryPage.map { history ->
             SearchHistoryResponse(
                 id = history.id,
                 keyword = history.keyword,
@@ -54,15 +59,7 @@ class SearchUseCase(
             )
         }
 
-        return SearchHistoryListResponse(
-            items = items,
-            currentPage = searchHistoryPage.number + 1,
-            pageSize = searchHistoryPage.size,
-            totalElements = searchHistoryPage.totalElements,
-            totalPages = searchHistoryPage.totalPages,
-            isFirst = searchHistoryPage.isFirst,
-            isLast = searchHistoryPage.isLast
-        )
+        return PageResponse.from(items)
     }
 
     /**

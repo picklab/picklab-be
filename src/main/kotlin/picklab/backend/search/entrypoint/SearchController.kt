@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import picklab.backend.common.model.MemberPrincipal
+import picklab.backend.common.model.PageResponse
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.common.model.SuccessCode
 import picklab.backend.search.application.SearchUseCase
@@ -53,7 +54,7 @@ class SearchController(
         @AuthenticationPrincipal member: MemberPrincipal,
         @RequestParam(defaultValue = "1") page: Int,
         @RequestParam(defaultValue = "20") size: Int
-    ): ResponseEntity<ResponseWrapper<SearchHistoryListResponse>> {
+    ): ResponseEntity<ResponseWrapper<PageResponse<SearchHistoryResponse>>> {
         val response = searchUseCase.getSearchHistory(member.memberId, page, size)
         return ResponseEntity.ok(
             ResponseWrapper.success(SuccessCode.SEARCH_HISTORY_RETRIEVED, response)
