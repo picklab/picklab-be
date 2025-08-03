@@ -48,7 +48,7 @@ class MemberSearchHistory(
     /**
      * 검색 시간 업데이트 (동일 키워드 재검색 시)
      */
-    fun search() {
+    fun updateSearchedAt() {
         this.searchedAt = LocalDateTime.now()
     }
 }

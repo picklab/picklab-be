@@ -29,7 +29,7 @@ class MemberSearchHistoryService(
         val existingHistory = memberSearchHistoryRepository.findByMemberIdAndKeyword(member.id, trimmedKeyword)
 
         return if (existingHistory != null) {
-            existingHistory.search()
+            existingHistory.updateSearchedAt()
             memberSearchHistoryRepository.save(existingHistory)
         } else {
             // 새로운 검색 기록 생성
