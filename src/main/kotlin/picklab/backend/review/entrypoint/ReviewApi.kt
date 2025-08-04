@@ -15,6 +15,7 @@ import picklab.backend.common.model.PageResponse
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.review.entrypoint.request.ActivityReviewListRequest
 import picklab.backend.review.entrypoint.request.MyReviewListRequest
+import picklab.backend.review.entrypoint.request.ReviewUpdateRequest
 import picklab.backend.review.entrypoint.response.ActivityReviewResponse
 import picklab.backend.review.entrypoint.response.MyReviewsResponse
 
@@ -76,4 +77,22 @@ interface ReviewApi {
         member: MemberPrincipal?,
         @ModelAttribute @ParameterObject request: ActivityReviewListRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityReviewResponse>>>
+
+    @Operation(
+        summary = "리뷰 수정",
+        description = "본인이 작성한 리뷰를 수정합니다.",
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "리뷰 수정에 성공했습니다."),
+            ApiResponse(responseCode = "403", description = "해당 리뷰를 수정할 권한이 없습니다."),
+            ApiResponse(responseCode = "404", description = "리뷰 정보를 찾을 수 없습니다."),
+            ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
+        ],
+    )
+    fun updateReview(
+        @Parameter(description = "리뷰 ID값") @PathVariable id: Long,
+        member: MemberPrincipal,
+        request: ReviewUpdateRequest,
+    ): ResponseEntity<ResponseWrapper<Unit>>
 }
