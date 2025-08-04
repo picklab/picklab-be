@@ -92,4 +92,66 @@ class UpdateReviewUnitTest {
         verify(exactly = 1) { memberService.findActiveMember(loggedInMemberId) }
         verify(exactly = 1) { reviewService.mustFindById(reviewId) }
     }
+
+    @Test
+    @DisplayName("로그인한 사용자와 리뷰 작성자가 다르면 조회 시 CANNOT_READ_REVIEW 에러 발생")
+    fun getReviewByNonAuthor_shouldThrowException() {
+        // given
+        val loggedInMemberId = 2L
+        val reviewId = 10L
+
+        val mockMember =
+            mockk<Member> {
+                every { id } returns loggedInMemberId
+            }
+        val mockReview =
+            mockk<Review> {
+                every { member.id } returns 1L
+            }
+
+        every { memberService.findActiveMember(loggedInMemberId) } returns mockMember
+        every { reviewService.mustFindById(reviewId) } returns mockReview
+
+        // when
+        val exception =
+            assertThrows(BusinessException::class.java) {
+                reviewUseCase.getMyReview(reviewId, loggedInMemberId)
+            }
+
+        // then
+        assert(exception.errorCode == ErrorCode.CANNOT_READ_REVIEW)
+        verify(exactly = 1) { memberService.findActiveMember(loggedInMemberId) }
+        verify(exactly = 1) { reviewService.mustFindById(reviewId) }
+    }
+
+    @Test
+    @DisplayName("로그인한 사용자와 리뷰 작성자가 다르면 삭제 시 CANNOT_DELETE_REVIEW 에러 발생")
+    fun deleteReviewByNonAuthor_shouldThrowException() {
+        // given
+        val loggedInMemberId = 3L
+        val reviewId = 20L
+
+        val mockMember =
+            mockk<Member> {
+                every { id } returns loggedInMemberId
+            }
+        val mockReview =
+            mockk<Review> {
+                every { member.id } returns 1L
+            }
+
+        every { memberService.findActiveMember(loggedInMemberId) } returns mockMember
+        every { reviewService.mustFindById(reviewId) } returns mockReview
+
+        // when
+        val exception =
+            assertThrows(BusinessException::class.java) {
+                reviewUseCase.deleteReview(loggedInMemberId, reviewId)
+            }
+
+        // then
+        assert(exception.errorCode == ErrorCode.CANNOT_DELETE_REVIEW)
+        verify(exactly = 1) { memberService.findActiveMember(loggedInMemberId) }
+        verify(exactly = 1) { reviewService.mustFindById(reviewId) }
+    }
 }
