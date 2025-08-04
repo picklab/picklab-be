@@ -21,6 +21,7 @@ import picklab.backend.review.entrypoint.request.ActivityReviewListRequest
 import picklab.backend.review.entrypoint.request.MyReviewListRequest
 import picklab.backend.review.entrypoint.request.ReviewUpdateRequest
 import picklab.backend.review.entrypoint.response.ActivityReviewResponse
+import picklab.backend.review.entrypoint.response.MyReviewResponse
 import picklab.backend.review.entrypoint.response.MyReviewsResponse
 
 @RestController
@@ -34,6 +35,17 @@ class ReviewController(
     ): ResponseEntity<ResponseWrapper<Unit>> {
         reviewUseCase.createReview(request.toCommand(member.memberId))
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.CREATE_REVIEW_SUCCESS))
+    }
+
+    @GetMapping("/v1/reviews/{id}")
+    override fun getMyReview(
+        @PathVariable id: Long,
+        @AuthenticationPrincipal member: MemberPrincipal,
+    ): ResponseEntity<ResponseWrapper<MyReviewResponse>> {
+        val res = reviewUseCase.getMyReview(id, member.memberId)
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(ResponseWrapper.success(SuccessCode.GET_REVIEW, res))
     }
 
     @GetMapping("/v1/reviews")

@@ -46,6 +46,7 @@ enum class SuccessCode(
     DELETE_ALL_MEMBER_NOTIFICATION(HttpStatus.OK, "모든 알림이 삭제되었습니다."),
 
     // Review 도메인 관련
+    GET_REVIEW(HttpStatus.OK, "리뷰 단건 조회에 성공했습니다."),
     GET_REVIEWS(HttpStatus.OK, "리뷰 목록 조회에 성공했습니다."),
     CREATE_REVIEW_SUCCESS(HttpStatus.OK, "리뷰 생성에 성공했습니다."),
     UPDATE_REVIEW_SUCCESS(HttpStatus.OK, "리뷰 수정에 성공했습니다."),
