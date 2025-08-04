@@ -185,4 +185,35 @@ class ActivityQueryRepositoryImpl(
 
         return PageImpl(items, pageable, count)
     }
+
+    override fun findActivityItemByActivityIds(activityIds: List<Long>): List<ActivityItem> {
+        if (activityIds.isEmpty()) {
+            return emptyList()
+        }
+
+        return jpaQueryFactory
+            .selectFrom(QActivity.activity)
+            .leftJoin(QActivityJobCategory.activityJobCategory)
+            .on(
+                QActivityJobCategory.activityJobCategory.activity.id
+                    .eq(QActivity.activity.id),
+            ).leftJoin(QJobCategory.jobCategory)
+            .on(
+                QActivityJobCategory.activityJobCategory.jobCategory.id
+                    .eq(QJobCategory.jobCategory.id),
+            ).where(QActivity.activity.id.`in`(activityIds))
+            .transform(
+                GroupBy.groupBy(QActivity.activity.id).list(
+                    QActivityItem(
+                        QActivity.activity.id,
+                        QActivity.activity.title,
+                        QActivity.activity.organizer.stringValue(),
+                        QActivity.activity.startDate,
+                        QActivity.activity.activityType,
+                        GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),
+                        QActivity.activity.activityThumbnailUrl,
+                    ),
+                ),
+            )
+    }
 }

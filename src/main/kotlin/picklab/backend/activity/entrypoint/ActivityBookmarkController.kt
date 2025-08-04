@@ -1,15 +1,16 @@
 package picklab.backend.activity.entrypoint
 
 import io.swagger.v3.oas.annotations.Parameter
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import picklab.backend.activity.application.BookmarkUseCase
+import picklab.backend.activity.application.model.ActivityItemWithBookmark
+import picklab.backend.activity.entrypoint.request.GetMyBookmarkListRequest
 import picklab.backend.common.model.MemberPrincipal
+import picklab.backend.common.model.PageResponse
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.common.model.SuccessCode
 
@@ -39,5 +40,15 @@ class ActivityBookmarkController(
                 memberId = member.memberId,
                 activityId = activityId,
             ).let { ResponseWrapper.success(SuccessCode.ACTIVITY_BOOKMARK_REMOVED) }
+            .let { ResponseEntity.status(HttpStatus.OK).body(it) }
+
+    @GetMapping("/v1/bookmarks")
+    override fun getBookmarks(
+        @AuthenticationPrincipal member: MemberPrincipal,
+        @Valid @ModelAttribute request: GetMyBookmarkListRequest,
+    ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>> =
+        bookmarkUseCase
+            .getBookmarks(request.toCommand(member.memberId))
+            .let { ResponseWrapper.success(SuccessCode.GET_BOOKMARKS, it) }
             .let { ResponseEntity.status(HttpStatus.OK).body(it) }
 }

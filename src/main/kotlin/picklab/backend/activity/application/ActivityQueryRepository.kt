@@ -11,4 +11,6 @@ interface ActivityQueryRepository {
     ): Page<ActivityItem>
 
     fun findPopularActivities(pageable: PageRequest): Page<ActivityItem>
+
+    fun findActivityItemByActivityIds(activityIds: List<Long>): List<ActivityItem>
 }

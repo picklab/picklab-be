@@ -3,10 +3,15 @@ package picklab.backend.activity.entrypoint
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
+import picklab.backend.activity.application.model.ActivityItemWithBookmark
+import picklab.backend.activity.entrypoint.request.GetMyBookmarkListRequest
 import picklab.backend.common.model.MemberPrincipal
+import picklab.backend.common.model.PageResponse
 import picklab.backend.common.model.ResponseWrapper
 
 interface ActivityBookmarkApi {
@@ -37,4 +42,17 @@ interface ActivityBookmarkApi {
         @AuthenticationPrincipal member: MemberPrincipal,
         @Parameter(description = "활동 ID값") @PathVariable activityId: Long,
     ): ResponseEntity<ResponseWrapper<Unit>>
+
+    @Operation(
+        summary = "북마크 목록 조회",
+        description = "사용자가 북마크한 활동 목록을 조회합니다.",
+        responses = [
+            ApiResponse(responseCode = "200", description = "북마크 목록 조회 성공"),
+            ApiResponse(responseCode = "500", description = "서버 오류입니다."),
+        ],
+    )
+    fun getBookmarks(
+        @AuthenticationPrincipal member: MemberPrincipal,
+        @Valid @ModelAttribute request: GetMyBookmarkListRequest,
+    ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>>
 }

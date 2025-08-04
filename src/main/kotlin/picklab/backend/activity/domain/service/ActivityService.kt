@@ -175,6 +175,12 @@ class ActivityService(
     fun getMostPopularActivity(): Activity? = activityRepository.findMostPopularActivity()
 
     /**
+     * 특정 활동 ID 들로 ActivityItem을 조회합니다.
+     */
+    fun findActivityItemsByIds(activityIds: List<Long>): List<ActivityItem> =
+        activityQueryRepository.findActivityItemByActivityIds(activityIds)
+
+    /**
      * 활동명 자동완성 검색
      */
     @Transactional(readOnly = true)
