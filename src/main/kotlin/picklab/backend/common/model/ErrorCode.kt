@@ -67,6 +67,7 @@ enum class ErrorCode(
     CANNOT_WRITE_REVIEW(HttpStatus.BAD_REQUEST, "해당 활동에 대해 리뷰를 작성할 수 없는 상태입니다."),
     CANNOT_READ_REVIEW(HttpStatus.FORBIDDEN, "해당 리뷰를 읽을 권한이 없습니다."),
     CANNOT_UPDATE_REVIEW(HttpStatus.FORBIDDEN, "해당 리뷰를 수정할 권한이 없습니다."),
+    CANNOT_DELETE_REVIEW(HttpStatus.FORBIDDEN, "해당 리뷰를 삭제할 권한이 없습니다."),
     ALREADY_EXISTS_REVIEW(HttpStatus.BAD_REQUEST, "이미 해당 활동에 대해 리뷰를 작성했습니다."),
 
     /**

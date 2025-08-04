@@ -4,6 +4,7 @@ import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
@@ -82,5 +83,14 @@ class ReviewController(
     ): ResponseEntity<ResponseWrapper<Unit>> {
         reviewUseCase.updateReview(request.toCommand(id, member.memberId))
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.UPDATE_REVIEW_SUCCESS))
+    }
+
+    @DeleteMapping("/v1/reviews/{id}")
+    override fun deleteReview(
+        @PathVariable id: Long,
+        @AuthenticationPrincipal member: MemberPrincipal,
+    ): ResponseEntity<ResponseWrapper<Unit>> {
+        reviewUseCase.deleteReview(member.memberId, id)
+        return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.DELETE_REVIEW_SUCCESS))
     }
 }

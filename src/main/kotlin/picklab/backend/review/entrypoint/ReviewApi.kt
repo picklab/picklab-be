@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import picklab.backend.archive.entrypoint.request.ReviewCreateRequest
@@ -109,5 +110,11 @@ interface ReviewApi {
         @Parameter(description = "리뷰 ID값") @PathVariable id: Long,
         member: MemberPrincipal,
         request: ReviewUpdateRequest,
+    ): ResponseEntity<ResponseWrapper<Unit>>
+
+    @Operation(summary = "리뷰 삭제", description = "본인이 작성한 리뷰를 삭제합니다.")
+    fun deleteReview(
+        @Parameter(description = "리뷰 ID값") @PathVariable id: Long,
+        @AuthenticationPrincipal member: MemberPrincipal,
     ): ResponseEntity<ResponseWrapper<Unit>>
 }

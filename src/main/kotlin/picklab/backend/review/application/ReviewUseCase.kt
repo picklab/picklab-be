@@ -125,4 +125,17 @@ class ReviewUseCase(
             activity,
         )
     }
+
+    @Transactional
+    fun deleteReview(
+        memberId: Long,
+        id: Long,
+    ) {
+        val review = reviewService.mustFindById(id)
+        val member = memberService.findActiveMember(memberId)
+        if (member.id != review.member.id) {
+            throw BusinessException(ErrorCode.CANNOT_DELETE_REVIEW)
+        }
+        review.delete()
+    }
 }

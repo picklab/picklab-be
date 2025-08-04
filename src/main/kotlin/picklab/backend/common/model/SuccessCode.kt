@@ -49,7 +49,8 @@ enum class SuccessCode(
     GET_REVIEW(HttpStatus.OK, "리뷰 단건 조회에 성공했습니다."),
     GET_REVIEWS(HttpStatus.OK, "리뷰 목록 조회에 성공했습니다."),
     CREATE_REVIEW_SUCCESS(HttpStatus.OK, "리뷰 생성에 성공했습니다."),
-    UPDATE_REVIEW_SUCCESS(HttpStatus.OK, "리뷰 수정에 성공했습니다."),
+    UPDATE_REVIEW_SUCCESS(HttpStatus.OK, "리뷰 수정을 성공했습니다."),
+    DELETE_REVIEW_SUCCESS(HttpStatus.OK, "리뷰 삭제를 성공했습니다."),
 
     // Search 도메인 관련
     SEARCH_AUTOCOMPLETE_SUCCESS(HttpStatus.OK, "자동완성 검색에 성공했습니다."),
