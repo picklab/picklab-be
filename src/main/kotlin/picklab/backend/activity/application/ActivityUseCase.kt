@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import picklab.backend.activity.application.model.ActivityItemWithBookmark
 import picklab.backend.activity.application.model.ActivitySearchCommand
+import picklab.backend.activity.application.model.PopularActivitiesCommand
 import picklab.backend.activity.application.model.RecommendActivitiesCommand
 import picklab.backend.activity.domain.service.ActivityBookmarkService
 import picklab.backend.activity.domain.service.ActivityService
@@ -19,7 +20,6 @@ class ActivityUseCase(
     private val memberService: MemberService,
     private val activityService: ActivityService,
     private val activityBookmarkService: ActivityBookmarkService,
-    private val activityQueryService: ActivityQueryService,
     private val viewCountLimiterPort: ViewCountLimiterPort,
 ) {
     /**
@@ -111,7 +111,7 @@ class ActivityUseCase(
         val pageable = PageRequest.of(command.page - 1, command.size)
         val myJobIds = memberService.findMyInterestedJobCategoryIds(member)
 
-        val activityPage = activityQueryService.getRecommendationActivities(myJobIds, pageable)
+        val activityPage = activityService.getRecommendationActivities(myJobIds, pageable)
         val activityItems = activityPage.content
         val activityIds = activityItems.map { it.id }
 
@@ -120,6 +120,33 @@ class ActivityUseCase(
                 memberId = command.memberId,
                 activityIds = activityIds,
             )
+
+        val itemsPage =
+            activityPage.map {
+                ActivityItemWithBookmark.from(
+                    item = it,
+                    isBookmarked = bookmarkedActivityIds.contains(it.id),
+                )
+            }
+
+        return PageResponse.from(itemsPage)
+    }
+
+    /**
+     * 전체 활동 중 인기도가 높은 활동들을 조회합니다.
+     * 인기도는 조회수와 북마크 수를 합산하여 계산합니다.
+     */
+    @Transactional(readOnly = true)
+    fun getPopularActivities(command: PopularActivitiesCommand): PageResponse<ActivityItemWithBookmark> {
+        val pageable = PageRequest.of(command.page - 1, command.size)
+
+        val activityPage = activityService.getPopularActivities(pageable)
+        val activityIds = activityPage.content.map { it.id }
+
+        val bookmarkedActivityIds: Set<Long> =
+            command.memberId
+                ?.let { activityBookmarkService.getMyBookmarkedActivityIds(it, activityIds) }
+                ?: emptySet()
 
         val itemsPage =
             activityPage.map {

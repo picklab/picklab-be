@@ -8,10 +8,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import picklab.backend.activity.application.ActivityUseCase
-import picklab.backend.activity.entrypoint.mapper.toCommand
-import picklab.backend.activity.entrypoint.request.ActivitySearchCondition
-import picklab.backend.activity.entrypoint.request.RecommendationActivitiesRequest
 import picklab.backend.activity.application.model.ActivityItemWithBookmark
+import picklab.backend.activity.entrypoint.mapper.toCommand
+import picklab.backend.activity.entrypoint.mapper.toPopularActivitiesCommand
+import picklab.backend.activity.entrypoint.mapper.toRecommendActivitiesCommand
+import picklab.backend.activity.entrypoint.request.ActivitySearchCondition
+import picklab.backend.activity.entrypoint.request.GetActivityPageRequest
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
 import picklab.backend.activity.entrypoint.response.GetActivityListResponse
 import picklab.backend.common.model.MemberPrincipal
@@ -67,9 +69,20 @@ class ActivityController(
     @GetMapping("/recommendations")
     override fun getRecommendationActivities(
         @AuthenticationPrincipal member: MemberPrincipal,
-        @Valid @ModelAttribute request: RecommendationActivitiesRequest,
+        @Valid @ModelAttribute request: GetActivityPageRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>> {
-        val data = activityUseCase.getRecommendationActivities(request.toCommand(member.memberId))
+        val data = activityUseCase.getRecommendationActivities(request.toRecommendActivitiesCommand(member.memberId))
+        return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.GET_ACTIVITIES, data))
+    }
+
+    @GetMapping("/popular")
+    override fun getWeeklyPopularActivities(
+        @Valid @ModelAttribute request: GetActivityPageRequest,
+    ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>> {
+        val authentication = SecurityContextHolder.getContext().authentication
+        val memberId: Long? = (authentication?.principal as? MemberPrincipal)?.memberId
+
+        val data = activityUseCase.getPopularActivities(request.toPopularActivitiesCommand(memberId))
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.GET_ACTIVITIES, data))
     }
 }
