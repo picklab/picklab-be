@@ -12,7 +12,7 @@ import picklab.backend.activity.application.model.ActivityItemWithBookmark
 import picklab.backend.activity.entrypoint.mapper.toCommand
 import picklab.backend.activity.entrypoint.mapper.toPopularActivitiesCommand
 import picklab.backend.activity.entrypoint.mapper.toRecommendActivitiesCommand
-import picklab.backend.activity.entrypoint.request.ActivitySearchCondition
+import picklab.backend.activity.entrypoint.request.ActivitySearchRequest
 import picklab.backend.activity.entrypoint.request.GetActivityPageRequest
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
 import picklab.backend.activity.entrypoint.response.GetActivityListResponse
@@ -28,7 +28,7 @@ class ActivityController(
 ) : ActivityApi {
     @GetMapping("")
     override fun getActivities(
-        @ModelAttribute condition: ActivitySearchCondition,
+        @ModelAttribute condition: ActivitySearchRequest,
         @Parameter(description = "데이터 개수")
         @RequestParam(defaultValue = "20") size: Int,
         @Parameter(description = "페이지 번호") @RequestParam(defaultValue = "1") page: Int,

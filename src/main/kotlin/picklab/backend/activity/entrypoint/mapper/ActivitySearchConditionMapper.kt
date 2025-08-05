@@ -2,10 +2,10 @@ package picklab.backend.activity.entrypoint.mapper
 
 import picklab.backend.activity.application.model.ActivitySearchCondition
 import picklab.backend.activity.domain.enums.*
-import picklab.backend.activity.entrypoint.request.ActivitySearchCondition
+import picklab.backend.activity.entrypoint.request.ActivitySearchRequest
 import picklab.backend.job.domain.enums.JobDetail
 
-fun ActivitySearchCondition.toCommand(): ActivitySearchCondition =
+fun ActivitySearchRequest.toCommand(): ActivitySearchCondition =
     ActivitySearchCondition(
         category = ActivityType.findByType(category),
         jobTag = jobTag?.map(JobDetail::findByType),
