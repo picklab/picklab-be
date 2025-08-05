@@ -178,7 +178,10 @@ class ActivityService(
      * 활동명 자동완성 검색
      */
     @Transactional(readOnly = true)
-    fun getActivityTitlesForAutocomplete(keyword: String, limit: Int): List<String> {
+    fun getActivityTitlesForAutocomplete(
+        keyword: String,
+        limit: Int,
+    ): List<String> {
         val trimmedKeyword = keyword.trim()
         if (trimmedKeyword.isEmpty()) {
             return emptyList()
@@ -189,11 +192,6 @@ class ActivityService(
 
         return activityRepository.findActivityTitlesForAutocomplete(trimmedKeyword, validatedLimit)
     }
-
-    fun getRecommendationActivities(
-        jobIds: List<Long>,
-        pageable: PageRequest,
-    ): Page<ActivityItem> = activityQueryRepository.findAllByMemberJobRecommendation(jobIds, pageable)
 
     /**
      * 전체 활동 중 인기도가 높은 활동들을 조회합니다.

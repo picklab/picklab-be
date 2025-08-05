@@ -19,6 +19,7 @@ import picklab.backend.member.domain.MemberService
 class ActivityUseCase(
     private val memberService: MemberService,
     private val activityService: ActivityService,
+    private val activityQueryService: ActivityQueryService,
     private val activityBookmarkService: ActivityBookmarkService,
     private val viewCountLimiterPort: ViewCountLimiterPort,
 ) {
@@ -73,7 +74,8 @@ class ActivityUseCase(
         val activity = activityService.mustFindById(activityId)
 
         val bookmarkCount = activityBookmarkService.countByActivityId(activityId)
-        val isBookmarked = memberId?.let { activityBookmarkService.existsByMemberIdAndActivityId(memberId, activityId) } ?: false
+        val isBookmarked =
+            memberId?.let { activityBookmarkService.existsByMemberIdAndActivityId(memberId, activityId) } ?: false
 
         return GetActivityDetailResponse.from(
             activity = activity,
@@ -111,7 +113,7 @@ class ActivityUseCase(
         val pageable = PageRequest.of(command.page - 1, command.size)
         val myJobIds = memberService.findMyInterestedJobCategoryIds(member)
 
-        val activityPage = activityService.getRecommendationActivities(myJobIds, pageable)
+        val activityPage = activityQueryService.getRecommendationActivities(myJobIds, pageable)
         val activityItems = activityPage.content
         val activityIds = activityItems.map { it.id }
 
