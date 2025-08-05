@@ -175,16 +175,13 @@ class ActivityQueryRepositoryImpl(
                 )
 
         val count =
-            (
-                jpaQueryFactory
-                    .select(QActivity.activity.id.countDistinct())
-                    .from(QActivity.activity)
-                    .leftJoin(QActivityBookmark.activityBookmark)
-                    .on(QActivityBookmark.activityBookmark.activity.eq(QActivity.activity))
-                    .where(condition)
-                    .fetchOne()
-                    ?: 0L
-            ).coerceAtMost(20L)
+            jpaQueryFactory
+                .select(QActivity.activity.id.countDistinct())
+                .from(QActivity.activity)
+                .leftJoin(QActivityBookmark.activityBookmark)
+                .on(QActivityBookmark.activityBookmark.activity.eq(QActivity.activity))
+                .where(condition)
+                .fetchOne() ?: 0L
 
         return PageImpl(items, pageable, count)
     }
