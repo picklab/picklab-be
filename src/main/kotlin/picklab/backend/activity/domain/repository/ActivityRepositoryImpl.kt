@@ -11,15 +11,10 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Repository
 import picklab.backend.activity.application.model.ActivityItem
-import picklab.backend.activity.application.model.ActivitySearchCommand
+import picklab.backend.activity.application.model.ActivitySearchCondition
 import picklab.backend.activity.domain.entity.QActivity
 import picklab.backend.activity.domain.entity.QActivityJobCategory
-import picklab.backend.activity.domain.enums.ActivityFieldType
-import picklab.backend.activity.domain.enums.ActivitySortType
-import picklab.backend.activity.domain.enums.DomainType
-import picklab.backend.activity.domain.enums.EducationCostType
-import picklab.backend.activity.domain.enums.EducationFormatType
-import picklab.backend.activity.domain.enums.LocationType
+import picklab.backend.activity.domain.enums.*
 import picklab.backend.job.domain.entity.QJobCategory
 import java.time.LocalDate
 
@@ -28,7 +23,7 @@ class ActivityRepositoryImpl(
     private val jpaQueryFactory: JPAQueryFactory,
 ) : ActivityRepositoryCustom {
     override fun getActivities(
-        queryData: ActivitySearchCommand,
+        queryData: ActivitySearchCondition,
         pageable: PageRequest,
     ): Page<ActivityItem> {
         val condition =
@@ -75,7 +70,12 @@ class ActivityRepositoryImpl(
         val orderBy =
             when (queryData.sort) {
                 ActivitySortType.LATEST -> listOf(QActivity.activity.createdAt.desc())
-                ActivitySortType.DEADLINE_ASC -> listOf(QActivity.activity.recruitmentEndDate.asc(), QActivity.activity.createdAt.desc())
+                ActivitySortType.DEADLINE_ASC ->
+                    listOf(
+                        QActivity.activity.recruitmentEndDate.asc(),
+                        QActivity.activity.createdAt.desc(),
+                    )
+
                 ActivitySortType.DEADLINE_DESC ->
                     listOf(
                         Expressions
@@ -137,19 +137,20 @@ class ActivityRepositoryImpl(
 
         return PageImpl(items, pageable, count)
     }
-    
-    override fun findActivityTitlesForAutocomplete(keyword: String, limit: Int): List<String> {
-        return jpaQueryFactory
+
+    override fun findActivityTitlesForAutocomplete(
+        keyword: String,
+        limit: Int,
+    ): List<String> =
+        jpaQueryFactory
             .select(QActivity.activity.title)
             .from(QActivity.activity)
             .where(
                 QActivity.activity.deletedAt.isNull
-                    .and(QActivity.activity.title.startsWith(keyword))
-            )
-            .orderBy(QActivity.activity.title.asc())
+                    .and(QActivity.activity.title.startsWith(keyword)),
+            ).orderBy(QActivity.activity.title.asc())
             .limit(limit.toLong())
             .fetch()
-    }
 }
 
 inline fun <T> BooleanBuilder.andIfNotNullOrEmpty(

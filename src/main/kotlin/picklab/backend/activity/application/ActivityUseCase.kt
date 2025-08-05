@@ -5,9 +5,9 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import picklab.backend.activity.application.model.ActivityItemWithBookmark
-import picklab.backend.activity.application.model.ActivitySearchCommand
-import picklab.backend.activity.application.model.PopularActivitiesCommand
-import picklab.backend.activity.application.model.RecommendActivitiesCommand
+import picklab.backend.activity.application.model.ActivitySearchCondition
+import picklab.backend.activity.application.model.PopularActivitiesCondition
+import picklab.backend.activity.application.model.RecommendActivitiesCondition
 import picklab.backend.activity.domain.service.ActivityBookmarkService
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
@@ -27,7 +27,7 @@ class ActivityUseCase(
      * 검색 필터에 일치하는 활동 리스트 및 북마크 여부를 페이징으로 가져옵니다.
      */
     fun getActivities(
-        queryParams: ActivitySearchCommand,
+        queryParams: ActivitySearchCondition,
         size: Int,
         page: Int,
         memberId: Long?,
@@ -107,7 +107,7 @@ class ActivityUseCase(
     /**
      * 사용자의 직무에 해당하는 추천 활동을 조회합니다.
      */
-    fun getRecommendationActivities(command: RecommendActivitiesCommand): PageResponse<ActivityItemWithBookmark> {
+    fun getRecommendationActivities(command: RecommendActivitiesCondition): PageResponse<ActivityItemWithBookmark> {
         val member = memberService.findActiveMember(command.memberId)
 
         val pageable = PageRequest.of(command.page - 1, command.size)
@@ -139,7 +139,7 @@ class ActivityUseCase(
      * 인기도는 조회수와 북마크 수를 합산하여 계산합니다.
      */
     @Transactional(readOnly = true)
-    fun getPopularActivities(command: PopularActivitiesCommand): PageResponse<ActivityItemWithBookmark> {
+    fun getPopularActivities(command: PopularActivitiesCondition): PageResponse<ActivityItemWithBookmark> {
         val pageable = PageRequest.of(command.page - 1, command.size)
 
         val activityPage = activityService.getPopularActivities(pageable)

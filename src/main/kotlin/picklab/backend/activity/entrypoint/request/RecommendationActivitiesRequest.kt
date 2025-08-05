@@ -3,7 +3,7 @@ package picklab.backend.activity.entrypoint.request
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
-import picklab.backend.activity.application.model.RecommendActivitiesCommand
+import picklab.backend.activity.application.model.RecommendActivitiesCondition
 
 data class RecommendationActivitiesRequest(
     @Min(1)
@@ -14,8 +14,8 @@ data class RecommendationActivitiesRequest(
     @Schema(description = "페이지 크기 (기본값 4)")
     val size: Int = 4,
 ) {
-    fun toCommand(memberId: Long): RecommendActivitiesCommand =
-        RecommendActivitiesCommand(
+    fun toCommand(memberId: Long): RecommendActivitiesCondition =
+        RecommendActivitiesCondition(
             memberId = memberId,
             page = page,
             size = size,

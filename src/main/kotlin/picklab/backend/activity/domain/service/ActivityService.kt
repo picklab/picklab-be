@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import picklab.backend.activity.application.ActivityQueryRepository
 import picklab.backend.activity.application.model.ActivityItem
-import picklab.backend.activity.application.model.ActivitySearchCommand
+import picklab.backend.activity.application.model.ActivitySearchCondition
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.activity.domain.enums.ActivityType
 import picklab.backend.activity.domain.enums.EducationFormatType
@@ -33,7 +33,7 @@ class ActivityService(
      * 조건과 일치하는 활동 리스트를 페이징으로 가져옵니다
      */
     fun getActivities(
-        queryData: ActivitySearchCommand,
+        queryData: ActivitySearchCondition,
         pageable: PageRequest,
     ) = activityRepository.getActivities(
         queryData = queryData,
@@ -43,7 +43,7 @@ class ActivityService(
     /**
      * 활동 카테고리 별, 불필요한 데이터가 파라미터로 넘어올 경우 이를 제거하고 정의된 규격에 맞게 파라미터 값을 조정합니다
      */
-    fun adjustQueryByCategory(query: ActivitySearchCommand): ActivitySearchCommand =
+    fun adjustQueryByCategory(query: ActivitySearchCondition): ActivitySearchCondition =
         when (query.category) {
             ActivityType.EXTRACURRICULAR -> {
                 query.copy(
