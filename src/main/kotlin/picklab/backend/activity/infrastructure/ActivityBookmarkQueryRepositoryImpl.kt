@@ -5,7 +5,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Repository
 import picklab.backend.activity.application.ActivityBookmarkQueryRepository
-import picklab.backend.activity.application.model.GetMyBookmarkListCommand
+import picklab.backend.activity.application.model.GetMyBookmarkListCondition
 import picklab.backend.activity.domain.entity.QActivity
 import picklab.backend.activity.domain.entity.QActivityBookmark
 import picklab.backend.activity.domain.entity.QActivityJobCategory
@@ -18,7 +18,7 @@ class ActivityBookmarkQueryRepositoryImpl(
 ) : ActivityBookmarkQueryRepository {
     override fun findBookmarkedActivityIds(
         memberId: Long,
-        queryData: GetMyBookmarkListCommand,
+        queryData: GetMyBookmarkListCondition,
         pageable: PageRequest,
     ): List<Long> {
         val condition =
@@ -51,6 +51,7 @@ class ActivityBookmarkQueryRepositoryImpl(
                         QActivity.activity.recruitmentEndDate.asc(),
                         QActivity.activity.createdAt.desc(),
                     )
+
                 ActivityBookmarkSortType.DEADLINE_DESC ->
                     listOf(
                         QActivity.activity.recruitmentEndDate.desc(),
@@ -79,7 +80,7 @@ class ActivityBookmarkQueryRepositoryImpl(
 
     override fun countBookmarkedActivities(
         memberId: Long,
-        queryData: GetMyBookmarkListCommand,
+        queryData: GetMyBookmarkListCondition,
     ): Long {
         val condition =
             BooleanBuilder().apply {

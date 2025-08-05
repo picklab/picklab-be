@@ -5,7 +5,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import picklab.backend.activity.application.model.ActivityItemWithBookmark
-import picklab.backend.activity.application.model.GetMyBookmarkListCommand
+import picklab.backend.activity.application.model.GetMyBookmarkListCondition
 import picklab.backend.activity.domain.service.ActivityBookmarkService
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.common.model.PageResponse
@@ -41,7 +41,7 @@ class BookmarkUseCase(
     }
 
     @Transactional(readOnly = true)
-    fun getBookmarks(command: GetMyBookmarkListCommand): PageResponse<ActivityItemWithBookmark> {
+    fun getBookmarks(command: GetMyBookmarkListCondition): PageResponse<ActivityItemWithBookmark> {
         val member = memberService.findActiveMember(command.memberId)
         val pageable = PageRequest.of(command.page, command.size)
 

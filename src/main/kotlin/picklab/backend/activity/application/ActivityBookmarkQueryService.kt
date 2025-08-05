@@ -2,7 +2,7 @@ package picklab.backend.activity.application
 
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
-import picklab.backend.activity.application.model.GetMyBookmarkListCommand
+import picklab.backend.activity.application.model.GetMyBookmarkListCondition
 
 @Service
 class ActivityBookmarkQueryService(
@@ -10,12 +10,12 @@ class ActivityBookmarkQueryService(
 ) {
     fun getBookmarkedActivityIds(
         memberId: Long,
-        queryData: GetMyBookmarkListCommand,
+        queryData: GetMyBookmarkListCondition,
         pageable: PageRequest,
     ): List<Long> = activityBookmarkQueryRepository.findBookmarkedActivityIds(memberId, queryData, pageable)
-    
+
     fun countBookmarkedActivities(
         memberId: Long,
-        queryData: GetMyBookmarkListCommand,
+        queryData: GetMyBookmarkListCondition,
     ): Long = activityBookmarkQueryRepository.countBookmarkedActivities(memberId, queryData)
 }

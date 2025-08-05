@@ -1,7 +1,7 @@
 package picklab.backend.activity.entrypoint.request
 
 import io.swagger.v3.oas.annotations.media.Schema
-import picklab.backend.activity.application.model.GetMyBookmarkListCommand
+import picklab.backend.activity.application.model.GetMyBookmarkListCondition
 import picklab.backend.activity.domain.enums.ActivityBookmarkSortType
 import picklab.backend.activity.domain.enums.ActivityType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
@@ -22,7 +22,7 @@ data class GetMyBookmarkListRequest(
     val size: Int = 16,
 ) {
     fun toCommand(memberId: Long) =
-        GetMyBookmarkListCommand(
+        GetMyBookmarkListCondition(
             memberId = memberId,
             activityTypes = activityTypes,
             jobGroups = jobGroups,
