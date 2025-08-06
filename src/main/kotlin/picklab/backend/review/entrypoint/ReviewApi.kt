@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import picklab.backend.archive.entrypoint.request.ReviewCreateRequest
@@ -17,6 +18,7 @@ import picklab.backend.review.entrypoint.request.ActivityReviewListRequest
 import picklab.backend.review.entrypoint.request.MyReviewListRequest
 import picklab.backend.review.entrypoint.request.ReviewUpdateRequest
 import picklab.backend.review.entrypoint.response.ActivityReviewResponse
+import picklab.backend.review.entrypoint.response.MyReviewResponse
 import picklab.backend.review.entrypoint.response.MyReviewsResponse
 
 @Tag(name = "리뷰 API", description = "리뷰 관련 API 입니다.")
@@ -34,6 +36,20 @@ interface ReviewApi {
         member: MemberPrincipal,
         request: ReviewCreateRequest,
     ): ResponseEntity<ResponseWrapper<Unit>>
+
+    @Operation(
+        summary = "내가 작성한 리뷰 단건 조회",
+        description = "로그인한 사용자가 본인이 작성한 특정 리뷰를 단건 조회합니다.",
+        responses = [
+            ApiResponse(responseCode = "200", description = "리뷰 조회에 성공했습니다."),
+            ApiResponse(responseCode = "403", description = "해당 리뷰를 조회할 권한이 없습니다."),
+            ApiResponse(responseCode = "404", description = "리뷰 정보를 찾을 수 없습니다."),
+        ],
+    )
+    fun getMyReview(
+        @Parameter(description = "리뷰 ID값") @PathVariable id: Long,
+        member: MemberPrincipal,
+    ): ResponseEntity<ResponseWrapper<MyReviewResponse>>
 
     @Operation(
         summary = "내가 작성한 리뷰 리스트 조회",
@@ -94,5 +110,11 @@ interface ReviewApi {
         @Parameter(description = "리뷰 ID값") @PathVariable id: Long,
         member: MemberPrincipal,
         request: ReviewUpdateRequest,
+    ): ResponseEntity<ResponseWrapper<Unit>>
+
+    @Operation(summary = "리뷰 삭제", description = "본인이 작성한 리뷰를 삭제합니다.")
+    fun deleteReview(
+        @Parameter(description = "리뷰 ID값") @PathVariable id: Long,
+        @AuthenticationPrincipal member: MemberPrincipal,
     ): ResponseEntity<ResponseWrapper<Unit>>
 }

@@ -19,6 +19,7 @@ import picklab.backend.review.application.service.ReviewOverviewQueryService
 import picklab.backend.review.domain.policy.ReviewApprovalDecider
 import picklab.backend.review.domain.service.ReviewService
 import picklab.backend.review.entrypoint.response.ActivityReviewResponse
+import picklab.backend.review.entrypoint.response.MyReviewResponse
 import picklab.backend.review.entrypoint.response.MyReviewsResponse
 
 @Component
@@ -40,6 +41,18 @@ class ReviewUseCase(
         val approvalStatus = ReviewApprovalDecider.decideOnCreate(command.url)
         val review = reviewCreateConverter.toEntity(command, approvalStatus, member, activity)
         reviewService.save(review)
+    }
+
+    fun getMyReview(
+        id: Long,
+        memberId: Long,
+    ): MyReviewResponse {
+        val review = reviewService.mustFindById(id)
+        val member = memberService.findActiveMember(memberId)
+        if (member.id != review.member.id) {
+            throw BusinessException(ErrorCode.CANNOT_READ_REVIEW)
+        }
+        return MyReviewResponse.from(review)
     }
 
     fun getMyReviews(req: MyReviewListQueryRequest): PageResponse<MyReviewsResponse> {
@@ -111,5 +124,18 @@ class ReviewUseCase(
             approvalStatus = updatedApprovalStatus,
             activity,
         )
+    }
+
+    @Transactional
+    fun deleteReview(
+        memberId: Long,
+        id: Long,
+    ) {
+        val review = reviewService.mustFindById(id)
+        val member = memberService.findActiveMember(memberId)
+        if (member.id != review.member.id) {
+            throw BusinessException(ErrorCode.CANNOT_DELETE_REVIEW)
+        }
+        review.delete()
     }
 }

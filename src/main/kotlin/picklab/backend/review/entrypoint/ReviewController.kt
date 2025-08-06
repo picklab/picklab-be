@@ -4,6 +4,7 @@ import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
@@ -21,6 +22,7 @@ import picklab.backend.review.entrypoint.request.ActivityReviewListRequest
 import picklab.backend.review.entrypoint.request.MyReviewListRequest
 import picklab.backend.review.entrypoint.request.ReviewUpdateRequest
 import picklab.backend.review.entrypoint.response.ActivityReviewResponse
+import picklab.backend.review.entrypoint.response.MyReviewResponse
 import picklab.backend.review.entrypoint.response.MyReviewsResponse
 
 @RestController
@@ -34,6 +36,17 @@ class ReviewController(
     ): ResponseEntity<ResponseWrapper<Unit>> {
         reviewUseCase.createReview(request.toCommand(member.memberId))
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.CREATE_REVIEW_SUCCESS))
+    }
+
+    @GetMapping("/v1/reviews/{id}")
+    override fun getMyReview(
+        @PathVariable id: Long,
+        @AuthenticationPrincipal member: MemberPrincipal,
+    ): ResponseEntity<ResponseWrapper<MyReviewResponse>> {
+        val res = reviewUseCase.getMyReview(id, member.memberId)
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(ResponseWrapper.success(SuccessCode.GET_REVIEW, res))
     }
 
     @GetMapping("/v1/reviews")
@@ -70,5 +83,14 @@ class ReviewController(
     ): ResponseEntity<ResponseWrapper<Unit>> {
         reviewUseCase.updateReview(request.toCommand(id, member.memberId))
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.UPDATE_REVIEW_SUCCESS))
+    }
+
+    @DeleteMapping("/v1/reviews/{id}")
+    override fun deleteReview(
+        @PathVariable id: Long,
+        @AuthenticationPrincipal member: MemberPrincipal,
+    ): ResponseEntity<ResponseWrapper<Unit>> {
+        reviewUseCase.deleteReview(member.memberId, id)
+        return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.DELETE_REVIEW_SUCCESS))
     }
 }
