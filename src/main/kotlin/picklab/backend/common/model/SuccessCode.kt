@@ -28,10 +28,8 @@ enum class SuccessCode(
     GET_ACTIVITY_DETAIL(HttpStatus.OK, "활동 상세 조회에 성공했습니다."),
     ACTIVITY_BOOKMARK_CREATED(HttpStatus.CREATED, "북마크가 추가되었습니다."),
     ACTIVITY_BOOKMARK_REMOVED(HttpStatus.OK, "북마크가 삭제되었습니다."),
+    GET_BOOKMARKS(HttpStatus.OK, "북마크 목록 조회에 성공했습니다."),
     INCREASE_VIEW_COUNT(HttpStatus.OK, "조회수 증가에 성공했습니다."),
-
-    // Activity Participation 도메인 관련
-    GET_ACTIVITY_APPLICATION_URL(HttpStatus.OK, "활동 지원 링크를 가져오는데 성공했습니다."),
 
     // Archive 도메인 관련
     CREATE_ARCHIVE_SUCCESS(HttpStatus.OK, "아카이브 생성에 성공했습니다."),
