@@ -1,6 +1,5 @@
 package picklab.backend.activity.application
 
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -16,7 +15,7 @@ class BookmarkUseCase(
     private val activityBookmarkService: ActivityBookmarkService,
     private val memberService: MemberService,
     private val activityService: ActivityService,
-    private val activityBookmarkQueryService: ActivityBookmarkQueryService,
+    private val activityQueryService: ActivityQueryService,
 ) {
     @Transactional
     fun createActivityBookmark(
@@ -45,23 +44,16 @@ class BookmarkUseCase(
         val member = memberService.findActiveMember(command.memberId)
         val pageable = PageRequest.of(command.page, command.size)
 
-        val bookmarkedActivityIds = activityBookmarkQueryService.getBookmarkedActivityIds(member.id, command, pageable)
+        val bookmarkedActivityPage = activityQueryService.getBookmarkedActivityItems(member.id, command, pageable)
 
-        if (bookmarkedActivityIds.isEmpty()) {
-            val emptyPage = PageImpl<ActivityItemWithBookmark>(emptyList(), pageable, 0)
-            return PageResponse.from(emptyPage)
-        }
-
-        val activityItems = activityService.findActivityItemsByIds(bookmarkedActivityIds)
-
-        val activityItemsWithBookmark =
-            activityItems.map {
-                ActivityItemWithBookmark.from(it, isBookmarked = true)
+        val itemPage =
+            bookmarkedActivityPage.map {
+                ActivityItemWithBookmark.from(
+                    item = it,
+                    isBookmarked = true,
+                )
             }
 
-        val totalCount = activityBookmarkQueryService.countBookmarkedActivities(member.id, command)
-
-        val page = PageImpl(activityItemsWithBookmark, pageable, totalCount)
-        return PageResponse.from(page)
+        return PageResponse.from(itemPage)
     }
 }
