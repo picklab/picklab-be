@@ -79,6 +79,7 @@ class Review(
         url: String?,
         approvalStatus: ReviewApprovalStatus,
         activity: Activity,
+        jobCategory: JobCategory,
     ) {
         this.overallScore = overallScore
         this.infoScore = infoScore
@@ -92,5 +93,6 @@ class Review(
         this.url = url
         this.reviewApprovalStatus = approvalStatus
         this.activity = activity
+        this.jobCategory = jobCategory
     }
 }

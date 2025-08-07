@@ -10,7 +10,6 @@ import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Repository
 import picklab.backend.activity.domain.entity.QActivity.Companion.activity
 import picklab.backend.job.domain.entity.QJobCategory.Companion.jobCategory
-import picklab.backend.member.domain.entity.QInterestedJobCategory.Companion.interestedJobCategory
 import picklab.backend.member.domain.entity.QMember.Companion.member
 import picklab.backend.participation.domain.entity.QActivityParticipation.Companion.activityParticipation
 import picklab.backend.review.application.model.ActivityReviewListQueryRequest
@@ -93,7 +92,8 @@ class ReviewOverviewQueryRepositoryImpl(
                         review.infoScore,
                         review.difficultyScore,
                         review.benefitScore,
-                        activity.activityType,
+                        jobCategory.jobGroup,
+                        jobCategory.jobDetail,
                         activityParticipation.createdAt,
                         activityParticipation.progressStatus,
                         review.summary,
@@ -104,14 +104,12 @@ class ReviewOverviewQueryRepositoryImpl(
                 ).from(review)
                 .join(review.activity, activity)
                 .join(review.member, member)
-                .leftJoin(member.interestedJobCategories, interestedJobCategory)
-                .leftJoin(interestedJobCategory.jobCategory, jobCategory)
+                .join(review.jobCategory, jobCategory)
                 .join(activityParticipation)
                 .on(
                     activityParticipation.member.id
                         .eq(member.id)
-                        .and(activityParticipation.activity.id.eq(activity.id))
-                        .and(activityParticipation.deletedAt.isNull),
+                        .and(activityParticipation.activity.id.eq(activity.id)),
                 ).where(builder)
                 .orderBy(
                     * pageable.sort
@@ -128,14 +126,12 @@ class ReviewOverviewQueryRepositoryImpl(
                 .from(review)
                 .join(review.activity, activity)
                 .join(review.member, member)
-                .leftJoin(member.interestedJobCategories, interestedJobCategory)
-                .leftJoin(interestedJobCategory.jobCategory, jobCategory)
+                .join(review.jobCategory, jobCategory)
                 .join(activityParticipation)
                 .on(
                     activityParticipation.member.id
                         .eq(member.id)
-                        .and(activityParticipation.activity.id.eq(activity.id))
-                        .and(activityParticipation.deletedAt.isNull),
+                        .and(activityParticipation.activity.id.eq(activity.id)),
                 ).where(builder)
                 .fetchOne() ?: 0L
 

@@ -1,10 +1,12 @@
 package picklab.backend.review.entrypoint.response
 
 import io.swagger.v3.oas.annotations.media.Schema
+import picklab.backend.job.domain.enums.JobDetail
+import picklab.backend.job.domain.enums.JobGroup
 import picklab.backend.participation.domain.enums.ProgressStatus
-import picklab.backend.review.application.query.model.ActivityReviewListItem
 import java.time.LocalDateTime
 
+@Suppress("ktlint:standard:comment-wrapping")
 @Schema(description = "리뷰 응답")
 data class ActivityReviewResponse(
     @Schema(description = "리뷰 ID", example = "1")
@@ -17,8 +19,10 @@ data class ActivityReviewResponse(
     val difficultyScore: Int,
     @Schema(description = "혜택 및 복지 평점", example = "5")
     val benefitScore: Int,
-    @Schema(description = "활동 유형", example = "기획")
-    val activityType: String,
+    @Schema(description = "직무", example = "기획")
+    val jobGroup: JobGroup,
+    @Schema(description = "리뷰 세부 직무 (null = 전체)", example = "서비스 기획")
+    val jobDetail: JobDetail?,
     @Schema(description = "참여 날짜", example = "2024-01-01T12:00:00")
     val participationDate: LocalDateTime,
     @Schema(description = "진행 상태 (진행 중 / 수료 완료 / 중도 포기)", example = "수료 완료")
@@ -32,22 +36,4 @@ data class ActivityReviewResponse(
     val weakness: String? = null,
     @Schema(description = "꿀팁")
     val tips: String? = null,
-) {
-    companion object {
-        fun from(item: ActivityReviewListItem): ActivityReviewResponse =
-            ActivityReviewResponse(
-                id = item.id,
-                overallScore = item.overallScore,
-                infoScore = item.infoScore,
-                difficultyScore = item.difficultyScore,
-                benefitScore = item.benefitScore,
-                activityType = item.activityType,
-                participationDate = item.participationDate,
-                progressStatus = item.progressStatus,
-                summary = item.summary,
-                strength = item.strength,
-                weakness = item.weakness,
-                tips = item.tips,
-            )
-    }
-}
+)
