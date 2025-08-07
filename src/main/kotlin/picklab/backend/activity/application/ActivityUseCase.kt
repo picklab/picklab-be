@@ -139,14 +139,14 @@ class ActivityUseCase(
      * 인기도는 조회수와 북마크 수를 합산하여 계산합니다.
      */
     @Transactional(readOnly = true)
-    fun getPopularActivities(command: PopularActivitiesCondition): PageResponse<ActivityItemWithBookmark> {
-        val pageable = PageRequest.of(command.page - 1, command.size)
+    fun getPopularActivities(condition: PopularActivitiesCondition): PageResponse<ActivityItemWithBookmark> {
+        val pageable = PageRequest.of(condition.page - 1, condition.size)
 
         val activityPage = activityService.getPopularActivities(pageable)
         val activityIds = activityPage.content.map { it.id }
 
         val bookmarkedActivityIds: Set<Long> =
-            command.memberId
+            condition.memberId
                 ?.let { activityBookmarkService.getMyBookmarkedActivityIds(it, activityIds) }
                 ?: emptySet()
 
