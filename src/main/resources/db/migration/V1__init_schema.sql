@@ -215,6 +215,7 @@ CREATE TABLE IF NOT EXISTS review
     id                  BIGINT        NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '리뷰 ID',
     member_id           BIGINT        NOT NULL COMMENT '회원 ID',
     activity_id         BIGINT        NOT NULL COMMENT '활동 ID',
+    job_category_id     BIGINT        NOT NULL COMMENT '직무 카테고리 ID',
     overall_score       TINYINT       NOT NULL COMMENT '총 평점',
     info_score          TINYINT       NOT NULL COMMENT '정보 점수',
     difficulty_score    TINYINT       NOT NULL COMMENT '강도 점수',
