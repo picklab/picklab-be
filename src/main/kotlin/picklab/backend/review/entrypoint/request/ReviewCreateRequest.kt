@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.Size
 import picklab.backend.review.application.model.ReviewCreateCommand
+import picklab.backend.review.entrypoint.request.JobCategoryDto
 
 class ReviewCreateRequest(
     @Schema(description = "활동 ID")
@@ -43,6 +44,8 @@ class ReviewCreateRequest(
     val jobRelevanceScore: Int,
     @Schema(description = "리뷰 인증 자료 URL")
     val url: String? = null,
+    @Schema(description = "직무 정보")
+    val jobCategory: JobCategoryDto,
 ) {
     fun toCommand(memberId: Long): ReviewCreateCommand =
         ReviewCreateCommand(
@@ -58,5 +61,7 @@ class ReviewCreateRequest(
             tips = this.tips,
             jobRelevanceScore = this.jobRelevanceScore,
             url = this.url,
+            jobGroup = this.jobCategory.jobGroup,
+            jobDetail = this.jobCategory.jobDetail,
         )
 }

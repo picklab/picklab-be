@@ -13,6 +13,8 @@ import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
+import picklab.backend.job.domain.enums.JobGroup
+import picklab.backend.job.domain.service.JobService
 import picklab.backend.member.domain.MemberService
 import picklab.backend.member.domain.entity.Member
 import picklab.backend.participation.domain.service.ActivityParticipationService
@@ -41,6 +43,9 @@ class UpdateReviewUnitTest {
 
     @MockK
     lateinit var reviewOverviewQueryService: ReviewOverviewQueryService
+
+    @MockK
+    lateinit var jobService: JobService
 
     @InjectMockKs
     lateinit var reviewUseCase: ReviewUseCase
@@ -78,6 +83,8 @@ class UpdateReviewUnitTest {
                 weakness = "weakness",
                 tips = null,
                 jobRelevanceScore = 3,
+                jobGroup = JobGroup.DEVELOPMENT,
+                jobDetail = null,
                 url = "http://some.url",
             )
 
