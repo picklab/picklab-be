@@ -20,4 +20,9 @@ interface ActivityQueryRepository {
         queryData: GetMyBookmarkListCondition,
         pageable: PageRequest,
     ): Page<ActivityItem>
+
+    fun findRecentlyViewedActivities(
+        memberId: Long,
+        pageable: PageRequest,
+    ): Page<ActivityItem>
 }

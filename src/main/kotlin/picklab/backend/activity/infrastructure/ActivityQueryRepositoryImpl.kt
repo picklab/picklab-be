@@ -19,6 +19,7 @@ import picklab.backend.activity.domain.entity.QActivityJobCategory
 import picklab.backend.activity.domain.enums.ActivityBookmarkSortType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.job.domain.entity.QJobCategory
+import picklab.backend.member.domain.entity.QMemberActivityViewHistory
 
 @Repository
 class ActivityQueryRepositoryImpl(
@@ -309,6 +310,61 @@ class ActivityQueryRepositoryImpl(
                     QActivityJobCategory.activityJobCategory.jobCategory.id
                         .eq(QJobCategory.jobCategory.id),
                 ).where(condition)
+                .fetchOne() ?: 0L
+
+        return PageImpl(items, pageable, count)
+    }
+
+    override fun findRecentlyViewedActivities(
+        memberId: Long,
+        pageable: PageRequest,
+    ): Page<ActivityItem> {
+        val condition =
+            BooleanBuilder().apply {
+                and(
+                    QMemberActivityViewHistory.memberActivityViewHistory.member.id
+                        .eq(memberId),
+                )
+                and(QActivity.activity.deletedAt.isNull)
+                and(QActivity.activity.status.eq(RecruitmentStatus.OPEN))
+            }
+
+        val items =
+            jpaQueryFactory
+                .from(QMemberActivityViewHistory.memberActivityViewHistory)
+                .join(QMemberActivityViewHistory.memberActivityViewHistory.activity, QActivity.activity)
+                .leftJoin(QActivityJobCategory.activityJobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.activity.id
+                        .eq(QActivity.activity.id),
+                ).leftJoin(QJobCategory.jobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.jobCategory.id
+                        .eq(QJobCategory.jobCategory.id),
+                ).where(condition)
+                .orderBy(QMemberActivityViewHistory.memberActivityViewHistory.updatedAt.desc())
+                .offset(pageable.offset)
+                .limit(pageable.pageSize.toLong())
+                .transform(
+                    GroupBy.groupBy(QActivity.activity.id).list(
+                        QActivityItem(
+                            QActivity.activity.id,
+                            QActivity.activity.title,
+                            QActivity.activity.organizer.stringValue(),
+                            QActivity.activity.startDate,
+                            QActivity.activity.activityType,
+                            GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),
+                            QActivity.activity.activityThumbnailUrl,
+                        ),
+                    ),
+                )
+
+        val count =
+            jpaQueryFactory
+                .select(QMemberActivityViewHistory.memberActivityViewHistory.id.countDistinct())
+                .from(QMemberActivityViewHistory.memberActivityViewHistory)
+                .join(QMemberActivityViewHistory.memberActivityViewHistory.activity, QActivity.activity)
+                .where(condition)
                 .fetchOne() ?: 0L
 
         return PageImpl(items, pageable, count)
