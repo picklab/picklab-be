@@ -1,10 +1,12 @@
 package picklab.backend.activity.domain.service
 
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import picklab.backend.activity.application.ActivityQueryRepository
-import picklab.backend.activity.application.model.ActivitySearchCommand
+import picklab.backend.activity.application.model.ActivityItem
+import picklab.backend.activity.application.model.ActivitySearchCondition
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.activity.domain.enums.ActivityType
 import picklab.backend.activity.domain.enums.EducationFormatType
@@ -31,7 +33,7 @@ class ActivityService(
      * 조건과 일치하는 활동 리스트를 페이징으로 가져옵니다
      */
     fun getActivities(
-        queryData: ActivitySearchCommand,
+        queryData: ActivitySearchCondition,
         pageable: PageRequest,
     ) = activityRepository.getActivities(
         queryData = queryData,
@@ -41,7 +43,7 @@ class ActivityService(
     /**
      * 활동 카테고리 별, 불필요한 데이터가 파라미터로 넘어올 경우 이를 제거하고 정의된 규격에 맞게 파라미터 값을 조정합니다
      */
-    fun adjustQueryByCategory(query: ActivitySearchCommand): ActivitySearchCommand =
+    fun adjustQueryByCategory(query: ActivitySearchCondition): ActivitySearchCondition =
         when (query.category) {
             ActivityType.EXTRACURRICULAR -> {
                 query.copy(
@@ -176,7 +178,10 @@ class ActivityService(
      * 활동명 자동완성 검색
      */
     @Transactional(readOnly = true)
-    fun getActivityTitlesForAutocomplete(keyword: String, limit: Int): List<String> {
+    fun getActivityTitlesForAutocomplete(
+        keyword: String,
+        limit: Int,
+    ): List<String> {
         val trimmedKeyword = keyword.trim()
         if (trimmedKeyword.isEmpty()) {
             return emptyList()
@@ -187,4 +192,10 @@ class ActivityService(
 
         return activityRepository.findActivityTitlesForAutocomplete(trimmedKeyword, validatedLimit)
     }
+
+    /**
+     * 전체 활동 중 인기도가 높은 활동들을 조회합니다.
+     * 인기도는 조회수와 북마크 수를 합산하여 계산합니다.
+     */
+    fun getPopularActivities(pageable: PageRequest): Page<ActivityItem> = activityQueryRepository.findPopularActivities(pageable)
 }

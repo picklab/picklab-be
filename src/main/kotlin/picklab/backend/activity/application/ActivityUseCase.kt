@@ -5,8 +5,9 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import picklab.backend.activity.application.model.ActivityItemWithBookmark
-import picklab.backend.activity.application.model.ActivitySearchCommand
-import picklab.backend.activity.application.model.RecommendActivitiesCommand
+import picklab.backend.activity.application.model.ActivitySearchCondition
+import picklab.backend.activity.application.model.PopularActivitiesCondition
+import picklab.backend.activity.application.model.RecommendActivitiesCondition
 import picklab.backend.activity.domain.service.ActivityBookmarkService
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
@@ -18,15 +19,15 @@ import picklab.backend.member.domain.MemberService
 class ActivityUseCase(
     private val memberService: MemberService,
     private val activityService: ActivityService,
-    private val activityBookmarkService: ActivityBookmarkService,
     private val activityQueryService: ActivityQueryService,
+    private val activityBookmarkService: ActivityBookmarkService,
     private val viewCountLimiterPort: ViewCountLimiterPort,
 ) {
     /**
      * 검색 필터에 일치하는 활동 리스트 및 북마크 여부를 페이징으로 가져옵니다.
      */
     fun getActivities(
-        queryParams: ActivitySearchCommand,
+        queryParams: ActivitySearchCondition,
         size: Int,
         page: Int,
         memberId: Long?,
@@ -73,7 +74,8 @@ class ActivityUseCase(
         val activity = activityService.mustFindById(activityId)
 
         val bookmarkCount = activityBookmarkService.countByActivityId(activityId)
-        val isBookmarked = memberId?.let { activityBookmarkService.existsByMemberIdAndActivityId(memberId, activityId) } ?: false
+        val isBookmarked =
+            memberId?.let { activityBookmarkService.existsByMemberIdAndActivityId(memberId, activityId) } ?: false
 
         return GetActivityDetailResponse.from(
             activity = activity,
@@ -105,7 +107,7 @@ class ActivityUseCase(
     /**
      * 사용자의 직무에 해당하는 추천 활동을 조회합니다.
      */
-    fun getRecommendationActivities(command: RecommendActivitiesCommand): PageResponse<ActivityItemWithBookmark> {
+    fun getRecommendationActivities(command: RecommendActivitiesCondition): PageResponse<ActivityItemWithBookmark> {
         val member = memberService.findActiveMember(command.memberId)
 
         val pageable = PageRequest.of(command.page - 1, command.size)
@@ -120,6 +122,33 @@ class ActivityUseCase(
                 memberId = command.memberId,
                 activityIds = activityIds,
             )
+
+        val itemsPage =
+            activityPage.map {
+                ActivityItemWithBookmark.from(
+                    item = it,
+                    isBookmarked = bookmarkedActivityIds.contains(it.id),
+                )
+            }
+
+        return PageResponse.from(itemsPage)
+    }
+
+    /**
+     * 전체 활동 중 인기도가 높은 활동들을 조회합니다.
+     * 인기도는 조회수와 북마크 수를 합산하여 계산합니다.
+     */
+    @Transactional(readOnly = true)
+    fun getPopularActivities(condition: PopularActivitiesCondition): PageResponse<ActivityItemWithBookmark> {
+        val pageable = PageRequest.of(condition.page - 1, condition.size)
+
+        val activityPage = activityService.getPopularActivities(pageable)
+        val activityIds = activityPage.content.map { it.id }
+
+        val bookmarkedActivityIds: Set<Long> =
+            condition.memberId
+                ?.let { activityBookmarkService.getMyBookmarkedActivityIds(it, activityIds) }
+                ?: emptySet()
 
         val itemsPage =
             activityPage.map {

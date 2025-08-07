@@ -2,7 +2,7 @@ package picklab.backend.activity.entrypoint.request
 
 import io.swagger.v3.oas.annotations.media.Schema
 
-data class ActivitySearchCondition(
+data class ActivitySearchRequest(
     @field:Schema(description = "활동 분류 (extracurricular, seminar, education, competition)")
     val category: String,
     @field:Schema(description = "관련 직무")

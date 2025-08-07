@@ -8,16 +8,8 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import picklab.backend.activity.application.ActivityQueryRepository
-import picklab.backend.activity.application.model.ActivitySearchCommand
-import picklab.backend.activity.domain.enums.ActivityFieldType
-import picklab.backend.activity.domain.enums.ActivitySortType
-import picklab.backend.activity.domain.enums.ActivityType
-import picklab.backend.activity.domain.enums.DomainType
-import picklab.backend.activity.domain.enums.EducationCostType
-import picklab.backend.activity.domain.enums.EducationFormatType
-import picklab.backend.activity.domain.enums.LocationType
-import picklab.backend.activity.domain.enums.OrganizerType
-import picklab.backend.activity.domain.enums.ParticipantType
+import picklab.backend.activity.application.model.ActivitySearchCondition
+import picklab.backend.activity.domain.enums.*
 import picklab.backend.activity.domain.repository.ActivityRepository
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.job.domain.enums.JobDetail
@@ -39,7 +31,7 @@ class ActivityQuerySanitizeTest {
     fun `대외활동 활동의 경우 온,오프라인 여부, 비용, 상금, 기간, 도메인이 null로 보정된다`() {
         // given
         val query =
-            ActivitySearchCommand(
+            ActivitySearchCondition(
                 category = ActivityType.EXTRACURRICULAR,
                 jobTag = listOf(JobDetail.BACKEND),
                 organizer = listOf(OrganizerType.LARGE_CORPORATION),
@@ -69,7 +61,7 @@ class ActivityQuerySanitizeTest {
     fun `세미나 활동의 경우 분야, 온,오프라인 여부, 비용, 상금, 기간, 도메인이 null로 보정된다`() {
         // given
         val query =
-            ActivitySearchCommand(
+            ActivitySearchCondition(
                 category = ActivityType.SEMINAR,
                 jobTag = listOf(JobDetail.BACKEND),
                 organizer = listOf(OrganizerType.LARGE_CORPORATION),
@@ -103,7 +95,7 @@ class ActivityQuerySanitizeTest {
         fun `분야, 상금, 도메인이 null로 보정된다`() {
             // given
             val query =
-                ActivitySearchCommand(
+                ActivitySearchCondition(
                     category = ActivityType.EDUCATION,
                     jobTag = listOf(JobDetail.BACKEND),
                     organizer = listOf(OrganizerType.LARGE_CORPORATION),
@@ -131,7 +123,7 @@ class ActivityQuerySanitizeTest {
         fun `요청 기간이 0보다 작을 경우 처리되지 않는다`() {
             // given
             val query =
-                ActivitySearchCommand(
+                ActivitySearchCondition(
                     category = ActivityType.EDUCATION,
                     jobTag = listOf(JobDetail.BACKEND),
                     organizer = listOf(OrganizerType.LARGE_CORPORATION),
@@ -161,7 +153,7 @@ class ActivityQuerySanitizeTest {
             fun `분야, 지역, 온,오프라인 여부, 비용타입 이 null로 보정된다`() {
                 // given
                 val query =
-                    ActivitySearchCommand(
+                    ActivitySearchCondition(
                         category = ActivityType.COMPETITION,
                         jobTag = listOf(JobDetail.BACKEND),
                         organizer = listOf(OrganizerType.LARGE_CORPORATION),
@@ -190,7 +182,7 @@ class ActivityQuerySanitizeTest {
             fun `최소 상금이 0보다 작을 경우 0으로 보정된다`() {
                 // given
                 val query =
-                    ActivitySearchCommand(
+                    ActivitySearchCondition(
                         category = ActivityType.COMPETITION,
                         jobTag = listOf(JobDetail.BACKEND),
                         organizer = listOf(OrganizerType.LARGE_CORPORATION),
@@ -219,7 +211,7 @@ class ActivityQuerySanitizeTest {
             fun `상금의 범위가 조작되더라도 요구한 범위로 보정된다`() {
                 // given
                 val query =
-                    ActivitySearchCommand(
+                    ActivitySearchCondition(
                         category = ActivityType.COMPETITION,
                         jobTag = listOf(JobDetail.BACKEND),
                         organizer = listOf(OrganizerType.LARGE_CORPORATION),

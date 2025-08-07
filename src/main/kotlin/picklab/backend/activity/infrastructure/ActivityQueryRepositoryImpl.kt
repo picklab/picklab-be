@@ -1,5 +1,6 @@
 package picklab.backend.activity.infrastructure
 
+import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.group.GroupBy
 import com.querydsl.jpa.JPAExpressions
 import com.querydsl.jpa.impl.JPAQueryFactory
@@ -13,6 +14,7 @@ import picklab.backend.activity.application.model.QActivityItem
 import picklab.backend.activity.domain.entity.QActivity
 import picklab.backend.activity.domain.entity.QActivityBookmark
 import picklab.backend.activity.domain.entity.QActivityJobCategory
+import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.job.domain.entity.QJobCategory
 
 @Repository
@@ -110,6 +112,76 @@ class ActivityQueryRepositoryImpl(
                     QActivity.activity.deletedAt.isNull
                         .and(QJobCategory.jobCategory.id.`in`(jobIds)),
                 ).fetchOne() ?: 0L
+
+        return PageImpl(items, pageable, count)
+    }
+
+    override fun findPopularActivities(pageable: PageRequest): Page<ActivityItem> {
+        val condition =
+            BooleanBuilder().apply {
+                and(QActivity.activity.status.eq(RecruitmentStatus.OPEN))
+                and(QActivity.activity.deletedAt.isNull)
+            }
+
+        val orderBy =
+            listOf(
+                QActivity.activity.viewCount
+                    .add(QActivityBookmark.activityBookmark.count().coalesce(0L))
+                    .desc(),
+                QActivity.activity.createdAt.desc(),
+            )
+
+        val popularActivityIds =
+            jpaQueryFactory
+                .select(QActivity.activity.id)
+                .from(QActivity.activity)
+                .leftJoin(QActivityBookmark.activityBookmark)
+                .on(QActivityBookmark.activityBookmark.activity.eq(QActivity.activity))
+                .where(condition)
+                .groupBy(QActivity.activity.id)
+                .orderBy(*orderBy.toTypedArray())
+                .offset(pageable.offset)
+                .limit(pageable.pageSize.toLong())
+                .fetch()
+
+        if (popularActivityIds.isEmpty()) {
+            return PageImpl(emptyList(), pageable, 0)
+        }
+
+        val items =
+            jpaQueryFactory
+                .from(QActivity.activity)
+                .leftJoin(QActivityJobCategory.activityJobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.activity.id
+                        .eq(QActivity.activity.id),
+                ).leftJoin(QJobCategory.jobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.jobCategory.id
+                        .eq(QJobCategory.jobCategory.id),
+                ).where(QActivity.activity.id.`in`(popularActivityIds))
+                .transform(
+                    GroupBy.groupBy(QActivity.activity.id).list(
+                        QActivityItem(
+                            QActivity.activity.id,
+                            QActivity.activity.title,
+                            QActivity.activity.organizer.stringValue(),
+                            QActivity.activity.startDate,
+                            QActivity.activity.activityType,
+                            GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),
+                            QActivity.activity.activityThumbnailUrl,
+                        ),
+                    ),
+                )
+
+        val count =
+            jpaQueryFactory
+                .select(QActivity.activity.id.countDistinct())
+                .from(QActivity.activity)
+                .leftJoin(QActivityBookmark.activityBookmark)
+                .on(QActivityBookmark.activityBookmark.activity.eq(QActivity.activity))
+                .where(condition)
+                .fetchOne() ?: 0L
 
         return PageImpl(items, pageable, count)
     }
