@@ -21,7 +21,7 @@ data class GetMyBookmarkListRequest(
     @field:Schema(description = "페이지 크기 (기본값 16)")
     val size: Int = 16,
 ) {
-    fun toCommand(memberId: Long) =
+    fun toCondition(memberId: Long) =
         GetMyBookmarkListCondition(
             memberId = memberId,
             activityTypes = activityTypes,

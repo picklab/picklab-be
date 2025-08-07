@@ -48,7 +48,7 @@ class ActivityBookmarkController(
         @Valid @ModelAttribute request: GetMyBookmarkListRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>> =
         bookmarkUseCase
-            .getBookmarks(request.toCommand(member.memberId))
+            .getBookmarks(request.toCondition(member.memberId))
             .let { ResponseWrapper.success(SuccessCode.GET_BOOKMARKS, it) }
             .let { ResponseEntity.status(HttpStatus.OK).body(it) }
 }

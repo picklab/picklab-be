@@ -40,11 +40,11 @@ class BookmarkUseCase(
     }
 
     @Transactional(readOnly = true)
-    fun getBookmarks(command: GetMyBookmarkListCondition): PageResponse<ActivityItemWithBookmark> {
-        val member = memberService.findActiveMember(command.memberId)
-        val pageable = PageRequest.of(command.page, command.size)
+    fun getBookmarks(condition: GetMyBookmarkListCondition): PageResponse<ActivityItemWithBookmark> {
+        val member = memberService.findActiveMember(condition.memberId)
+        val pageable = PageRequest.of(condition.page, condition.size)
 
-        val bookmarkedActivityPage = activityQueryService.getBookmarkedActivityItems(member.id, command, pageable)
+        val bookmarkedActivityPage = activityQueryService.getBookmarkedActivityItems(member.id, condition, pageable)
 
         val itemPage =
             bookmarkedActivityPage.map {

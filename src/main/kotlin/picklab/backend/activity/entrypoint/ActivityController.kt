@@ -9,9 +9,9 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import picklab.backend.activity.application.ActivityUseCase
 import picklab.backend.activity.application.model.ActivityItemWithBookmark
-import picklab.backend.activity.entrypoint.mapper.toCommand
-import picklab.backend.activity.entrypoint.mapper.toPopularActivitiesCommand
-import picklab.backend.activity.entrypoint.mapper.toRecommendActivitiesCommand
+import picklab.backend.activity.entrypoint.mapper.toCondition
+import picklab.backend.activity.entrypoint.mapper.toPopularActivitiesCondition
+import picklab.backend.activity.entrypoint.mapper.toRecommendActivitiesCondition
 import picklab.backend.activity.entrypoint.request.ActivitySearchRequest
 import picklab.backend.activity.entrypoint.request.GetActivityPageRequest
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
@@ -38,7 +38,7 @@ class ActivityController(
 
         val data =
             activityUseCase.getActivities(
-                queryParams = condition.toCommand(),
+                queryParams = condition.toCondition(),
                 size = size,
                 page = page,
                 memberId = memberId,
@@ -71,7 +71,7 @@ class ActivityController(
         @AuthenticationPrincipal member: MemberPrincipal,
         @Valid @ModelAttribute request: GetActivityPageRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>> {
-        val data = activityUseCase.getRecommendationActivities(request.toRecommendActivitiesCommand(member.memberId))
+        val data = activityUseCase.getRecommendationActivities(request.toRecommendActivitiesCondition(member.memberId))
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.GET_ACTIVITIES, data))
     }
 
@@ -82,7 +82,7 @@ class ActivityController(
         val authentication = SecurityContextHolder.getContext().authentication
         val memberId: Long? = (authentication?.principal as? MemberPrincipal)?.memberId
 
-        val data = activityUseCase.getPopularActivities(request.toPopularActivitiesCommand(memberId))
+        val data = activityUseCase.getPopularActivities(request.toPopularActivitiesCondition(memberId))
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.GET_ACTIVITIES, data))
     }
 }
