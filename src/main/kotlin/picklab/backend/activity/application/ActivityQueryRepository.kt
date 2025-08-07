@@ -13,8 +13,6 @@ interface ActivityQueryRepository {
 
     fun findPopularActivities(pageable: PageRequest): Page<ActivityItem>
 
-    fun findActivityItemByActivityIds(activityIds: List<Long>): List<ActivityItem>
-
     fun findActivityItemByMemberBookmarked(
         memberId: Long,
         queryData: GetMyBookmarkListCondition,
