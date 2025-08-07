@@ -26,6 +26,12 @@ enum class ErrorCode(
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다."),
 
     /**
+     * 직무 카테고리 도메인 관련
+     */
+    JOB_CATEGORY_MISMATCH_INPUT(HttpStatus.BAD_REQUEST, "잘못된 직무 카테고리 요청입니다."),
+    JOB_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 직무 카테고리를 찾을 수 없습니다."),
+
+    /**
      * 회원 도메인 관련
      */
     INVALID_MEMBER(HttpStatus.UNAUTHORIZED, "회원을 찾을 수 없습니다."),
