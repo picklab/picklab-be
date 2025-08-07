@@ -5,7 +5,7 @@ import picklab.backend.activity.domain.enums.*
 import picklab.backend.activity.entrypoint.request.ActivitySearchRequest
 import picklab.backend.job.domain.enums.JobDetail
 
-fun ActivitySearchRequest.toCommand(): ActivitySearchCondition =
+fun ActivitySearchRequest.toCondition(): ActivitySearchCondition =
     ActivitySearchCondition(
         category = ActivityType.findByType(category),
         jobTag = jobTag?.map(JobDetail::findByType),

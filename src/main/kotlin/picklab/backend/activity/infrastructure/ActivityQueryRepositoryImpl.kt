@@ -2,6 +2,7 @@ package picklab.backend.activity.infrastructure
 
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.group.GroupBy
+import com.querydsl.core.types.Projections
 import com.querydsl.jpa.JPAExpressions
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.data.domain.Page
@@ -10,10 +11,12 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Repository
 import picklab.backend.activity.application.ActivityQueryRepository
 import picklab.backend.activity.application.model.ActivityItem
+import picklab.backend.activity.application.model.GetMyBookmarkListCondition
 import picklab.backend.activity.application.model.QActivityItem
 import picklab.backend.activity.domain.entity.QActivity
 import picklab.backend.activity.domain.entity.QActivityBookmark
 import picklab.backend.activity.domain.entity.QActivityJobCategory
+import picklab.backend.activity.domain.enums.ActivityBookmarkSortType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.job.domain.entity.QJobCategory
 
@@ -181,6 +184,131 @@ class ActivityQueryRepositoryImpl(
                 .leftJoin(QActivityBookmark.activityBookmark)
                 .on(QActivityBookmark.activityBookmark.activity.eq(QActivity.activity))
                 .where(condition)
+                .fetchOne() ?: 0L
+
+        return PageImpl(items, pageable, count)
+    }
+
+    override fun findActivityItemByActivityIds(activityIds: List<Long>): List<ActivityItem> {
+        if (activityIds.isEmpty()) {
+            return emptyList()
+        }
+
+        return jpaQueryFactory
+            .selectFrom(QActivity.activity)
+            .leftJoin(QActivityJobCategory.activityJobCategory)
+            .on(
+                QActivityJobCategory.activityJobCategory.activity.id
+                    .eq(QActivity.activity.id),
+            ).leftJoin(QJobCategory.jobCategory)
+            .on(
+                QActivityJobCategory.activityJobCategory.jobCategory.id
+                    .eq(QJobCategory.jobCategory.id),
+            ).where(QActivity.activity.id.`in`(activityIds))
+            .transform(
+                GroupBy.groupBy(QActivity.activity.id).list(
+                    QActivityItem(
+                        QActivity.activity.id,
+                        QActivity.activity.title,
+                        QActivity.activity.organizer.stringValue(),
+                        QActivity.activity.startDate,
+                        QActivity.activity.activityType,
+                        GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),
+                        QActivity.activity.activityThumbnailUrl,
+                    ),
+                ),
+            )
+    }
+
+    override fun findActivityItemByMemberBookmarked(
+        memberId: Long,
+        queryData: GetMyBookmarkListCondition,
+        pageable: PageRequest,
+    ): Page<ActivityItem> {
+        val condition =
+            BooleanBuilder().apply {
+                and(
+                    QActivityBookmark.activityBookmark.member.id
+                        .eq(memberId),
+                )
+                and(QActivity.activity.deletedAt.isNull)
+
+                queryData.activityTypes?.let { activityTypes ->
+                    and(QActivity.activity.activityType.`in`(activityTypes.map { it.discriminator }))
+                }
+
+                queryData.recruitmentStatus?.let { status ->
+                    and(QActivity.activity.status.eq(status))
+                }
+
+                queryData.jobGroups?.let { jobGroups ->
+                    and(QJobCategory.jobCategory.jobGroup.`in`(jobGroups))
+                }
+            }
+
+        val orderBy =
+            when (queryData.sortType) {
+                ActivityBookmarkSortType.RECENTLY_BOOKMARKED -> listOf(QActivityBookmark.activityBookmark.createdAt.desc())
+                ActivityBookmarkSortType.LATEST -> listOf(QActivity.activity.createdAt.desc())
+                ActivityBookmarkSortType.DEADLINE_ASC ->
+                    listOf(
+                        QActivity.activity.recruitmentEndDate.asc(),
+                        QActivity.activity.createdAt.desc(),
+                    )
+
+                ActivityBookmarkSortType.DEADLINE_DESC ->
+                    listOf(
+                        QActivity.activity.recruitmentEndDate.desc(),
+                        QActivity.activity.createdAt.desc(),
+                    )
+            }
+
+        val items =
+            jpaQueryFactory
+                .select(QActivity.activity.id)
+                .from(QActivityBookmark.activityBookmark)
+                .join(QActivityBookmark.activityBookmark.activity, QActivity.activity)
+                .leftJoin(QActivityJobCategory.activityJobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.activity.id
+                        .eq(QActivity.activity.id),
+                ).leftJoin(QJobCategory.jobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.jobCategory.id
+                        .eq(QJobCategory.jobCategory.id),
+                ).where(condition)
+                .orderBy(*orderBy.toTypedArray())
+                .offset(pageable.offset)
+                .limit(pageable.pageSize.toLong())
+                .transform(
+                    GroupBy.groupBy(QActivity.activity.id).list(
+                        Projections.constructor(
+                            ActivityItem::class.java,
+                            QActivity.activity.id,
+                            QActivity.activity.title,
+                            QActivity.activity.organizer.stringValue(),
+                            QActivity.activity.startDate,
+                            QActivity.activity.activityType,
+                            GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),
+                            QActivity.activity.activityThumbnailUrl,
+                        ),
+                    ),
+                )
+
+        val count =
+            jpaQueryFactory
+                .select(QActivityBookmark.activityBookmark.id.countDistinct())
+                .from(QActivityBookmark.activityBookmark)
+                .join(QActivityBookmark.activityBookmark.activity, QActivity.activity)
+                .leftJoin(QActivityJobCategory.activityJobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.activity.id
+                        .eq(QActivity.activity.id),
+                ).leftJoin(QJobCategory.jobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.jobCategory.id
+                        .eq(QJobCategory.jobCategory.id),
+                ).where(condition)
                 .fetchOne() ?: 0L
 
         return PageImpl(items, pageable, count)

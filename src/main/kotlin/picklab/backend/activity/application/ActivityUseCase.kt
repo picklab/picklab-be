@@ -107,10 +107,10 @@ class ActivityUseCase(
     /**
      * 사용자의 직무에 해당하는 추천 활동을 조회합니다.
      */
-    fun getRecommendationActivities(command: RecommendActivitiesCondition): PageResponse<ActivityItemWithBookmark> {
-        val member = memberService.findActiveMember(command.memberId)
+    fun getRecommendationActivities(condition: RecommendActivitiesCondition): PageResponse<ActivityItemWithBookmark> {
+        val member = memberService.findActiveMember(condition.memberId)
 
-        val pageable = PageRequest.of(command.page - 1, command.size)
+        val pageable = PageRequest.of(condition.page - 1, condition.size)
         val myJobIds = memberService.findMyInterestedJobCategoryIds(member)
 
         val activityPage = activityQueryService.getRecommendationActivities(myJobIds, pageable)
@@ -119,7 +119,7 @@ class ActivityUseCase(
 
         val bookmarkedActivityIds =
             activityBookmarkService.getMyBookmarkedActivityIds(
-                memberId = command.memberId,
+                memberId = condition.memberId,
                 activityIds = activityIds,
             )
 
