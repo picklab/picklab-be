@@ -46,16 +46,16 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: build docker
-        run: ./gradlew bootBuildImage --imageName=${{ secrets.DOCKER_REPO }}:${{ github.event.workflow_run.head_sha }}
+        run: ./gradlew bootBuildImage --imageName=${{ secrets.DOCKER_REPO }}:${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Tag Version
         run: |
-          docker tag ${{ secrets.DOCKER_REPO }}:${{ github.event.workflow_run.head_sha }} ${{ secrets.DOCKER_REPO }}:latest
+          docker tag ${{ secrets.DOCKER_REPO }}:${{ github.event.workflow_run.head_sha || github.sha }} ${{ secrets.DOCKER_REPO }}:latest
 
       - name: Publish Docker Images
         run: |
           docker push ${{ secrets.DOCKER_REPO }}:latest
-          docker push ${{ secrets.DOCKER_REPO }}:${{ github.event.workflow_run.head_sha }}
+          docker push ${{ secrets.DOCKER_REPO }}:${{ github.event.workflow_run.head_sha || github.sha }}
 
   deploy-to-ncp:
     needs: docker-build-push
@@ -91,4 +91,4 @@ jobs:
             bash ${{ secrets.DEPLOY_FILE }} \
               ${{ secrets.APP_NAME }} \
               ${{ secrets.DOCKER_REPO }} \
-              ${{ github.sha }}
+              ${{ github.event.workflow_run.head_sha || github.sha }}
