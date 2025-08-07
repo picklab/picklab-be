@@ -20,4 +20,10 @@ class JobService(
                 jobCategoryList.map { it.first }.distinct(),
                 jobCategoryList.map { it.second }.distinct(),
             )
+
+    @Transactional(readOnly = true)
+    fun getJobCategoryByGroupAndDetail(
+        jobGroup: JobGroup,
+        jobDetail: JobDetail?,
+    ): JobCategory? = jobCategoryRepository.findByJobGroupAndJobDetail(jobGroup, jobDetail)
 }
