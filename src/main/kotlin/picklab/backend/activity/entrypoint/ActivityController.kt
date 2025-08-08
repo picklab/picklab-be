@@ -11,6 +11,7 @@ import picklab.backend.activity.application.ActivityUseCase
 import picklab.backend.activity.application.model.ActivityItemWithBookmark
 import picklab.backend.activity.entrypoint.mapper.toCondition
 import picklab.backend.activity.entrypoint.mapper.toPopularActivitiesCondition
+import picklab.backend.activity.entrypoint.mapper.toRecentlyViewedActivitiesCondition
 import picklab.backend.activity.entrypoint.mapper.toRecommendActivitiesCondition
 import picklab.backend.activity.entrypoint.request.ActivitySearchRequest
 import picklab.backend.activity.entrypoint.request.GetActivityPageRequest
@@ -58,11 +59,14 @@ class ActivityController(
     }
 
     @PostMapping("/{activityId}/view")
-    override fun increaseViewCount(
+    override fun recordActivityView(
         @Parameter(description = "활동 ID값") @PathVariable activityId: Long,
         request: HttpServletRequest,
     ): ResponseEntity<ResponseWrapper<Unit>> {
-        activityUseCase.increaseViewCount(activityId, request)
+        val authentication = SecurityContextHolder.getContext().authentication
+        val memberId: Long? = (authentication?.principal as? MemberPrincipal)?.memberId
+
+        activityUseCase.recordActivityView(activityId, request, memberId)
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.INCREASE_VIEW_COUNT))
     }
 
@@ -83,6 +87,16 @@ class ActivityController(
         val memberId: Long? = (authentication?.principal as? MemberPrincipal)?.memberId
 
         val data = activityUseCase.getPopularActivities(request.toPopularActivitiesCondition(memberId))
+        return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.GET_ACTIVITIES, data))
+    }
+
+    @GetMapping("/recently-viewed")
+    override fun getRecentlyViewedActivities(
+        @AuthenticationPrincipal member: MemberPrincipal,
+        @Valid @ModelAttribute request: GetActivityPageRequest,
+    ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>> {
+        val data =
+            activityUseCase.getRecentlyViewedActivities(request.toRecentlyViewedActivitiesCondition(member.memberId))
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.GET_ACTIVITIES, data))
     }
 }

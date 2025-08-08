@@ -72,15 +72,15 @@ interface ActivityApi {
     ): ResponseEntity<ResponseWrapper<GetActivityDetailResponse>>
 
     @Operation(
-        summary = "활동 조회수 증가",
-        description = "해당 활동의 조회수를 1 증가시킵니다.",
+        summary = "활동 조회 기록",
+        description = "활동 조회를 기록합니다. 조회수를 증가시키고 로그인한 사용자의 경우 조회 이력도 저장됩니다.",
         responses = [
-            ApiResponse(responseCode = "200", description = "조회수 증가에 성공했습니다."),
+            ApiResponse(responseCode = "200", description = "활동 조회 기록에 성공했습니다."),
             ApiResponse(responseCode = "404", description = "해당 활동을 찾을 수 없습니다."),
             ApiResponse(responseCode = "500", description = "서버 오류입니다."),
         ],
     )
-    fun increaseViewCount(
+    fun recordActivityView(
         @Parameter(description = "활동 ID값") @PathVariable activityId: Long,
         request: HttpServletRequest,
     ): ResponseEntity<ResponseWrapper<Unit>>
@@ -105,6 +105,18 @@ interface ActivityApi {
         ],
     )
     fun getWeeklyPopularActivities(
+        @Valid @ModelAttribute request: GetActivityPageRequest,
+    ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>>
+
+    @Operation(
+        summary = "최근 본 활동 조회",
+        description = "유저가 최근에 본 활동을 조회합니다.",
+        responses = [
+            ApiResponse(responseCode = "200", description = "최근 본 활동 조회에 성공했습니다."),
+        ],
+    )
+    fun getRecentlyViewedActivities(
+        @AuthenticationPrincipal member: MemberPrincipal,
         @Valid @ModelAttribute request: GetActivityPageRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>>
 }

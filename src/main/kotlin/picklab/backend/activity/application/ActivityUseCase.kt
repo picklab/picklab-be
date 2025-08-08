@@ -4,16 +4,15 @@ import jakarta.servlet.http.HttpServletRequest
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
-import picklab.backend.activity.application.model.ActivityItemWithBookmark
-import picklab.backend.activity.application.model.ActivitySearchCondition
-import picklab.backend.activity.application.model.PopularActivitiesCondition
-import picklab.backend.activity.application.model.RecommendActivitiesCondition
+import picklab.backend.activity.application.model.*
 import picklab.backend.activity.domain.service.ActivityBookmarkService
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
 import picklab.backend.activity.entrypoint.response.GetActivityListResponse
 import picklab.backend.common.model.PageResponse
 import picklab.backend.member.domain.MemberService
+import picklab.backend.member.domain.service.MemberActivityViewHistoryService
+import java.time.LocalDateTime
 
 @Component
 class ActivityUseCase(
@@ -22,6 +21,7 @@ class ActivityUseCase(
     private val activityQueryService: ActivityQueryService,
     private val activityBookmarkService: ActivityBookmarkService,
     private val viewCountLimiterPort: ViewCountLimiterPort,
+    private val memberActivityViewHistoryService: MemberActivityViewHistoryService,
 ) {
     /**
      * 검색 필터에 일치하는 활동 리스트 및 북마크 여부를 페이징으로 가져옵니다.
@@ -85,13 +85,14 @@ class ActivityUseCase(
     }
 
     /**
-     * 조회수를 증가시킵니다. 로컬 캐시에 "activity:{activity.id}:ip:{ip}:userAgent:{userAgent}의 키 값을 이용하여
-     * 일정 기간 내 일정 횟수의 조회수 증가만 가능합니다.
+     * 활동 조회를 기록합니다. 조회수를 증가시키고 로그인한 사용자의 경우 조회 이력을 저장합니다.
+     * 조회수 증가는 로컬 캐시를 이용하여 일정 기간 내 일정 횟수만 가능합니다.
      */
     @Transactional
-    fun increaseViewCount(
+    fun recordActivityView(
         activityId: Long,
         request: HttpServletRequest,
+        memberId: Long?,
     ) {
         val activity = activityService.mustFindById(activityId)
 
@@ -101,6 +102,11 @@ class ActivityUseCase(
 
         if (viewCountLimiterPort.isViewCountUpAllowed(activityId, viewIdentifier)) {
             activity.increaseViewCount()
+        }
+
+        // 로그인한 사용자의 경우 조회 이력 저장
+        memberId?.let { id ->
+            memberActivityViewHistoryService.recordActivityView(id, activityId, LocalDateTime.now())
         }
     }
 
@@ -149,6 +155,30 @@ class ActivityUseCase(
             condition.memberId
                 ?.let { activityBookmarkService.getMyBookmarkedActivityIds(it, activityIds) }
                 ?: emptySet()
+
+        val itemsPage =
+            activityPage.map {
+                ActivityItemWithBookmark.from(
+                    item = it,
+                    isBookmarked = bookmarkedActivityIds.contains(it.id),
+                )
+            }
+
+        return PageResponse.from(itemsPage)
+    }
+
+    /**
+     * 사용자가 최근에 조회한 활동들을 조회합니다.
+     */
+    @Transactional(readOnly = true)
+    fun getRecentlyViewedActivities(condition: RecentlyViewedActivitiesCondition): PageResponse<ActivityItemWithBookmark> {
+        val pageable = PageRequest.of(condition.page - 1, condition.size)
+
+        val activityPage = activityQueryService.getRecentlyViewedActivities(condition.memberId, pageable)
+        val activityIds = activityPage.content.map { it.id }
+
+        val bookmarkedActivityIds: Set<Long> =
+            activityBookmarkService.getMyBookmarkedActivityIds(condition.memberId, activityIds)
 
         val itemsPage =
             activityPage.map {
