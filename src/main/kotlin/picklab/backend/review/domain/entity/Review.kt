@@ -13,6 +13,7 @@ import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.common.model.SoftDeleteEntity
+import picklab.backend.job.domain.entity.JobCategory
 import picklab.backend.member.domain.entity.Member
 import picklab.backend.review.domain.enums.ReviewApprovalStatus
 
@@ -61,6 +62,9 @@ class Review(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "activity_id", nullable = false)
     var activity: Activity,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "job_category_id", nullable = false)
+    var jobCategory: JobCategory,
 ) : SoftDeleteEntity() {
     fun update(
         overallScore: Int,
@@ -75,6 +79,7 @@ class Review(
         url: String?,
         approvalStatus: ReviewApprovalStatus,
         activity: Activity,
+        jobCategory: JobCategory,
     ) {
         this.overallScore = overallScore
         this.infoScore = infoScore
@@ -88,5 +93,6 @@ class Review(
         this.url = url
         this.reviewApprovalStatus = approvalStatus
         this.activity = activity
+        this.jobCategory = jobCategory
     }
 }

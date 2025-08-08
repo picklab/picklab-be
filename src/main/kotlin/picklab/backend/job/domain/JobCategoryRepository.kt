@@ -6,6 +6,11 @@ import picklab.backend.job.domain.enums.JobDetail
 import picklab.backend.job.domain.enums.JobGroup
 
 interface JobCategoryRepository : JpaRepository<JobCategory, Long> {
+    fun findByJobGroupAndJobDetail(
+        jobGroup: JobGroup,
+        jobDetail: JobDetail?,
+    ): JobCategory?
+
     fun findByJobGroupInAndJobDetailIn(
         jobGroups: List<JobGroup>,
         jobDetails: List<JobDetail>,

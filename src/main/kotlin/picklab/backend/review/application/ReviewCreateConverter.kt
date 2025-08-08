@@ -2,6 +2,7 @@ package picklab.backend.review.application
 
 import org.springframework.stereotype.Component
 import picklab.backend.activity.domain.entity.Activity
+import picklab.backend.job.domain.entity.JobCategory
 import picklab.backend.member.domain.entity.Member
 import picklab.backend.review.application.model.ReviewCreateCommand
 import picklab.backend.review.domain.entity.Review
@@ -14,6 +15,7 @@ class ReviewCreateConverter {
         approvalStatus: ReviewApprovalStatus,
         member: Member,
         activity: Activity,
+        jobCategory: JobCategory,
     ): Review =
         Review(
             overallScore = command.overallScore,
@@ -29,5 +31,6 @@ class ReviewCreateConverter {
             reviewApprovalStatus = approvalStatus,
             member = member,
             activity = activity,
+            jobCategory = jobCategory,
         )
 }
