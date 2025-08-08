@@ -18,8 +18,8 @@ permissions:
   contents: read
 
 jobs:
-  docker-build-push-deploy:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  docker-build-push:
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     name: Create Docker Image
     runs-on: ubuntu-latest
     steps:
@@ -28,7 +28,6 @@ jobs:
         with:
           submodules: recursive
           token: ${{ secrets.PRIVATE_REPO_TOKEN }}
-
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -47,39 +46,49 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: build docker
-        run: ./gradlew bootBuildImage --imageName=${{ secrets.DOCKER_REPO }}:${{ github.event.workflow_run.head_sha }}
+        run: ./gradlew bootBuildImage --imageName=${{ secrets.DOCKER_REPO }}:${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Tag Version
         run: |
-          docker tag ${{ secrets.DOCKER_REPO }}:${{ github.event.workflow_run.head_sha }} ${{ secrets.DOCKER_REPO }}:latest
+          docker tag ${{ secrets.DOCKER_REPO }}:${{ github.event.workflow_run.head_sha || github.sha }} ${{ secrets.DOCKER_REPO }}:latest
 
       - name: Publish Docker Images
         run: |
           docker push ${{ secrets.DOCKER_REPO }}:latest
-          docker push ${{ secrets.DOCKER_REPO }}:${{ github.event.workflow_run.head_sha }}
+          docker push ${{ secrets.DOCKER_REPO }}:${{ github.event.workflow_run.head_sha || github.sha }}
 
-      - name: Google Auth
-        id: "auth"
-        uses: "google-github-actions/auth@v1"
+  deploy-to-ncp:
+    needs: docker-build-push
+    name: Deploy to NCP Server
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository with submodules for deploy files
+        uses: actions/checkout@v4
         with:
-          credentials_json: ${{ secrets.GCE_SA_KEY }}
+          submodules: recursive
+          token: ${{ secrets.PRIVATE_REPO_TOKEN }}
 
-      - name: set up Cloud SDK
-        uses: "google-github-actions/setup-gcloud@v1"
+      - name: Copy deploy files to NCP server
+        uses: appleboy/scp-action@v1.0.0
         with:
-          project_id: ${{ secrets.GCE_PROJECT_ID }}
+          host: ${{ secrets.NCP_SERVER_IP }}
+          username: ${{ secrets.NCP_USERNAME }}
+          key: ${{ secrets.NCP_SSH_PRIVATE_KEY }}
+          port: ${{ secrets.NCP_SSH_PORT }}
+          source: ${{ secrets.DEPLOY_SCRIPT_PATH }}
+          target: "."
+          strip_components: 4
 
-      - name: Copy .env and deploy script to GCP VM
-        run: |
-          gcloud compute scp ${{ secrets.PRIVATE_DEPLOY_FILE }} ${{ secrets.GCE_USERNAME }}@${{ secrets.GCE_INSTANCE_NAME }}:${{ secrets.DEPLOY_FILE }} \
-            --zone=${{ secrets.GCE_INSTANCE_ZONE }} --quiet
-
-      - name: Deploy to GCE VM Instance
-        run: |
-          gcloud compute ssh ${{ secrets.GCE_USERNAME }}@${{ secrets.GCE_INSTANCE_NAME }} \
-            --zone=${{ secrets.GCE_INSTANCE_ZONE }} \
-            --command="chmod +x ${{ secrets.DEPLOY_FILE }} && \
-              bash ${{ secrets.DEPLOY_FILE }} \
+      - name: Deploy to NCP Server
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.NCP_SERVER_IP }}
+          username: ${{ secrets.NCP_USERNAME }}
+          key: ${{ secrets.NCP_SSH_PRIVATE_KEY }}
+          port: ${{ secrets.NCP_SSH_PORT }}
+          script: |
+            chmod +x ${{ secrets.DEPLOY_FILE }} && \
+            bash ${{ secrets.DEPLOY_FILE }} \
               ${{ secrets.APP_NAME }} \
               ${{ secrets.DOCKER_REPO }} \
-              ${{ github.event.workflow_run.head_sha }}"
+              ${{ github.event.workflow_run.head_sha || github.sha }}
