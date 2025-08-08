@@ -50,6 +50,7 @@ enum class SuccessCode(
     UPDATE_REVIEW_SUCCESS(HttpStatus.OK, "리뷰 수정을 성공했습니다."),
     DELETE_REVIEW_SUCCESS(HttpStatus.OK, "리뷰 삭제를 성공했습니다."),
     GET_JOB_RELEVANCE_AVG_SCORES_SUCCESS(HttpStatus.OK, "직무 연관성 평균 점수 조회에 성공했습니다."),
+    GET_SATISFACTION_AVG_SCORES_SUCCESS(HttpStatus.OK, "활동별 만족도 통계 조회에 성공했습니다."),
 
     // Search 도메인 관련
     SEARCH_AUTOCOMPLETE_SUCCESS(HttpStatus.OK, "자동완성 검색에 성공했습니다."),
