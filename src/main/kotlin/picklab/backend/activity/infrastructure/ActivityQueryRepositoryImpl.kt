@@ -19,6 +19,7 @@ import picklab.backend.activity.domain.entity.QActivityJobCategory
 import picklab.backend.activity.domain.enums.ActivityBookmarkSortType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.job.domain.entity.QJobCategory
+import picklab.backend.member.domain.entity.QMemberActivityViewHistory
 
 @Repository
 class ActivityQueryRepositoryImpl(
@@ -189,37 +190,6 @@ class ActivityQueryRepositoryImpl(
         return PageImpl(items, pageable, count)
     }
 
-    override fun findActivityItemByActivityIds(activityIds: List<Long>): List<ActivityItem> {
-        if (activityIds.isEmpty()) {
-            return emptyList()
-        }
-
-        return jpaQueryFactory
-            .selectFrom(QActivity.activity)
-            .leftJoin(QActivityJobCategory.activityJobCategory)
-            .on(
-                QActivityJobCategory.activityJobCategory.activity.id
-                    .eq(QActivity.activity.id),
-            ).leftJoin(QJobCategory.jobCategory)
-            .on(
-                QActivityJobCategory.activityJobCategory.jobCategory.id
-                    .eq(QJobCategory.jobCategory.id),
-            ).where(QActivity.activity.id.`in`(activityIds))
-            .transform(
-                GroupBy.groupBy(QActivity.activity.id).list(
-                    QActivityItem(
-                        QActivity.activity.id,
-                        QActivity.activity.title,
-                        QActivity.activity.organizer.stringValue(),
-                        QActivity.activity.startDate,
-                        QActivity.activity.activityType,
-                        GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),
-                        QActivity.activity.activityThumbnailUrl,
-                    ),
-                ),
-            )
-    }
-
     override fun findActivityItemByMemberBookmarked(
         memberId: Long,
         queryData: GetMyBookmarkListCondition,
@@ -312,5 +282,83 @@ class ActivityQueryRepositoryImpl(
                 .fetchOne() ?: 0L
 
         return PageImpl(items, pageable, count)
+    }
+
+    override fun findRecentlyViewedActivities(
+        memberId: Long,
+        pageable: PageRequest,
+    ): Page<ActivityItem> {
+        val latestViewActivities =
+            jpaQueryFactory
+                .select(
+                    QActivity.activity.id,
+                    QMemberActivityViewHistory.memberActivityViewHistory.createdAt.max(),
+                ).from(QMemberActivityViewHistory.memberActivityViewHistory)
+                .join(QMemberActivityViewHistory.memberActivityViewHistory.activity, QActivity.activity)
+                .where(
+                    QMemberActivityViewHistory.memberActivityViewHistory.member.id
+                        .eq(memberId),
+                    QActivity.activity.deletedAt.isNull,
+                ).groupBy(QActivity.activity.id)
+                .orderBy(
+                    QMemberActivityViewHistory.memberActivityViewHistory.createdAt
+                        .max()
+                        .desc(),
+                ).offset(pageable.offset)
+                .limit(pageable.pageSize.toLong())
+                .fetch()
+
+        if (latestViewActivities.isEmpty()) {
+            return PageImpl(emptyList(), pageable, 0)
+        }
+
+        val sortedActivityIds =
+            latestViewActivities.mapNotNull {
+                it.get(QActivity.activity.id)
+            }
+
+        val itemsMap =
+            jpaQueryFactory
+                .from(QActivity.activity)
+                .leftJoin(QActivityJobCategory.activityJobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.activity.id
+                        .eq(QActivity.activity.id),
+                ).leftJoin(QJobCategory.jobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.jobCategory.id
+                        .eq(QJobCategory.jobCategory.id),
+                ).where(QActivity.activity.id.`in`(sortedActivityIds))
+                .transform(
+                    GroupBy.groupBy(QActivity.activity.id).`as`(
+                        QActivityItem(
+                            QActivity.activity.id,
+                            QActivity.activity.title,
+                            QActivity.activity.organizer.stringValue(),
+                            QActivity.activity.startDate,
+                            QActivity.activity.activityType,
+                            GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),
+                            QActivity.activity.activityThumbnailUrl,
+                        ),
+                    ),
+                )
+
+        val sortedItems =
+            sortedActivityIds.mapNotNull { activityId ->
+                itemsMap[activityId]
+            }
+
+        val count =
+            jpaQueryFactory
+                .select(QActivity.activity.id.countDistinct())
+                .from(QMemberActivityViewHistory.memberActivityViewHistory)
+                .join(QMemberActivityViewHistory.memberActivityViewHistory.activity, QActivity.activity)
+                .where(
+                    QMemberActivityViewHistory.memberActivityViewHistory.member.id
+                        .eq(memberId),
+                    QActivity.activity.deletedAt.isNull,
+                ).fetchOne() ?: 0L
+
+        return PageImpl(sortedItems, pageable, count)
     }
 }

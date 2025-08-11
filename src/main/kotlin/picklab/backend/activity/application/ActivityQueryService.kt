@@ -20,4 +20,9 @@ class ActivityQueryService(
         queryData: GetMyBookmarkListCondition,
         pageable: PageRequest,
     ): Page<ActivityItem> = activityQueryRepository.findActivityItemByMemberBookmarked(memberId, queryData, pageable)
+
+    fun getRecentlyViewedActivities(
+        memberId: Long,
+        pageable: PageRequest,
+    ): Page<ActivityItem> = activityQueryRepository.findRecentlyViewedActivities(memberId, pageable)
 }

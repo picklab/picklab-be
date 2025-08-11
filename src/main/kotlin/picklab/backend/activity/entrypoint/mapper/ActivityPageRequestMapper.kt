@@ -1,6 +1,7 @@
 package picklab.backend.activity.entrypoint.mapper
 
 import picklab.backend.activity.application.model.PopularActivitiesCondition
+import picklab.backend.activity.application.model.RecentlyViewedActivitiesCondition
 import picklab.backend.activity.application.model.RecommendActivitiesCondition
 import picklab.backend.activity.entrypoint.request.GetActivityPageRequest
 
@@ -13,6 +14,13 @@ fun GetActivityPageRequest.toPopularActivitiesCondition(memberId: Long?): Popula
 
 fun GetActivityPageRequest.toRecommendActivitiesCondition(memberId: Long): RecommendActivitiesCondition =
     RecommendActivitiesCondition(
+        memberId = memberId,
+        page = page,
+        size = size,
+    )
+
+fun GetActivityPageRequest.toRecentlyViewedActivitiesCondition(memberId: Long): RecentlyViewedActivitiesCondition =
+    RecentlyViewedActivitiesCondition(
         memberId = memberId,
         page = page,
         size = size,
