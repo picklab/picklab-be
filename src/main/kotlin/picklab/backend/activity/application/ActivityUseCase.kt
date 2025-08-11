@@ -12,7 +12,6 @@ import picklab.backend.activity.entrypoint.response.GetActivityListResponse
 import picklab.backend.common.model.PageResponse
 import picklab.backend.member.domain.MemberService
 import picklab.backend.member.domain.service.MemberActivityViewHistoryService
-import java.time.LocalDateTime
 
 @Component
 class ActivityUseCase(
@@ -106,7 +105,7 @@ class ActivityUseCase(
 
         // 로그인한 사용자의 경우 조회 이력 저장
         memberId?.let { id ->
-            memberActivityViewHistoryService.recordActivityView(id, activityId, LocalDateTime.now())
+            memberActivityViewHistoryService.recordActivityView(id, activity)
         }
     }
 

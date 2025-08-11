@@ -8,7 +8,3 @@ CREATE TABLE IF NOT EXISTS member_activity_view_history
     updated_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='회원 활동 조회 이력 테이블';
-
--- 중복 조회를 방지하기 위한 유니크 제약조건 추가
-ALTER TABLE member_activity_view_history
-    ADD CONSTRAINT uk_member_activity_view UNIQUE (member_id, activity_id);
