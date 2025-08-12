@@ -43,6 +43,8 @@ data class ReviewUpdateRequest(
     val jobRelevanceScore: Int,
     @Schema(description = "리뷰 인증 자료 URL")
     val url: String? = null,
+    @Schema(description = "직무 정보")
+    val jobCategory: JobCategoryDto,
 ) {
     fun toCommand(
         id: Long,
@@ -62,5 +64,7 @@ data class ReviewUpdateRequest(
             tips = this.tips,
             jobRelevanceScore = this.jobRelevanceScore,
             url = this.url,
+            jobGroup = this.jobCategory.jobGroup,
+            jobDetail = this.jobCategory.jobDetail,
         )
 }

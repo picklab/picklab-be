@@ -1,5 +1,8 @@
 package picklab.backend.review.application.model
 
+import picklab.backend.job.domain.enums.JobDetail
+import picklab.backend.job.domain.enums.JobGroup
+
 data class ReviewUpdateCommand(
     val id: Long,
     val activityId: Long,
@@ -14,4 +17,6 @@ data class ReviewUpdateCommand(
     val tips: String?,
     val jobRelevanceScore: Int,
     val url: String?,
+    val jobGroup: JobGroup,
+    val jobDetail: JobDetail?,
 )

@@ -8,6 +8,7 @@ import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
 import picklab.backend.common.model.PageResponse
+import picklab.backend.job.domain.service.JobService
 import picklab.backend.member.domain.MemberService
 import picklab.backend.participation.domain.service.ActivityParticipationService
 import picklab.backend.review.application.mapper.toResponse
@@ -30,6 +31,7 @@ class ReviewUseCase(
     private val activityParticipationService: ActivityParticipationService,
     private val reviewCreateConverter: ReviewCreateConverter,
     private val reviewOverviewQueryService: ReviewOverviewQueryService,
+    private val jobService: JobService,
 ) {
     fun createReview(command: ReviewCreateCommand) {
         val member = memberService.findActiveMember(command.memberId)
@@ -38,11 +40,18 @@ class ReviewUseCase(
         if (reviewService.existsByActivityIdAndMemberId(activity.id, member.id)) {
             throw BusinessException(ErrorCode.ALREADY_EXISTS_REVIEW)
         }
+        if (command.jobDetail != null && command.jobDetail.group != command.jobGroup) {
+            throw BusinessException(ErrorCode.JOB_CATEGORY_MISMATCH_INPUT)
+        }
+        val jobCategory =
+            jobService.getJobCategoryByGroupAndDetail(command.jobGroup, command.jobDetail)
+                ?: throw BusinessException(ErrorCode.JOB_CATEGORY_NOT_FOUND)
         val approvalStatus = ReviewApprovalDecider.decideOnCreate(command.url)
-        val review = reviewCreateConverter.toEntity(command, approvalStatus, member, activity)
+        val review = reviewCreateConverter.toEntity(command, approvalStatus, member, activity, jobCategory)
         reviewService.save(review)
     }
 
+    @Transactional(readOnly = true)
     fun getMyReview(
         id: Long,
         memberId: Long,
@@ -52,7 +61,7 @@ class ReviewUseCase(
         if (member.id != review.member.id) {
             throw BusinessException(ErrorCode.CANNOT_READ_REVIEW)
         }
-        return MyReviewResponse.from(review)
+        return MyReviewResponse.from(review, review.jobCategory)
     }
 
     fun getMyReviews(req: MyReviewListQueryRequest): PageResponse<MyReviewsResponse> {
@@ -101,6 +110,12 @@ class ReviewUseCase(
         if (member.id != review.member.id) {
             throw BusinessException(ErrorCode.CANNOT_UPDATE_REVIEW)
         }
+        if (command.jobDetail != null && command.jobDetail.group != command.jobGroup) {
+            throw BusinessException(ErrorCode.JOB_CATEGORY_MISMATCH_INPUT)
+        }
+        val jobCategory =
+            jobService.getJobCategoryByGroupAndDetail(command.jobGroup, command.jobDetail)
+                ?: throw BusinessException(ErrorCode.JOB_CATEGORY_NOT_FOUND)
         val updatedApprovalStatus =
             ReviewApprovalDecider.decideOnUpdate(
                 review.url,
@@ -123,6 +138,7 @@ class ReviewUseCase(
             url = command.url,
             approvalStatus = updatedApprovalStatus,
             activity,
+            jobCategory = jobCategory,
         )
     }
 
