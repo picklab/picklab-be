@@ -34,6 +34,7 @@ class SecurityConfig(
             "/v1/activities",
             "/v1/activities/**",
             "/v1/search/autocomplete",
+            "/v1/activities/*/reviews/statistics/**",
         )
 
     @Bean
