@@ -15,6 +15,7 @@ val jjwtVersion = "0.12.6"
 val queryDSLVersion = "7.0"
 val archUnitVersion = "1.4.1"
 val caffeineCacheVersion = "3.2.2"
+val awsJavaSdkVersion = "2.32.19"
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
@@ -67,6 +68,9 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("com.github.ben-manes.caffeine:caffeine:$caffeineCacheVersion")
+
+    // ncloud object storage
+    implementation("software.amazon.awssdk:aws-sdk-java:$awsJavaSdkVersion")
 }
 
 kotlin {
