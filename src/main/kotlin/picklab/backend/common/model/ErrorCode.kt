@@ -80,4 +80,9 @@ enum class ErrorCode(
      * 검색 도메인 관련
      */
     SEARCH_HISTORY_NOT_FOUND(HttpStatus.NOT_FOUND, "검색 기록을 찾을 수 없습니다."),
+
+    /**
+     * 파일 업로드 관련
+     */
+    UNSUPPORTED_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "지원하지 않는 파일 확장자입니다."),
 }
