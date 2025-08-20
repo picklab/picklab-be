@@ -59,4 +59,7 @@ enum class SuccessCode(
     RECENT_KEYWORDS_RETRIEVED(HttpStatus.OK, "최근 검색어 조회에 성공했습니다."),
     SEARCH_HISTORY_DELETED(HttpStatus.OK, "검색 기록이 삭제되었습니다."),
     SEARCH_HISTORY_ALL_DELETED(HttpStatus.OK, "모든 검색 기록이 삭제되었습니다."),
+
+    // File Upload 관련
+    GET_PRESIGNED_URL(HttpStatus.OK, "Presigned url 발급에 성공했습니다."),
 }
