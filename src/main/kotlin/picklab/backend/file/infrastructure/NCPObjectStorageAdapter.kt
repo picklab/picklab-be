@@ -1,9 +1,9 @@
-package picklab.backend.common.file.infrastructure
+package picklab.backend.file.infrastructure
 
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import picklab.backend.common.file.application.FileStoragePort
+import picklab.backend.file.application.FileStoragePort
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.services.s3.presigner.S3Presigner
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest

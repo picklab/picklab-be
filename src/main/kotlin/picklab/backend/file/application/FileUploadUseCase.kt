@@ -1,9 +1,9 @@
-package picklab.backend.common.file.application
+package picklab.backend.file.application
 
 import org.springframework.stereotype.Component
-import picklab.backend.common.file.FileKeyGenerator
-import picklab.backend.common.file.application.model.CreatePresignedUrlCommand
-import picklab.backend.common.file.entrypoint.response.CreatePresignedurlResponse
+import picklab.backend.file.FileKeyGenerator
+import picklab.backend.file.application.model.CreatePresignedUrlCommand
+import picklab.backend.file.entrypoint.response.CreatePresignedurlResponse
 
 @Component
 class FileUploadUseCase(

@@ -1,4 +1,4 @@
-package picklab.backend.common.file.entrypoint.response
+package picklab.backend.file.entrypoint.response
 
 import io.swagger.v3.oas.annotations.media.Schema
 

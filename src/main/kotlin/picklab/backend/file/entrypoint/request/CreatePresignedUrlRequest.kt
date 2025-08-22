@@ -1,9 +1,9 @@
-package picklab.backend.common.file.entrypoint.request
+package picklab.backend.file.entrypoint.request
 
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
-import picklab.backend.common.file.FileCategory
-import picklab.backend.common.file.application.model.CreatePresignedUrlCommand
+import picklab.backend.file.FileCategory
+import picklab.backend.file.application.model.CreatePresignedUrlCommand
 
 data class CreatePresignedUrlRequest(
     @NotBlank(message = "파일 이름은 필수입니다.")

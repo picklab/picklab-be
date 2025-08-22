@@ -1,4 +1,4 @@
-package picklab.backend.common.file
+package picklab.backend.file
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

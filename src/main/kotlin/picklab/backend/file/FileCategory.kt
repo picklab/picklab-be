@@ -1,4 +1,4 @@
-package picklab.backend.common.file
+package picklab.backend.file
 
 enum class FileCategory(
     val label: String,

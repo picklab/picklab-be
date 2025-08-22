@@ -1,6 +1,6 @@
-package picklab.backend.common.file.application.model
+package picklab.backend.file.application.model
 
-import picklab.backend.common.file.FileCategory
+import picklab.backend.file.FileCategory
 
 class CreatePresignedUrlCommand(
     val fileName: String,

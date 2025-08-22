@@ -1,4 +1,4 @@
-package picklab.backend.common.file.entrypoint
+package picklab.backend.file.entrypoint
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.parameters.RequestBody
@@ -8,10 +8,10 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import picklab.backend.common.file.entrypoint.request.CreatePresignedUrlRequest
-import picklab.backend.common.file.entrypoint.response.CreatePresignedurlResponse
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.ResponseWrapper
+import picklab.backend.file.entrypoint.request.CreatePresignedUrlRequest
+import picklab.backend.file.entrypoint.response.CreatePresignedurlResponse
 
 @Tag(name = "파일 관련 API", description = "Ncloud Object Storage를 이용한 파일 업로드 API")
 interface FileUploadApi {

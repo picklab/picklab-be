@@ -1,4 +1,4 @@
-package picklab.backend.common.file.application
+package picklab.backend.file.application
 
 interface FileStoragePort {
     /**
