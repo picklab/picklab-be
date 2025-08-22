@@ -70,7 +70,8 @@ dependencies {
     implementation("com.github.ben-manes.caffeine:caffeine:$caffeineCacheVersion")
 
     // ncloud object storage
-    implementation("software.amazon.awssdk:aws-sdk-java:$awsJavaSdkVersion")
+    implementation(platform("software.amazon.awssdk:bom:$awsJavaSdkVersion"))
+    implementation("software.amazon.awssdk:s3")
 }
 
 kotlin {
