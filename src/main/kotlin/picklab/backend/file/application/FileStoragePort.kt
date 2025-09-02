@@ -7,10 +7,6 @@ interface FileStoragePort {
     fun generateUploadPresignedUrl(
         contentType: String,
         key: String,
+        fileSize: Long,
     ): String
-
-    /**
-     * 파일의 public read URL을 반환합니다.
-     */
-    fun getPublicReadUrl(key: String): String
 }

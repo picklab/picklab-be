@@ -21,14 +21,15 @@ class NCPObjectStorageAdapter(
     override fun generateUploadPresignedUrl(
         contentType: String,
         key: String,
+        fileSize: Long,
     ): String {
-        // content-length 제한을 적용할 지 프론트측과 논의 필요
         val putObjectRequest =
             PutObjectRequest
                 .builder()
                 .bucket(bucketName)
                 .key(key)
                 .contentType(contentType)
+                .contentLength(fileSize)
                 .build()
 
         val presignRequest =
@@ -42,6 +43,4 @@ class NCPObjectStorageAdapter(
 
         return presignedRequest.url().toString()
     }
-
-    override fun getPublicReadUrl(key: String): String = "$endPoint/$bucketName/$key"
 }
