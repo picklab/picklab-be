@@ -72,8 +72,8 @@ class ReviewUseCase(
                 req.size,
                 Sort.by("createdAt").descending(),
             )
-        val page = reviewOverviewQueryService.findMyReviews(member.id, pageable)
-        val responsePage = page.map { MyReviewsResponse.from(it) }
+        val views = reviewOverviewQueryService.findMyReviews(member.id, pageable)
+        val responsePage = views.map { MyReviewsResponse.from(it) }
 
         return PageResponse.from(responsePage)
     }
@@ -93,11 +93,11 @@ class ReviewUseCase(
                 size,
                 Sort.by("createdAt").descending(),
             )
-        val page =
+        val views =
             reviewOverviewQueryService
                 .findActivityReviews(request, activity.id, pageable)
         val isLoggedIn = member != null
-        val responsePage = page.map { it.toResponse(isLoggedIn) }
+        val responsePage = views.map { it.toResponse(isLoggedIn) }
 
         return PageResponse.from(responsePage)
     }
