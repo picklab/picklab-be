@@ -12,7 +12,7 @@ data class JobRelevanceStatisticsResponse(
     @Schema(description = "마케팅 직무 연관성 평균 점수")
     val marketingAvgScore: Double,
     @Schema(description = "AI 직무 연관성 평균 점수")
-    val aiScore: Double,
+    val aiAvgScore: Double,
     @Schema(description = "디자인 직무 연관성 평균 점수")
     val designAvgScore: Double,
 )
@@ -22,6 +22,6 @@ fun JobRelevanceStatisticsView.toResponse(): JobRelevanceStatisticsResponse =
         planningAvgScore = this.planningAvgScore,
         developmentAvgScore = this.developmentAvgScore,
         marketingAvgScore = this.marketingAvgScore,
-        aiScore = this.aiAvgScore,
+        aiAvgScore = this.aiAvgScore,
         designAvgScore = this.designAvgScore,
     )
