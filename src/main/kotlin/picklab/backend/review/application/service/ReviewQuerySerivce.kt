@@ -5,8 +5,8 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import picklab.backend.review.application.model.ActivityReviewListQueryRequest
 import picklab.backend.review.application.query.ReviewOverviewQueryRepository
-import picklab.backend.review.application.query.model.ActivityReviewListItem
-import picklab.backend.review.application.query.model.MyReviewListItem
+import picklab.backend.review.application.query.model.ActivityReviewListView
+import picklab.backend.review.application.query.model.MyReviewListView
 
 @Service
 class ReviewOverviewQueryService(
@@ -15,11 +15,11 @@ class ReviewOverviewQueryService(
     fun findMyReviews(
         memberId: Long,
         pageable: PageRequest,
-    ): Page<MyReviewListItem> = reviewOverviewQueryRepository.findMyReviews(memberId, pageable)
+    ): Page<MyReviewListView> = reviewOverviewQueryRepository.findMyReviews(memberId, pageable)
 
     fun findActivityReviews(
         request: ActivityReviewListQueryRequest,
         activityId: Long,
         pageable: PageRequest,
-    ): Page<ActivityReviewListItem> = reviewOverviewQueryRepository.findActivityReviewsWithFilter(request, activityId, pageable)
+    ): Page<ActivityReviewListView> = reviewOverviewQueryRepository.findActivityReviewsWithFilter(request, activityId, pageable)
 }
