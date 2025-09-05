@@ -95,6 +95,7 @@ ncp:
     secret-key: ${NCP_SECRET_KEY}
   storage:
     bucket-name: ${NCP_BUCKET_NAME}
+
 ---
 spring:
   config:
@@ -138,3 +139,12 @@ jwt:
   refresh:
     secret: testRefreshSecrettestRefreshSecret
     expiration: 2000 # 2초
+
+ncp:
+  cloud:
+    region: ap-northeast-2
+    end-point: http://localhost:4566
+    access-key: testAccessKey
+    secret-key: testSecretKey
+  storage:
+    bucket-name: test-bucket
