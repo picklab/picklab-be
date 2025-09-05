@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.presigner.S3Presigner
 import java.net.URI
 
@@ -25,6 +26,18 @@ class NCPObjectStorageConfig(
         val credentials = AwsBasicCredentials.create(accessKey, secretKey)
 
         return S3Presigner
+            .builder()
+            .credentialsProvider(StaticCredentialsProvider.create(credentials))
+            .endpointOverride(URI.create(endpoint))
+            .region(Region.of(region))
+            .build()
+    }
+
+    @Bean
+    fun ncpObjectStorageClient(): S3Client {
+        val credentials = AwsBasicCredentials.create(accessKey, secretKey)
+
+        return S3Client
             .builder()
             .credentialsProvider(StaticCredentialsProvider.create(credentials))
             .endpointOverride(URI.create(endpoint))

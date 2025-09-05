@@ -7,4 +7,5 @@ class CreatePresignedUrlCommand(
     val category: FileCategory,
     val fileSize: Long,
     val memberId: Long,
+    val activityId: Long?,
 )

@@ -8,14 +8,24 @@ import picklab.backend.file.entrypoint.response.CreatePresignedurlResponse
 @Component
 class FileUploadUseCase(
     private val fileStoragePort: FileStoragePort,
+    private val fileKeyGenerator: FileKeyGenerator,
+    private val fileValidator: FileValidator,
 ) {
     /**
      * 파일 업로드를 위한 presigned URL을 반환합니다.
      */
     fun generateUploadPresignedUrl(command: CreatePresignedUrlCommand): CreatePresignedurlResponse {
-        val contentType = ContentTypeResolver.resolveContentType(command.fileName)
+        fileValidator.validateFileSize(command.fileSize)
 
-        val fileKey = FileKeyGenerator.generateTempFileKey(command.fileName, command.category.name, command.memberId)
+        val contentType = fileValidator.validateExtensionAndResolveContentType(command.fileName)
+
+        val fileKey =
+            fileKeyGenerator.generateTempFileKey(
+                command.fileName,
+                command.category,
+                command.memberId,
+                command.activityId,
+            )
 
         val presignedUrl = fileStoragePort.generateUploadPresignedUrl(contentType, fileKey, command.fileSize)
 

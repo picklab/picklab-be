@@ -15,12 +15,15 @@ data class CreatePresignedUrlRequest(
     @NotBlank(message = "파일 크기는 필수입니다.")
     @Schema(description = "업로드 할 파일 크기(Byte)", example = "2048")
     val fileSize: Long,
+    @Schema(description = "리뷰 및 아카이브와 관련된 활동 ID, PROFILE 카테고리인 경우 null", example = "1")
+    val activityId: Long? = null,
 ) {
     fun toCommand(memberId: Long): CreatePresignedUrlCommand =
         CreatePresignedUrlCommand(
             fileName = this.fileName,
             category = this.category,
             fileSize = this.fileSize,
+            activityId = this.activityId,
             memberId = memberId,
         )
 }
