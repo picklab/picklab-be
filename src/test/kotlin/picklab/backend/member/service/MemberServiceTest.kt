@@ -389,7 +389,7 @@ class MemberServiceTest : IntegrationTest() {
                 )
 
             // when
-            memberService.updateProfileImage(member.id, request)
+            memberService.updateProfileImage(member, request.profileImage)
 
             // then
             val updatedMember = memberRepository.findById(member.id).orElse(null)
