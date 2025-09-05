@@ -11,6 +11,7 @@ import picklab.backend.archive.domain.service.ArchiveUploadFileUrlService
 import picklab.backend.archive.entrypoint.request.ArchiveCreateRequest
 import picklab.backend.archive.entrypoint.request.ArchiveUpdateRequest
 import picklab.backend.common.model.MemberPrincipal
+import picklab.backend.file.application.FileManagementService
 import picklab.backend.member.domain.MemberService
 
 @Component
@@ -20,6 +21,7 @@ class ArchiveUseCase(
     private val activityService: ActivityService,
     private val archiveReferenceUrlService: ArchiveReferenceUrlService,
     private val archiveUploadFileUrlService: ArchiveUploadFileUrlService,
+    private val fileManagementService: FileManagementService,
 ) {
     @Transactional
     fun createArchive(
@@ -29,11 +31,19 @@ class ArchiveUseCase(
         val member = memberService.findActiveMember(memberPrincipal.memberId)
         val activity = activityService.mustFindById(request.activityId)
 
+        val permanentFileUrls =
+            fileManagementService.verifyAndMoveTempFilesToPermanent(
+                fileUrls = request.fileUrls,
+                memberId = member.id,
+                activityId = request.activityId,
+                category = "archive",
+            )
+
         val entity = request.toCreateEntity(member, activity)
         val archive = archiveService.save(entity)
 
         val referenceUrls = request.referenceUrls.map { url -> ArchiveReferenceUrl(archive, url) }
-        val uploadedFileUrls = request.fileUrls.map { url -> ArchiveUploadFileUrl(archive, url) }
+        val uploadedFileUrls = permanentFileUrls.map { url -> ArchiveUploadFileUrl(archive, url) }
 
         archiveReferenceUrlService.saveAll(referenceUrls)
         archiveUploadFileUrlService.saveAll(uploadedFileUrls)
