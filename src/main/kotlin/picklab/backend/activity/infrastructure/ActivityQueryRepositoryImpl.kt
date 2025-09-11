@@ -2,7 +2,6 @@ package picklab.backend.activity.infrastructure
 
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.group.GroupBy
-import com.querydsl.core.types.Projections
 import com.querydsl.jpa.JPAExpressions
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.data.domain.Page
@@ -251,8 +250,7 @@ class ActivityQueryRepositoryImpl(
                 .limit(pageable.pageSize.toLong())
                 .transform(
                     GroupBy.groupBy(QActivity.activity.id).list(
-                        Projections.constructor(
-                            ActivityView::class.java,
+                        QActivityItem(
                             QActivity.activity.id,
                             QActivity.activity.title,
                             QActivity.activity.organizer.stringValue(),
@@ -262,7 +260,7 @@ class ActivityQueryRepositoryImpl(
                             QActivity.activity.activityThumbnailUrl,
                         ),
                     ),
-                )
+                ).map { it as ActivityView }
 
         val count =
             jpaQueryFactory
