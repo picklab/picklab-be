@@ -10,8 +10,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Repository
-import picklab.backend.activity.application.model.ActivityItem
 import picklab.backend.activity.application.model.ActivitySearchCondition
+import picklab.backend.activity.application.model.ActivityView
 import picklab.backend.activity.domain.entity.QActivity
 import picklab.backend.activity.domain.entity.QActivityJobCategory
 import picklab.backend.activity.domain.enums.*
@@ -25,7 +25,7 @@ class ActivityRepositoryImpl(
     override fun getActivities(
         queryData: ActivitySearchCondition,
         pageable: PageRequest,
-    ): Page<ActivityItem> {
+    ): Page<ActivityView> {
         val condition =
             BooleanBuilder().apply {
                 and(QActivity.activity.activityType.eq(queryData.category.name))
@@ -107,7 +107,7 @@ class ActivityRepositoryImpl(
                 .transform(
                     GroupBy.groupBy(QActivity.activity.id).list(
                         Projections.constructor(
-                            ActivityItem::class.java,
+                            ActivityView::class.java,
                             QActivity.activity.id,
                             QActivity.activity.title,
                             QActivity.activity.organizer.stringValue(),

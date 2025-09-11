@@ -10,9 +10,8 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Repository
 import picklab.backend.activity.application.ActivityQueryRepository
-import picklab.backend.activity.application.model.ActivityItem
+import picklab.backend.activity.application.model.ActivityView
 import picklab.backend.activity.application.model.GetMyBookmarkListCondition
-import picklab.backend.activity.application.model.QActivityItem
 import picklab.backend.activity.domain.entity.QActivity
 import picklab.backend.activity.domain.entity.QActivityBookmark
 import picklab.backend.activity.domain.entity.QActivityJobCategory
@@ -28,7 +27,7 @@ class ActivityQueryRepositoryImpl(
     override fun findAllByMemberJobRecommendation(
         jobIds: List<Long>,
         pageable: PageRequest,
-    ): Page<ActivityItem> {
+    ): Page<ActivityView> {
         // 1. 조건에 맞는 activityId 들을 조회
         val activityIds =
             jpaQueryFactory
@@ -97,7 +96,7 @@ class ActivityQueryRepositoryImpl(
                             QActivity.activity.activityThumbnailUrl,
                         ),
                     ),
-                )
+                ).map { it as ActivityView }
 
         // 3. 페이징 기능을 위해 토탈 count 를 구하는 쿼리
         val count =
@@ -120,7 +119,7 @@ class ActivityQueryRepositoryImpl(
         return PageImpl(items, pageable, count)
     }
 
-    override fun findPopularActivities(pageable: PageRequest): Page<ActivityItem> {
+    override fun findPopularActivities(pageable: PageRequest): Page<ActivityView> {
         val condition =
             BooleanBuilder().apply {
                 and(QActivity.activity.status.eq(RecruitmentStatus.OPEN))
@@ -176,7 +175,7 @@ class ActivityQueryRepositoryImpl(
                             QActivity.activity.activityThumbnailUrl,
                         ),
                     ),
-                )
+                ).map { it as ActivityView }
 
         val count =
             jpaQueryFactory
@@ -194,7 +193,7 @@ class ActivityQueryRepositoryImpl(
         memberId: Long,
         queryData: GetMyBookmarkListCondition,
         pageable: PageRequest,
-    ): Page<ActivityItem> {
+    ): Page<ActivityView> {
         val condition =
             BooleanBuilder().apply {
                 and(
@@ -253,7 +252,7 @@ class ActivityQueryRepositoryImpl(
                 .transform(
                     GroupBy.groupBy(QActivity.activity.id).list(
                         Projections.constructor(
-                            ActivityItem::class.java,
+                            ActivityView::class.java,
                             QActivity.activity.id,
                             QActivity.activity.title,
                             QActivity.activity.organizer.stringValue(),
@@ -287,7 +286,7 @@ class ActivityQueryRepositoryImpl(
     override fun findRecentlyViewedActivities(
         memberId: Long,
         pageable: PageRequest,
-    ): Page<ActivityItem> {
+    ): Page<ActivityView> {
         val latestViewActivities =
             jpaQueryFactory
                 .select(
