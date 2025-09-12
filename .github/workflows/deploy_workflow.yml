@@ -103,7 +103,6 @@ jobs:
     steps:
       - name: Notify Discord
         uses: sarisia/actions-status-discord@v1
-        if: always()
         with:
           webhook: ${{ secrets.DEPLOY_WEBHOOK_URL }}
           status: ${{ job.status }}
