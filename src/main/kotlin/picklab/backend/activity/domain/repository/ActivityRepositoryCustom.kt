@@ -2,14 +2,14 @@ package picklab.backend.activity.domain.repository
 
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
-import picklab.backend.activity.application.model.ActivityItem
 import picklab.backend.activity.application.model.ActivitySearchCondition
+import picklab.backend.activity.application.model.ActivityView
 
 interface ActivityRepositoryCustom {
     fun getActivities(
         queryData: ActivitySearchCondition,
         pageable: PageRequest,
-    ): Page<ActivityItem>
+    ): Page<ActivityView>
 
     /**
      * 활동명 자동완성 검색
