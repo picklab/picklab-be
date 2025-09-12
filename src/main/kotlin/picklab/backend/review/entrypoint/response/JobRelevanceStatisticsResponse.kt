@@ -1,7 +1,7 @@
 package picklab.backend.review.entrypoint.response
 
 import io.swagger.v3.oas.annotations.media.Schema
-import picklab.backend.review.application.query.model.JobRelevanceStatisticsItem
+import picklab.backend.review.application.query.model.JobRelevanceStatisticsView
 
 @Schema(description = "직무 연관성 통계 응답")
 data class JobRelevanceStatisticsResponse(
@@ -12,16 +12,16 @@ data class JobRelevanceStatisticsResponse(
     @Schema(description = "마케팅 직무 연관성 평균 점수")
     val marketingAvgScore: Double,
     @Schema(description = "AI 직무 연관성 평균 점수")
-    val aiScore: Double,
+    val aiAvgScore: Double,
     @Schema(description = "디자인 직무 연관성 평균 점수")
     val designAvgScore: Double,
 )
 
-fun JobRelevanceStatisticsItem.toResponse(): JobRelevanceStatisticsResponse =
+fun JobRelevanceStatisticsView.toResponse(): JobRelevanceStatisticsResponse =
     JobRelevanceStatisticsResponse(
         planningAvgScore = this.planningAvgScore,
         developmentAvgScore = this.developmentAvgScore,
         marketingAvgScore = this.marketingAvgScore,
-        aiScore = this.aiAvgScore,
+        aiAvgScore = this.aiAvgScore,
         designAvgScore = this.designAvgScore,
     )

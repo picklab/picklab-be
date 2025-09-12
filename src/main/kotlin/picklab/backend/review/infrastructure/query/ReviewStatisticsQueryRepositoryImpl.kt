@@ -7,17 +7,19 @@ import picklab.backend.job.domain.entity.QJobCategory.Companion.jobCategory
 import picklab.backend.job.domain.enums.JobDetail
 import picklab.backend.job.domain.enums.JobGroup
 import picklab.backend.review.application.query.ReviewStatisticsQueryRepository
-import picklab.backend.review.application.query.model.JobRelevanceStatisticsItem
-import picklab.backend.review.application.query.model.QSatisfactionStatisticsItem
-import picklab.backend.review.application.query.model.SatisfactionStatisticsItem
+import picklab.backend.review.application.query.model.JobRelevanceStatisticsView
+import picklab.backend.review.application.query.model.SatisfactionStatisticsView
 import picklab.backend.review.domain.entity.QReview.Companion.review
 import picklab.backend.review.domain.enums.ReviewApprovalStatus
+import picklab.backend.review.infrastructure.query.projection.JobRelevanceStatisticsItem
+import picklab.backend.review.infrastructure.query.projection.QSatisfactionStatisticsItem
+import picklab.backend.review.infrastructure.query.projection.SatisfactionStatisticsItem
 
 @Repository
 class ReviewStatisticsQueryRepositoryImpl(
     private val jpaQueryFactory: JPAQueryFactory,
 ) : ReviewStatisticsQueryRepository {
-    override fun findJobRelevanceStatistics(activityId: Long): JobRelevanceStatisticsItem {
+    override fun findJobRelevanceStatistics(activityId: Long): JobRelevanceStatisticsView {
         val results =
             jpaQueryFactory
                 .select(review.jobCategory.jobGroup, review.jobRelevanceScore.avg())
@@ -50,7 +52,7 @@ class ReviewStatisticsQueryRepositoryImpl(
     override fun findSatisfactionStatistics(
         activityId: Long,
         jobCategoryIds: List<Long>,
-    ): List<SatisfactionStatisticsItem> {
+    ): List<SatisfactionStatisticsView> {
         val results = mutableListOf<SatisfactionStatisticsItem>()
         val overall =
             jpaQueryFactory

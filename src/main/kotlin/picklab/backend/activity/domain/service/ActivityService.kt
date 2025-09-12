@@ -5,8 +5,8 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import picklab.backend.activity.application.ActivityQueryRepository
-import picklab.backend.activity.application.model.ActivityItem
 import picklab.backend.activity.application.model.ActivitySearchCondition
+import picklab.backend.activity.application.model.ActivityView
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.activity.domain.enums.ActivityType
 import picklab.backend.activity.domain.enums.EducationFormatType
@@ -197,5 +197,5 @@ class ActivityService(
      * 전체 활동 중 인기도가 높은 활동들을 조회합니다.
      * 인기도는 조회수와 북마크 수를 합산하여 계산합니다.
      */
-    fun getPopularActivities(pageable: PageRequest): Page<ActivityItem> = activityQueryRepository.findPopularActivities(pageable)
+    fun getPopularActivities(pageable: PageRequest): Page<ActivityView> = activityQueryRepository.findPopularActivities(pageable)
 }

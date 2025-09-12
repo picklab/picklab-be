@@ -14,12 +14,12 @@ import picklab.backend.member.domain.entity.QMember.Companion.member
 import picklab.backend.participation.domain.entity.QActivityParticipation.Companion.activityParticipation
 import picklab.backend.review.application.model.ActivityReviewListQueryRequest
 import picklab.backend.review.application.query.ReviewOverviewQueryRepository
-import picklab.backend.review.application.query.model.ActivityReviewListItem
-import picklab.backend.review.application.query.model.MyReviewListItem
-import picklab.backend.review.application.query.model.QActivityReviewListItem
-import picklab.backend.review.application.query.model.QMyReviewListItem
+import picklab.backend.review.application.query.model.ActivityReviewListView
+import picklab.backend.review.application.query.model.MyReviewListView
 import picklab.backend.review.domain.entity.QReview.Companion.review
 import picklab.backend.review.domain.enums.ReviewApprovalStatus
+import picklab.backend.review.infrastructure.query.projection.QActivityReviewListItem
+import picklab.backend.review.infrastructure.query.projection.QMyReviewListItem
 
 @Repository
 class ReviewOverviewQueryRepositoryImpl(
@@ -28,7 +28,7 @@ class ReviewOverviewQueryRepositoryImpl(
     override fun findMyReviews(
         memberId: Long,
         pageable: Pageable,
-    ): Page<MyReviewListItem> {
+    ): Page<MyReviewListView> {
         val content =
             jpaQueryFactory
                 .select(
@@ -51,6 +51,7 @@ class ReviewOverviewQueryRepositoryImpl(
                 ).offset(pageable.offset)
                 .limit(pageable.pageSize.toLong())
                 .fetch()
+                .map { it as MyReviewListView }
         val totalCount =
             jpaQueryFactory
                 .select(review.count())
@@ -65,7 +66,7 @@ class ReviewOverviewQueryRepositoryImpl(
         request: ActivityReviewListQueryRequest,
         activityId: Long,
         pageable: Pageable,
-    ): Page<ActivityReviewListItem> {
+    ): Page<ActivityReviewListView> {
         val builder = BooleanBuilder()
         builder.and(activity.id.eq(activityId))
         request.rating?.let {
@@ -119,6 +120,7 @@ class ReviewOverviewQueryRepositoryImpl(
                 ).offset(pageable.offset)
                 .limit(pageable.pageSize.toLong())
                 .fetch()
+                .map { it as ActivityReviewListView }
 
         val totalCount =
             jpaQueryFactory

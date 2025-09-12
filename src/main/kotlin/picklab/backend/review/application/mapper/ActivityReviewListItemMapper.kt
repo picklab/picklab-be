@@ -1,9 +1,9 @@
 package picklab.backend.review.application.mapper
 
-import picklab.backend.review.application.query.model.ActivityReviewListItem
+import picklab.backend.review.application.query.model.ActivityReviewListView
 import picklab.backend.review.entrypoint.response.ActivityReviewResponse
 
-fun ActivityReviewListItem.toResponse(isLoggedIn: Boolean): ActivityReviewResponse =
+fun ActivityReviewListView.toResponse(isLoggedIn: Boolean): ActivityReviewResponse =
     ActivityReviewResponse(
         id = id,
         overallScore = overallScore,

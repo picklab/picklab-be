@@ -1,7 +1,7 @@
 package picklab.backend.review.entrypoint.response
 
 import io.swagger.v3.oas.annotations.media.Schema
-import picklab.backend.review.application.query.model.SatisfactionStatisticsItem
+import picklab.backend.review.application.query.model.SatisfactionStatisticsView
 
 @Schema(description = "활동 만족도 평가 통계 응답")
 data class SatisfactionStatisticsResponse(
@@ -9,7 +9,7 @@ data class SatisfactionStatisticsResponse(
     val items: List<SatisfactionAvgScores>,
 )
 
-fun SatisfactionStatisticsItem.toResponse(): SatisfactionAvgScores =
+fun SatisfactionStatisticsView.toResponse(): SatisfactionAvgScores =
     SatisfactionAvgScores(
         jobGroup = this.jobGroup,
         jobDetail = this.jobDetail,

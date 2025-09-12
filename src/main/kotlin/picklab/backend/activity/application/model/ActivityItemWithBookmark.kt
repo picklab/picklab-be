@@ -14,7 +14,7 @@ class ActivityItemWithBookmark(
 ) {
     companion object {
         fun from(
-            item: ActivityItem,
+            item: ActivityView,
             isBookmarked: Boolean,
         ): ActivityItemWithBookmark =
             ActivityItemWithBookmark(

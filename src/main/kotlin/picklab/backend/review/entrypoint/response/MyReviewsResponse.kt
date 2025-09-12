@@ -2,7 +2,7 @@ package picklab.backend.review.entrypoint.response
 
 import io.swagger.v3.oas.annotations.media.Schema
 import picklab.backend.activity.domain.enums.OrganizerType
-import picklab.backend.review.application.query.model.MyReviewListItem
+import picklab.backend.review.application.query.model.MyReviewListView
 import picklab.backend.review.domain.enums.ReviewApprovalStatus
 import java.time.LocalDateTime
 
@@ -22,7 +22,7 @@ data class MyReviewsResponse(
     val approvalStatus: ReviewApprovalStatus,
 ) {
     companion object {
-        fun from(item: MyReviewListItem): MyReviewsResponse =
+        fun from(item: MyReviewListView): MyReviewsResponse =
             MyReviewsResponse(
                 id = item.id,
                 title = item.title,

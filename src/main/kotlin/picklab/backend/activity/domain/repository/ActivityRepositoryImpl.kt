@@ -2,7 +2,6 @@ package picklab.backend.activity.domain.repository
 
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.group.GroupBy
-import com.querydsl.core.types.Projections
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.jpa.impl.JPAQueryFactory
@@ -10,11 +9,12 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Repository
-import picklab.backend.activity.application.model.ActivityItem
 import picklab.backend.activity.application.model.ActivitySearchCondition
+import picklab.backend.activity.application.model.ActivityView
 import picklab.backend.activity.domain.entity.QActivity
 import picklab.backend.activity.domain.entity.QActivityJobCategory
 import picklab.backend.activity.domain.enums.*
+import picklab.backend.activity.infrastructure.QActivityItem
 import picklab.backend.job.domain.entity.QJobCategory
 import java.time.LocalDate
 
@@ -25,7 +25,7 @@ class ActivityRepositoryImpl(
     override fun getActivities(
         queryData: ActivitySearchCondition,
         pageable: PageRequest,
-    ): Page<ActivityItem> {
+    ): Page<ActivityView> {
         val condition =
             BooleanBuilder().apply {
                 and(QActivity.activity.activityType.eq(queryData.category.name))
@@ -106,8 +106,7 @@ class ActivityRepositoryImpl(
                 .limit(pageable.pageSize.toLong())
                 .transform(
                     GroupBy.groupBy(QActivity.activity.id).list(
-                        Projections.constructor(
-                            ActivityItem::class.java,
+                        QActivityItem(
                             QActivity.activity.id,
                             QActivity.activity.title,
                             QActivity.activity.organizer.stringValue(),
@@ -117,7 +116,7 @@ class ActivityRepositoryImpl(
                             QActivity.activity.activityThumbnailUrl,
                         ),
                     ),
-                )
+                ).map { it as ActivityView }
 
         val count =
             jpaQueryFactory

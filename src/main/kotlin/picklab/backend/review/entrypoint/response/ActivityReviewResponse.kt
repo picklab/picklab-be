@@ -6,7 +6,6 @@ import picklab.backend.job.domain.enums.JobGroup
 import picklab.backend.participation.domain.enums.ProgressStatus
 import java.time.LocalDateTime
 
-@Suppress("ktlint:standard:comment-wrapping")
 @Schema(description = "리뷰 응답")
 data class ActivityReviewResponse(
     @Schema(description = "리뷰 ID", example = "1")
