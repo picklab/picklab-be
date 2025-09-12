@@ -14,7 +14,6 @@ import picklab.backend.member.domain.service.NotificationPreferenceService
 import picklab.backend.member.entrypoint.request.AdditionalInfoRequest
 import picklab.backend.member.entrypoint.request.MemberWithdrawalRequest
 import picklab.backend.member.entrypoint.request.UpdateInfoRequest
-import picklab.backend.member.entrypoint.request.UpdateProfileImageRequest
 import picklab.backend.member.entrypoint.response.GetSocialLoginsResponse
 import java.time.LocalDateTime
 
@@ -141,12 +140,10 @@ class MemberService(
 
     @Transactional
     fun updateProfileImage(
-        memberId: Long,
-        request: UpdateProfileImageRequest,
+        member: Member,
+        imageUrl: String,
     ) {
-        val member = findActiveMember(memberId)
-
-        member.updateProfileImage(request.profileImage)
+        member.updateProfileImage(imageUrl)
         memberRepository.save(member)
     }
 

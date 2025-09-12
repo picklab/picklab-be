@@ -80,4 +80,12 @@ enum class ErrorCode(
      * 검색 도메인 관련
      */
     SEARCH_HISTORY_NOT_FOUND(HttpStatus.NOT_FOUND, "검색 기록을 찾을 수 없습니다."),
+
+    /**
+     * 파일 업로드 관련
+     */
+    UNSUPPORTED_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "지원하지 않는 파일 확장자입니다."),
+    FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "파일 크기가 최대 허용 크기를 초과했습니다."),
+    NEED_ACTIVITY_ID(HttpStatus.BAD_REQUEST, "아카이브,리뷰 카테고리는 활동 ID가 필요합니다."),
+    FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "파일을 찾을 수 없습니다."),
 }

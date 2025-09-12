@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component
 import picklab.backend.auth.domain.VerificationCodeService
 import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
+import picklab.backend.file.application.FileManagementService
 import picklab.backend.job.domain.enums.JobDetail
 import picklab.backend.job.domain.enums.JobGroup
 import picklab.backend.job.domain.service.JobService
@@ -17,6 +18,7 @@ class MemberUseCase(
     private val jobService: JobService,
     private val mailService: MailService,
     private val verificationCodeService: VerificationCodeService,
+    private val fileManagementService: FileManagementService,
 ) {
     fun updateAdditionalInfo(
         memberId: Long,
@@ -70,7 +72,15 @@ class MemberUseCase(
         memberId: Long,
         request: UpdateProfileImageRequest,
     ) {
-        memberService.updateProfileImage(memberId, request)
+        val member = memberService.findActiveMember(memberId)
+
+        if (member.profileImageUrl.isNotEmpty()) {
+            fileManagementService.deleteFile(member.profileImageUrl)
+        }
+
+        val permanentImageUrl = fileManagementService.verifyTempFileAndMoveToPermanent(request.profileImage)
+
+        memberService.updateProfileImage(member, permanentImageUrl)
     }
 
     fun updateEmail(

@@ -87,6 +87,15 @@ jwt:
     secret: ${JWT_REFRESH_SECRET}
     expiration: 604800000 # 1주일
 
+ncp:
+  cloud:
+    region: ${NCP_REGION}
+    end-point: ${NCP_ENDPOINT}
+    access-key: ${NCP_ACCESS_KEY}
+    secret-key: ${NCP_SECRET_KEY}
+  storage:
+    bucket-name: ${NCP_BUCKET_NAME}
+
 ---
 spring:
   config:
@@ -130,3 +139,12 @@ jwt:
   refresh:
     secret: testRefreshSecrettestRefreshSecret
     expiration: 2000 # 2초
+
+ncp:
+  cloud:
+    region: ap-northeast-2
+    end-point: http://localhost:4566
+    access-key: testAccessKey
+    secret-key: testSecretKey
+  storage:
+    bucket-name: test-bucket

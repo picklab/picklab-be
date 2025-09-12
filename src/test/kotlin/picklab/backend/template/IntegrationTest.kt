@@ -12,7 +12,7 @@ import picklab.backend.helper.CleanUp
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-@Import(TestContainerConfig::class)
+@Import(TestContainerConfig::class, TestS3Config::class)
 abstract class IntegrationTest {
     @Autowired
     protected lateinit var mockMvc: MockMvc

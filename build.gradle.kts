@@ -15,6 +15,8 @@ val jjwtVersion = "0.12.6"
 val queryDSLVersion = "7.0"
 val archUnitVersion = "1.4.1"
 val caffeineCacheVersion = "3.2.2"
+val awsJavaSdkVersion = "2.32.19"
+val localStackContainerVersion = "1.21.3"
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
@@ -51,6 +53,7 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.8")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.springframework.boot:spring-boot-starter-mail")
+    testImplementation("org.testcontainers:localstack:$localStackContainerVersion")
 
     // jjwt
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
@@ -66,6 +69,10 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("com.github.ben-manes.caffeine:caffeine:$caffeineCacheVersion")
+
+    // ncloud object storage
+    implementation(platform("software.amazon.awssdk:bom:$awsJavaSdkVersion"))
+    implementation("software.amazon.awssdk:s3")
 }
 
 kotlin {
