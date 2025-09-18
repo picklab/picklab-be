@@ -1,9 +1,9 @@
 package picklab.backend.search.application
 
+import org.springframework.data.domain.Page
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import picklab.backend.activity.domain.service.ActivityService
-import picklab.backend.common.model.PageResponse
 import picklab.backend.member.domain.MemberService
 import picklab.backend.search.domain.service.MemberSearchHistoryService
 import picklab.backend.search.entrypoint.response.*
@@ -14,11 +14,13 @@ class SearchUseCase(
     private val memberService: MemberService,
     private val memberSearchHistoryService: MemberSearchHistoryService,
 ) {
-
     /**
      * 활동명 자동완성 검색
      */
-    fun getAutocompleteResults(keyword: String, limit: Int): AutocompleteResponse {
+    fun getAutocompleteResults(
+        keyword: String,
+        limit: Int,
+    ): AutocompleteResponse {
         val suggestions = activityService.getActivityTitlesForAutocomplete(keyword, limit)
         return AutocompleteResponse(suggestions)
     }
@@ -27,7 +29,10 @@ class SearchUseCase(
      * 검색 기록 생성
      */
     @Transactional
-    fun createSearchHistory(memberId: Long, keyword: String): SearchHistoryResponse {
+    fun createSearchHistory(
+        memberId: Long,
+        keyword: String,
+    ): SearchHistoryResponse {
         val member = memberService.findActiveMember(memberId)
         val savedHistory = memberSearchHistoryService.createSearchHistory(member, keyword)
 
@@ -35,7 +40,7 @@ class SearchUseCase(
             id = savedHistory.id,
             keyword = savedHistory.keyword,
             searchedAt = savedHistory.searchedAt,
-            createdAt = savedHistory.createdAt
+            createdAt = savedHistory.createdAt,
         )
     }
 
@@ -46,36 +51,38 @@ class SearchUseCase(
     fun getSearchHistory(
         memberId: Long,
         page: Int,
-        size: Int
-    ): PageResponse<SearchHistoryResponse> {
+        size: Int,
+    ): Page<SearchHistoryResponse> {
         val searchHistoryPage = memberSearchHistoryService.getSearchHistory(memberId, page, size)
 
-        val items = searchHistoryPage.map { history ->
+        return searchHistoryPage.map { history ->
             SearchHistoryResponse(
                 id = history.id,
                 keyword = history.keyword,
                 searchedAt = history.searchedAt,
-                createdAt = history.createdAt
+                createdAt = history.createdAt,
             )
         }
-
-        return PageResponse.from(items)
     }
 
     /**
      * 최근 검색어 조회 (최신순)
      */
     @Transactional(readOnly = true)
-    fun getRecentKeywords(memberId: Long, limit: Int): RecentKeywordsResponse {
+    fun getRecentKeywords(
+        memberId: Long,
+        limit: Int,
+    ): RecentKeywordsResponse {
         val searchHistories = memberSearchHistoryService.getRecentKeywords(memberId, limit)
 
-        val keywords = searchHistories.map { history ->
-            RecentKeywordItem(
-                id = history.id,
-                keyword = history.keyword,
-                searchedAt = history.searchedAt
-            )
-        }
+        val keywords =
+            searchHistories.map { history ->
+                RecentKeywordItem(
+                    id = history.id,
+                    keyword = history.keyword,
+                    searchedAt = history.searchedAt,
+                )
+            }
 
         return RecentKeywordsResponse(keywords)
     }
@@ -84,7 +91,10 @@ class SearchUseCase(
      * 개별 검색 기록 삭제
      */
     @Transactional
-    fun deleteSearchHistory(memberId: Long, historyId: Long) {
+    fun deleteSearchHistory(
+        memberId: Long,
+        historyId: Long,
+    ) {
         memberSearchHistoryService.deleteSearchHistory(memberId, historyId)
     }
 

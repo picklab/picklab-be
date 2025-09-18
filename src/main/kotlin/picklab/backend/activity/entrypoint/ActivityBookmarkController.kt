@@ -13,6 +13,7 @@ import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.PageResponse
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.common.model.SuccessCode
+import picklab.backend.common.model.toPageResponse
 
 @RestController
 class ActivityBookmarkController(
@@ -49,6 +50,7 @@ class ActivityBookmarkController(
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>> =
         bookmarkUseCase
             .getBookmarks(request.toCondition(member.memberId))
+            .toPageResponse()
             .let { ResponseWrapper.success(SuccessCode.GET_BOOKMARKS, it) }
             .let { ResponseEntity.status(HttpStatus.OK).body(it) }
 }

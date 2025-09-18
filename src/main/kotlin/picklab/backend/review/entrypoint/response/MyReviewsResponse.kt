@@ -2,7 +2,6 @@ package picklab.backend.review.entrypoint.response
 
 import io.swagger.v3.oas.annotations.media.Schema
 import picklab.backend.activity.domain.enums.OrganizerType
-import picklab.backend.review.application.query.model.MyReviewListView
 import picklab.backend.review.domain.enums.ReviewApprovalStatus
 import java.time.LocalDateTime
 
@@ -20,16 +19,4 @@ data class MyReviewsResponse(
     val createdAt: LocalDateTime,
     @Schema(description = "승인여부 (미승인 / 승인 / 승인 중)", example = "미승인")
     val approvalStatus: ReviewApprovalStatus,
-) {
-    companion object {
-        fun from(item: MyReviewListView): MyReviewsResponse =
-            MyReviewsResponse(
-                id = item.id,
-                title = item.title,
-                organizer = item.organizer,
-                activityType = item.activityType,
-                createdAt = item.createdAt,
-                approvalStatus = item.approvalStatus,
-            )
-    }
-}
+)

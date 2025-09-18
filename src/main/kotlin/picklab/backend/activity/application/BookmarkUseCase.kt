@@ -1,5 +1,6 @@
 package picklab.backend.activity.application
 
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -7,7 +8,6 @@ import picklab.backend.activity.application.model.ActivityItemWithBookmark
 import picklab.backend.activity.application.model.GetMyBookmarkListCondition
 import picklab.backend.activity.domain.service.ActivityBookmarkService
 import picklab.backend.activity.domain.service.ActivityService
-import picklab.backend.common.model.PageResponse
 import picklab.backend.member.domain.MemberService
 
 @Component
@@ -40,20 +40,17 @@ class BookmarkUseCase(
     }
 
     @Transactional(readOnly = true)
-    fun getBookmarks(condition: GetMyBookmarkListCondition): PageResponse<ActivityItemWithBookmark> {
+    fun getBookmarks(condition: GetMyBookmarkListCondition): Page<ActivityItemWithBookmark> {
         val member = memberService.findActiveMember(condition.memberId)
         val pageable = PageRequest.of(condition.page, condition.size)
 
         val bookmarkedActivityPage = activityQueryService.getBookmarkedActivityItems(member.id, condition, pageable)
 
-        val itemPage =
-            bookmarkedActivityPage.map {
-                ActivityItemWithBookmark.from(
-                    item = it,
-                    isBookmarked = true,
-                )
-            }
-
-        return PageResponse.from(itemPage)
+        return bookmarkedActivityPage.map {
+            ActivityItemWithBookmark.from(
+                item = it,
+                isBookmarked = true,
+            )
+        }
     }
 }

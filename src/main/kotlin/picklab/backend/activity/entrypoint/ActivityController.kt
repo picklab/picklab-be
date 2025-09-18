@@ -21,6 +21,7 @@ import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.PageResponse
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.common.model.SuccessCode
+import picklab.backend.common.model.toPageResponse
 
 @RestController
 @RequestMapping("/v1/activities")
@@ -75,7 +76,10 @@ class ActivityController(
         @AuthenticationPrincipal member: MemberPrincipal,
         @Valid @ModelAttribute request: GetActivityPageRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>> {
-        val data = activityUseCase.getRecommendationActivities(request.toRecommendActivitiesCondition(member.memberId))
+        val data =
+            activityUseCase
+                .getRecommendationActivities(request.toRecommendActivitiesCondition(member.memberId))
+                .toPageResponse()
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.GET_ACTIVITIES, data))
     }
 
@@ -86,7 +90,10 @@ class ActivityController(
         val authentication = SecurityContextHolder.getContext().authentication
         val memberId: Long? = (authentication?.principal as? MemberPrincipal)?.memberId
 
-        val data = activityUseCase.getPopularActivities(request.toPopularActivitiesCondition(memberId))
+        val data =
+            activityUseCase
+                .getPopularActivities(request.toPopularActivitiesCondition(memberId))
+                .toPageResponse()
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.GET_ACTIVITIES, data))
     }
 
@@ -96,7 +103,9 @@ class ActivityController(
         @Valid @ModelAttribute request: GetActivityPageRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>> {
         val data =
-            activityUseCase.getRecentlyViewedActivities(request.toRecentlyViewedActivitiesCondition(member.memberId))
+            activityUseCase
+                .getRecentlyViewedActivities(request.toRecentlyViewedActivitiesCondition(member.memberId))
+                .toPageResponse()
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.GET_ACTIVITIES, data))
     }
 }
