@@ -40,8 +40,9 @@ data class AdditionalInfoRequest(
     @field:JsonProperty("interested_job_categories")
     @field:Schema(description = "관심 직무 카테고리")
     val interestedJobCategories: List<JobCategoryDto>,
-){
-    fun toJobGroupDetailMap(): List<Pair<JobGroup, JobDetail>> = this.interestedJobCategories.map {
-        JobGroup.valueOf(it.group) to JobDetail.valueOf(it.detail)
-    }
+) {
+    fun toJobGroupDetailMap(): List<Pair<JobGroup, JobDetail>> =
+        this.interestedJobCategories.map {
+            JobGroup.valueOf(it.group) to JobDetail.valueOf(it.detail)
+        }
 }

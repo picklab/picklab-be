@@ -1,7 +1,5 @@
 package picklab.backend.notification.domain.service
 
-import com.querydsl.core.annotations.QueryEntities
-import jakarta.persistence.Entity
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
@@ -22,9 +20,8 @@ import java.time.LocalDateTime
 class NotificationService(
     private val notificationRepository: NotificationRepository,
     private val memberService: MemberService,
-    private val sseEmitterService: SseEmitterService
+    private val sseEmitterService: SseEmitterService,
 ) {
-
     private val logger = this.logger()
 
     /**
@@ -35,12 +32,13 @@ class NotificationService(
         val receiver = memberService.findActiveMember(request.receiverId)
 
         // 알림 생성
-        val notification = Notification(
-            title = request.title,
-            type = request.type,
-            link = request.link,
-            member = receiver
-        )
+        val notification =
+            Notification(
+                title = request.title,
+                type = request.type,
+                link = request.link,
+                member = receiver,
+            )
 
         // 알림 저장
         val savedNotification = notificationRepository.save(notification)
@@ -59,11 +57,12 @@ class NotificationService(
             val isConnected = sseEmitterService.isUserConnected(notification.member.id)
             if (isConnected) {
                 val response = NotificationResponse.from(notification)
-                val success = sseEmitterService.sendEventToUser(
-                    notification.member.id,
-                    "notification",
-                    response
-                )
+                val success =
+                    sseEmitterService.sendEventToUser(
+                        notification.member.id,
+                        "notification",
+                        response,
+                    )
 
                 if (success) {
                     logger.info("실시간 알림 전송 성공. memberId: ${notification.member.id}, notificationId: ${notification.id}")
@@ -82,10 +81,15 @@ class NotificationService(
      * 특정 사용자의 알림 목록을 조회합니다
      */
     @Transactional(readOnly = true)
-    fun getNotificationsByMemberId(memberId: Long, pageable: Pageable): Page<NotificationResponse> {
-        val notifications = notificationRepository.findByMemberIdOrderByCreatedAtDesc(
-            memberId, pageable
-        )
+    fun getNotificationsByMemberId(
+        memberId: Long,
+        pageable: Pageable,
+    ): Page<NotificationResponse> {
+        val notifications =
+            notificationRepository.findByMemberIdOrderByCreatedAtDesc(
+                memberId,
+                pageable,
+            )
         return notifications.map { NotificationResponse.from(it) }
     }
 
@@ -93,20 +97,29 @@ class NotificationService(
      * 특정 사용자의 최근 n일 내 알림을 조회합니다
      */
     @Transactional(readOnly = true)
-    fun getRecentNotifications(memberId: Long, days: Int): List<NotificationResponse> {
+    fun getRecentNotifications(
+        memberId: Long,
+        days: Int,
+    ): List<NotificationResponse> {
         val cutoffDate = LocalDateTime.now().minusDays(days.toLong())
-        val notifications = notificationRepository.findByMemberIdAndCreatedAtAfterOrderByCreatedAtDesc(
-            memberId, cutoffDate
-        )
+        val notifications =
+            notificationRepository.findByMemberIdAndCreatedAtAfterOrderByCreatedAtDesc(
+                memberId,
+                cutoffDate,
+            )
         return notifications.map { NotificationResponse.from(it) }
     }
 
     /**
      * 알림을 읽음 상태로 변경합니다
      */
-    fun markAsRead(notificationId: Long, memberId: Long): NotificationResponse {
-        val notification = notificationRepository.findByIdAndMemberId(notificationId, memberId)
-            ?: throw BusinessException(ErrorCode.NOTIFICATION_NOT_FOUND)
+    fun markAsRead(
+        notificationId: Long,
+        memberId: Long,
+    ): NotificationResponse {
+        val notification =
+            notificationRepository.findByIdAndMemberId(notificationId, memberId)
+                ?: throw BusinessException(ErrorCode.NOTIFICATION_NOT_FOUND)
 
         notification.isRead = true
         val savedNotification = notificationRepository.save(notification)
@@ -128,7 +141,7 @@ class NotificationService(
                 sseEmitterService.sendEventToUser(
                     notification.member.id,
                     "notification_read",
-                    response
+                    response,
                 )
             }
         } catch (e: Exception) {
@@ -140,6 +153,8 @@ class NotificationService(
      * 특정 사용자의 모든 알림을 읽음 상태로 변경합니다
      */
     fun markAllAsRead(memberId: Long): Int = notificationRepository.markAllAsReadByMemberId(memberId)
+
     fun findAllByMember(member: Member): List<Notification> = notificationRepository.findAllByMember(member)
+
     fun saveAll(entities: List<Notification>): List<Notification> = notificationRepository.saveAll(entities)
 }

@@ -1,6 +1,12 @@
 package picklab.backend.search.domain.entity
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
+import jakarta.persistence.UniqueConstraint
 import org.hibernate.annotations.Comment
 import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
@@ -14,9 +20,9 @@ import java.time.LocalDateTime
     uniqueConstraints = [
         UniqueConstraint(
             name = "uk_member_search_history_member_keyword",
-            columnNames = ["member_id", "keyword"]
-        )
-    ]
+            columnNames = ["member_id", "keyword"],
+        ),
+    ],
 )
 @SQLDelete(sql = "UPDATE member_search_history SET deleted_at = NOW() WHERE id = ?")
 @SQLRestriction("deleted_at IS NULL")
@@ -25,24 +31,23 @@ class MemberSearchHistory(
     @JoinColumn(name = "member_id", nullable = false)
     @Comment("검색한 회원")
     val member: Member,
-    
     @Column(name = "keyword", nullable = false, columnDefinition = "TEXT")
     @Comment("검색 키워드")
     var keyword: String,
-    
     @Column(name = "searched_at", nullable = false)
     @Comment("검색 실행 시간")
     var searchedAt: LocalDateTime = LocalDateTime.now(),
 ) : SoftDeleteEntity() {
-    
     companion object {
-        fun create(member: Member, keyword: String): MemberSearchHistory {
-            return MemberSearchHistory(
+        fun create(
+            member: Member,
+            keyword: String,
+        ): MemberSearchHistory =
+            MemberSearchHistory(
                 member = member,
                 keyword = keyword.trim(),
-                searchedAt = LocalDateTime.now()
+                searchedAt = LocalDateTime.now(),
             )
-        }
     }
 
     /**

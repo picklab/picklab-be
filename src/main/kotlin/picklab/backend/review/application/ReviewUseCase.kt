@@ -82,7 +82,7 @@ class ReviewUseCase(
         page: Int,
         size: Int,
     ): Page<ActivityReviewListView> {
-        val member = memberId?.let { memberService.findActiveMember(it) }
+        memberId?.let { memberService.findActiveMember(it) }
         val activity = activityService.mustFindById(activityId)
         val pageable =
             PageRequest.of(

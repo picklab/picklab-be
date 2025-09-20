@@ -14,33 +14,37 @@ import java.time.LocalDateTime
 
 @Repository
 interface NotificationRepository : JpaRepository<Notification, Long> {
-    
     /**
      * 특정 사용자의 알림 목록을 조회합니다
      */
     fun findByMemberIdOrderByCreatedAtDesc(
         memberId: Long,
-        pageable: Pageable
+        pageable: Pageable,
     ): Page<Notification>
-    
+
     /**
      * 특정 사용자의 특정 알림을 조회합니다
      */
-    fun findByIdAndMemberId(id: Long, memberId: Long): Notification?
-    
+    fun findByIdAndMemberId(
+        id: Long,
+        memberId: Long,
+    ): Notification?
+
     /**
      * 특정 사용자의 모든 읽지 않은 알림을 읽음 상태로 변경합니다
      */
     @Modifying
     @Query("UPDATE Notification n SET n.isRead = true WHERE n.member.id = :memberId AND n.isRead = false")
-    fun markAllAsReadByMemberId(@Param("memberId") memberId: Long): Int
+    fun markAllAsReadByMemberId(
+        @Param("memberId") memberId: Long,
+    ): Int
 
     /**
      * 특정 사용자의 최근 n일 내 알림을 조회합니다
      */
     fun findByMemberIdAndCreatedAtAfterOrderByCreatedAtDesc(
         memberId: Long,
-        createdAt: LocalDateTime
+        createdAt: LocalDateTime,
     ): List<Notification>
 
     /**
@@ -48,13 +52,17 @@ interface NotificationRepository : JpaRepository<Notification, Long> {
      */
     fun findByCreatedAtBeforeOrderByCreatedAtAsc(
         cutoffDate: LocalDateTime,
-        pageable: Pageable
+        pageable: Pageable,
     ): Page<Notification>
 
     @Query(nativeQuery = true, value = "select * from notification where id = :id")
     fun findByIdIgnoreDelete(id: Long): Notification?
 
-    fun findAllByMember(member: Member) : List<Notification>
+    fun findAllByMember(member: Member): List<Notification>
 
-    fun existsByTypeAndReferenceIdAndMemberId(type: NotificationType, referenceId: String, memberId: Long): Boolean
+    fun existsByTypeAndReferenceIdAndMemberId(
+        type: NotificationType,
+        referenceId: String,
+        memberId: Long,
+    ): Boolean
 }

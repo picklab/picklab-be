@@ -9,7 +9,15 @@ import picklab.backend.job.domain.enums.JobDetail
 import picklab.backend.job.domain.enums.JobGroup
 import picklab.backend.job.domain.service.JobService
 import picklab.backend.member.domain.MemberService
-import picklab.backend.member.entrypoint.request.*
+import picklab.backend.member.entrypoint.request.AdditionalInfoRequest
+import picklab.backend.member.entrypoint.request.JobCategoryDto
+import picklab.backend.member.entrypoint.request.MemberWithdrawalRequest
+import picklab.backend.member.entrypoint.request.SendEmailRequest
+import picklab.backend.member.entrypoint.request.ToggleMemberNotificationRequest
+import picklab.backend.member.entrypoint.request.UpdateEmailAgreementRequest
+import picklab.backend.member.entrypoint.request.UpdateInfoRequest
+import picklab.backend.member.entrypoint.request.UpdateProfileImageRequest
+import picklab.backend.member.entrypoint.request.VerifyEmailCodeRequest
 import picklab.backend.member.infrastructure.MailService
 
 @Component

@@ -9,10 +9,10 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import picklab.backend.common.util.logger
+import picklab.backend.notification.domain.config.NotificationProperties
 import picklab.backend.notification.domain.repository.NotificationRepository
 import picklab.backend.notification.domain.service.ActivityDeadlineNotificationService
 import picklab.backend.notification.domain.service.PopularActivityNotificationService
-import picklab.backend.notification.domain.config.NotificationProperties
 import java.sql.SQLException
 import java.time.LocalDateTime
 
@@ -23,7 +23,7 @@ import java.time.LocalDateTime
 @ConditionalOnProperty(
     name = ["app.notification.cleanup.enabled"],
     havingValue = "true",
-    matchIfMissing = true
+    matchIfMissing = true,
 )
 class NotificationScheduler(
     private val notificationRepository: NotificationRepository,
@@ -33,9 +33,8 @@ class NotificationScheduler(
     @Value("\${app.notification.cleanup.retention-days:30}")
     private val retentionDays: Long,
     @Value("\${app.notification.cleanup.batch-size:100}")
-    private val batchSize: Int
+    private val batchSize: Int,
 ) {
-
     private val logger = this.logger()
 
     /**
@@ -47,12 +46,11 @@ class NotificationScheduler(
     fun cleanupOldNotifications() {
         try {
             logger.info("알림 정리 배치 작업 시작")
-            
+
             val cutoffDate = calculateCutoffDate()
             val deletedCount = processCleanupInBatches(cutoffDate)
-            
+
             logger.info("알림 정리 완료: $deletedCount 건 삭제")
-            
         } catch (e: Exception) {
             logger.error("알림 정리 배치 작업 중 오류 발생", e)
             throw e
@@ -64,20 +62,20 @@ class NotificationScheduler(
      */
     private fun processCleanupInBatches(cutoffDate: LocalDateTime): Int {
         var totalDeletedCount = 0
-        
+
         while (true) {
             val pageable: Pageable = PageRequest.of(0, batchSize)
             val notificationsPage = notificationRepository.findByCreatedAtBeforeOrderByCreatedAtAsc(cutoffDate, pageable)
-            
+
             if (notificationsPage.isEmpty) {
                 break
             }
-            
+
             val notifications = notificationsPage.content
             notificationRepository.deleteAll(notifications)
             totalDeletedCount += notifications.size
         }
-        
+
         return totalDeletedCount
     }
 
@@ -93,24 +91,24 @@ class NotificationScheduler(
      */
     @Scheduled(
         cron = "\${app.notification.deadline.schedule:0 0 9 * * *}",
-        zone = "\${app.notification.deadline.timezone:Asia/Seoul}"
+        zone = "\${app.notification.deadline.timezone:Asia/Seoul}",
     )
     @ConditionalOnProperty(
         name = ["app.notification.deadline.enabled"],
         havingValue = "true",
-        matchIfMissing = true
+        matchIfMissing = true,
     )
     @Transactional
     fun sendActivityDeadlineNotifications() {
         val startTime = System.currentTimeMillis()
-        
+
         runCatching {
             logger.info("활동 마감일 알림 배치 작업 시작")
-            
+
             val results = activityDeadlineNotificationService.sendAllConfiguredDeadlineNotifications()
             val totalNotifications = results.values.sum()
             val duration = System.currentTimeMillis() - startTime
-            
+
             if (totalNotifications > 0) {
                 logger.info("활동 마감일 알림 배치 작업 완료: 총 $totalNotifications 건 전송 (소요시간: ${duration}ms)")
                 // 결과 상세 로깅
@@ -122,15 +120,15 @@ class NotificationScheduler(
             } else {
                 logger.info("활동 마감일 알림 배치 작업 완료: 전송할 알림 없음 (소요시간: ${duration}ms)")
             }
-            
         }.onFailure { exception ->
             val duration = System.currentTimeMillis() - startTime
-            val errorType = when (exception) {
-                is IllegalStateException -> "데이터 처리 오류"
-                is DataAccessException -> "데이터베이스 오류"
-                is SQLException -> "SQL 실행 오류"
-                else -> "예상치 못한 오류"
-            }
+            val errorType =
+                when (exception) {
+                    is IllegalStateException -> "데이터 처리 오류"
+                    is DataAccessException -> "데이터베이스 오류"
+                    is SQLException -> "SQL 실행 오류"
+                    else -> "예상치 못한 오류"
+                }
             logger.error("활동 마감일 알림 배치 작업 실패 - $errorType (소요시간: ${duration}ms): ${exception.message}", exception)
         }
     }
@@ -142,38 +140,38 @@ class NotificationScheduler(
      */
     @Scheduled(
         cron = "\${app.notification.popular.schedule:0 0 12 * * *}",
-        zone = "\${app.notification.popular.timezone:Asia/Seoul}"
+        zone = "\${app.notification.popular.timezone:Asia/Seoul}",
     )
     @ConditionalOnProperty(
         name = ["app.notification.popular.enabled"],
         havingValue = "true",
-        matchIfMissing = true
+        matchIfMissing = true,
     )
     @Transactional
     fun sendPopularActivityNotifications() {
         val startTime = System.currentTimeMillis()
-        
+
         runCatching {
             logger.info("인기 공고 알림 배치 작업 시작")
-            
+
             val sentCount = popularActivityNotificationService.sendPopularActivityNotifications()
             val duration = System.currentTimeMillis() - startTime
-            
+
             if (sentCount > 0) {
                 logger.info("인기 공고 알림 배치 작업 완료: $sentCount 건 전송 (소요시간: ${duration}ms)")
             } else {
                 logger.info("인기 공고 알림 배치 작업 완료: 전송할 알림 없음 (소요시간: ${duration}ms)")
             }
-            
         }.onFailure { exception ->
             val duration = System.currentTimeMillis() - startTime
-            val errorType = when (exception) {
-                is IllegalStateException -> "데이터 처리 오류"
-                is DataAccessException -> "데이터베이스 오류"
-                is SQLException -> "SQL 실행 오류"
-                else -> "예상치 못한 오류"
-            }
+            val errorType =
+                when (exception) {
+                    is IllegalStateException -> "데이터 처리 오류"
+                    is DataAccessException -> "데이터베이스 오류"
+                    is SQLException -> "SQL 실행 오류"
+                    else -> "예상치 못한 오류"
+                }
             logger.error("인기 공고 알림 배치 작업 실패 - $errorType (소요시간: ${duration}ms): ${exception.message}", exception)
         }
     }
-} 
+}

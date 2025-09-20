@@ -10,7 +10,6 @@ import java.time.LocalDate
 interface ActivityRepository :
     JpaRepository<Activity, Long>,
     ActivityRepositoryCustom {
-
     /**
      * 특정 모집 종료일에 해당하는 모집 중인 활동들을 조회합니다
      */
@@ -20,11 +19,11 @@ interface ActivityRepository :
         WHERE a.recruitmentEndDate = :targetDate 
         AND a.status = :status 
         ORDER BY a.id ASC
-    """
+    """,
     )
     fun findByRecruitmentEndDateAndStatus(
         @Param("targetDate") targetDate: LocalDate,
-        @Param("status") status: RecruitmentStatus
+        @Param("status") status: RecruitmentStatus,
     ): List<Activity>
 
     /**
@@ -40,7 +39,7 @@ interface ActivityRepository :
         GROUP BY a.id 
         ORDER BY (a.viewCount + COALESCE(COUNT(ab.id), 0)) DESC 
         LIMIT 1
-    """
+    """,
     )
     fun findMostPopularActivity(): Activity?
 }

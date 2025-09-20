@@ -1,6 +1,10 @@
 package picklab.backend.member.domain.entity
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
+import jakarta.persistence.Table
 import org.hibernate.annotations.Comment
 import picklab.backend.common.model.BaseEntity
 import picklab.backend.member.domain.enums.WithdrawalType

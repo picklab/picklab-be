@@ -5,7 +5,11 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
-import picklab.backend.activity.application.model.*
+import picklab.backend.activity.application.model.ActivityItemWithBookmark
+import picklab.backend.activity.application.model.ActivitySearchCondition
+import picklab.backend.activity.application.model.PopularActivitiesCondition
+import picklab.backend.activity.application.model.RecentlyViewedActivitiesCondition
+import picklab.backend.activity.application.model.RecommendActivitiesCondition
 import picklab.backend.activity.domain.service.ActivityBookmarkService
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse

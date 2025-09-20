@@ -15,7 +15,6 @@ import picklab.backend.common.model.ResponseWrapper
 
 @Tag(name = "아카이브 API", description = "아카이브 관련 API 입니다.")
 interface ArchiveApi {
-
     @Operation(
         summary = "아카이브 정보 생성",
         description = "아카이브 정보를 생성 합니다",
@@ -25,7 +24,10 @@ interface ArchiveApi {
             ApiResponse(responseCode = "200", description = "아카이브 생성에 성공했습니다."),
         ],
     )
-    fun create(member: MemberPrincipal, request: ArchiveCreateRequest): ResponseEntity<ResponseWrapper<Unit>>
+    fun create(
+        member: MemberPrincipal,
+        request: ArchiveCreateRequest,
+    ): ResponseEntity<ResponseWrapper<Unit>>
 
     @Operation(
         summary = "아카이브 정보 수정",
@@ -40,6 +42,6 @@ interface ArchiveApi {
     fun update(
         @AuthenticationPrincipal member: MemberPrincipal,
         @PathVariable archiveId: Long,
-        @RequestBody request: ArchiveUpdateRequest
+        @RequestBody request: ArchiveUpdateRequest,
     ): ResponseEntity<ResponseWrapper<Unit>>
 }

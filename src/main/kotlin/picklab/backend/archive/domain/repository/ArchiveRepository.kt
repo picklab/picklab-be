@@ -7,5 +7,8 @@ import picklab.backend.member.domain.entity.Member
 
 @Repository
 interface ArchiveRepository : JpaRepository<Archive, Long> {
-    fun findByIdAndMember(id: Long, member: Member) : Archive?
+    fun findByIdAndMember(
+        id: Long,
+        member: Member,
+    ): Archive?
 }

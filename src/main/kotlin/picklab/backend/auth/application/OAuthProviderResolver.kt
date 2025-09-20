@@ -1,7 +1,11 @@
 package picklab.backend.auth.application
 
 import org.springframework.stereotype.Component
-import picklab.backend.auth.infrastructure.*
+import picklab.backend.auth.infrastructure.GithubOAuthProvider
+import picklab.backend.auth.infrastructure.GoogleOAuthProvider
+import picklab.backend.auth.infrastructure.KakaoOAuthProvider
+import picklab.backend.auth.infrastructure.NaverOAuthProvider
+import picklab.backend.auth.infrastructure.OAuthProvider
 import picklab.backend.member.domain.enums.SocialType
 
 @Component

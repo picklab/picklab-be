@@ -7,15 +7,14 @@ data class AutocompleteRequest(
     @Schema(
         description = "검색 키워드 (앞글자부터 매칭하여 활동명 검색)",
         example = "개발",
-        required = true
+        required = true,
     )
     val keyword: String,
-    
     @Schema(
         description = "반환할 최대 결과 수 (기본값: 10, 최대: 50)",
         example = "10",
         minimum = "1",
-        maximum = "50"
+        maximum = "50",
     )
-    val limit: Int = 10
-) 
+    val limit: Int = 10,
+)

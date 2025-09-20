@@ -15,12 +15,14 @@ import picklab.backend.search.domain.repository.MemberSearchHistoryRepository
 class MemberSearchHistoryService(
     private val memberSearchHistoryRepository: MemberSearchHistoryRepository,
 ) {
-
     /**
      * 검색 기록 생성 또는 업데이트 (upsert)
      */
     @Transactional
-    fun createSearchHistory(member: Member, keyword: String): MemberSearchHistory {
+    fun createSearchHistory(
+        member: Member,
+        keyword: String,
+    ): MemberSearchHistory {
         val trimmedKeyword = keyword.trim()
         if (trimmedKeyword.isEmpty()) {
             throw BusinessException(ErrorCode.INVALID_INPUT_VALUE)
@@ -42,7 +44,11 @@ class MemberSearchHistoryService(
      * 개인 검색 기록 조회 (페이징)
      */
     @Transactional(readOnly = true)
-    fun getSearchHistory(memberId: Long, page: Int, size: Int): Page<MemberSearchHistory> {
+    fun getSearchHistory(
+        memberId: Long,
+        page: Int,
+        size: Int,
+    ): Page<MemberSearchHistory> {
         val pageable = PageRequest.of(page - 1, size)
         return memberSearchHistoryRepository.findByMemberIdOrderBySearchedAtDesc(memberId, pageable)
     }
@@ -51,7 +57,10 @@ class MemberSearchHistoryService(
      * 최근 검색어 조회 (최신순) - unique constraint로 중복 없음
      */
     @Transactional(readOnly = true)
-    fun getRecentKeywords(memberId: Long, limit: Int): List<MemberSearchHistory> {
+    fun getRecentKeywords(
+        memberId: Long,
+        limit: Int,
+    ): List<MemberSearchHistory> {
         val validatedLimit = limit.coerceIn(1, 20)
         val pageable = PageRequest.of(0, validatedLimit)
         return memberSearchHistoryRepository.findByMemberIdOrderBySearchedAtDesc(memberId, pageable).content
@@ -61,9 +70,14 @@ class MemberSearchHistoryService(
      * 검색 기록 조회 (본인 확인)
      */
     @Transactional(readOnly = true)
-    fun findSearchHistoryWithOwnerCheck(memberId: Long, historyId: Long): MemberSearchHistory {
-        val searchHistory = memberSearchHistoryRepository.findById(historyId)
-            .orElseThrow { BusinessException(ErrorCode.SEARCH_HISTORY_NOT_FOUND) }
+    fun findSearchHistoryWithOwnerCheck(
+        memberId: Long,
+        historyId: Long,
+    ): MemberSearchHistory {
+        val searchHistory =
+            memberSearchHistoryRepository
+                .findById(historyId)
+                .orElseThrow { BusinessException(ErrorCode.SEARCH_HISTORY_NOT_FOUND) }
 
         // 본인의 검색 기록인지 확인
         if (searchHistory.member.id != memberId) {
@@ -77,7 +91,10 @@ class MemberSearchHistoryService(
      * 개별 검색 기록 삭제
      */
     @Transactional
-    fun deleteSearchHistory(memberId: Long, historyId: Long) {
+    fun deleteSearchHistory(
+        memberId: Long,
+        historyId: Long,
+    ) {
         val searchHistory = findSearchHistoryWithOwnerCheck(memberId, historyId)
         searchHistory.delete() // SoftDelete
         memberSearchHistoryRepository.save(searchHistory)
@@ -88,12 +105,14 @@ class MemberSearchHistoryService(
      */
     @Transactional
     fun deleteAllSearchHistory(memberId: Long) {
-        val searchHistories = memberSearchHistoryRepository.findByMemberIdOrderBySearchedAtDesc(
-            memberId,
-            Pageable.unpaged()
-        ).content
+        val searchHistories =
+            memberSearchHistoryRepository
+                .findByMemberIdOrderBySearchedAtDesc(
+                    memberId,
+                    Pageable.unpaged(),
+                ).content
 
         searchHistories.forEach { it.delete() }
         memberSearchHistoryRepository.saveAll(searchHistories)
     }
-} 
+}

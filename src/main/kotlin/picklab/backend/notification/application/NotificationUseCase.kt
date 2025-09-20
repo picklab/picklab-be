@@ -15,50 +15,46 @@ import picklab.backend.notification.entrypoint.response.NotificationResponse
 class NotificationUseCase(
     private val notificationService: NotificationService,
     private val sseEmitterService: SseEmitterService,
-    private val memberService: MemberService
+    private val memberService: MemberService,
 ) {
-
     /**
      * SSE 알림 구독
      */
-    fun subscribeNotifications(memberId: Long): SseEmitter {
-        return sseEmitterService.createEmitter(memberId)
-    }
+    fun subscribeNotifications(memberId: Long): SseEmitter = sseEmitterService.createEmitter(memberId)
 
     /**
      * 알림 전송
      */
-    fun sendNotification(request: NotificationCreateRequest): NotificationResponse {
-        return notificationService.createAndSendNotification(request)
-    }
+    fun sendNotification(request: NotificationCreateRequest): NotificationResponse = notificationService.createAndSendNotification(request)
 
     /**
      * 내 알림 목록 조회
      */
-    fun getMyNotifications(memberId: Long, pageable: Pageable): Page<NotificationResponse> {
-        return notificationService.getNotificationsByMemberId(memberId, pageable)
-    }
+    fun getMyNotifications(
+        memberId: Long,
+        pageable: Pageable,
+    ): Page<NotificationResponse> = notificationService.getNotificationsByMemberId(memberId, pageable)
 
     /**
      * 최근 n일 내 알림 조회
      */
-    fun getRecentNotifications(memberId: Long, days: Int): List<NotificationResponse> {
-        return notificationService.getRecentNotifications(memberId, days)
-    }
+    fun getRecentNotifications(
+        memberId: Long,
+        days: Int,
+    ): List<NotificationResponse> = notificationService.getRecentNotifications(memberId, days)
 
     /**
      * 알림 읽음 처리
      */
-    fun markAsRead(notificationId: Long, memberId: Long): NotificationResponse {
-        return notificationService.markAsRead(notificationId, memberId)
-    }
+    fun markAsRead(
+        notificationId: Long,
+        memberId: Long,
+    ): NotificationResponse = notificationService.markAsRead(notificationId, memberId)
 
     /**
      * 모든 알림 읽음 처리
      */
-    fun markAllAsRead(memberId: Long): Int {
-        return notificationService.markAllAsRead(memberId)
-    }
+    fun markAllAsRead(memberId: Long): Int = notificationService.markAllAsRead(memberId)
 
     @Transactional
     fun deleteAllByMember(memberId: Long) {

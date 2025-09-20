@@ -6,7 +6,10 @@ import org.springframework.transaction.annotation.Transactional
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.member.domain.MemberService
 import picklab.backend.search.domain.service.MemberSearchHistoryService
-import picklab.backend.search.entrypoint.response.*
+import picklab.backend.search.entrypoint.response.AutocompleteResponse
+import picklab.backend.search.entrypoint.response.RecentKeywordItem
+import picklab.backend.search.entrypoint.response.RecentKeywordsResponse
+import picklab.backend.search.entrypoint.response.SearchHistoryResponse
 
 @Component
 class SearchUseCase(
@@ -105,4 +108,4 @@ class SearchUseCase(
     fun deleteAllSearchHistory(memberId: Long) {
         memberSearchHistoryService.deleteAllSearchHistory(memberId)
     }
-} 
+}

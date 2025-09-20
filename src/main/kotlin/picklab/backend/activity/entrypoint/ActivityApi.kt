@@ -22,6 +22,7 @@ import picklab.backend.common.model.ResponseWrapper
 
 @Tag(name = "활동 API", description = "활동 관련 API")
 interface ActivityApi {
+    @Suppress("ktlint:standard:max-line-length")
     @Operation(
         summary = "활동 조회",
         description =

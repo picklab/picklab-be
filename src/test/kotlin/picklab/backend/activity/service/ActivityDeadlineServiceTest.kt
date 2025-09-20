@@ -159,4 +159,4 @@ class ActivityDeadlineServiceTest : IntegrationTest() {
             activityField = ActivityFieldType.MENTORING,
             benefit = "테스트 혜택",
         )
-} 
+}

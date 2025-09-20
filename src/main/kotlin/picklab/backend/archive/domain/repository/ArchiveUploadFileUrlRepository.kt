@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository
 import picklab.backend.archive.domain.entity.ArchiveUploadFileUrl
 
 @Repository
-interface ArchiveUploadFileUrlRepository : JpaRepository<ArchiveUploadFileUrl, Long> {
-}
+interface ArchiveUploadFileUrlRepository : JpaRepository<ArchiveUploadFileUrl, Long>
