@@ -54,6 +54,9 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Run ktlintCheck
+        run: ./gradlew ktlintCheck
+
       - name: Run test
         env:
           SPRING_PROFILES_ACTIVE: test
