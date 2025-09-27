@@ -4,10 +4,10 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import picklab.backend.common.model.MemberPrincipal
+import picklab.backend.common.model.PageResponse
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.notification.entrypoint.request.NotificationCreateRequest
 import picklab.backend.notification.entrypoint.response.NotificationResponse
@@ -36,7 +36,7 @@ interface NotificationApi {
     fun getMyNotifications(
         memberPrincipal: MemberPrincipal,
         pageable: Pageable,
-    ): ResponseWrapper<Page<NotificationResponse>>
+    ): ResponseWrapper<PageResponse<NotificationResponse>>
 
     @Operation(
         summary = "최근 n일 내 알림 조회",

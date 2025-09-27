@@ -1,6 +1,5 @@
 package picklab.backend.notification.entrypoint
 
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -13,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import picklab.backend.common.model.MemberPrincipal
+import picklab.backend.common.model.PageResponse
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.common.model.SuccessCode
+import picklab.backend.common.model.toPageResponse
 import picklab.backend.notification.application.NotificationUseCase
 import picklab.backend.notification.entrypoint.request.NotificationCreateRequest
 import picklab.backend.notification.entrypoint.response.NotificationResponse
@@ -40,8 +41,11 @@ class NotificationController(
     override fun getMyNotifications(
         @AuthenticationPrincipal memberPrincipal: MemberPrincipal,
         pageable: Pageable,
-    ): ResponseWrapper<Page<NotificationResponse>> {
-        val notifications = notificationUseCase.getMyNotifications(memberPrincipal.memberId, pageable)
+    ): ResponseWrapper<PageResponse<NotificationResponse>> {
+        val notifications =
+            notificationUseCase
+                .getMyNotifications(memberPrincipal.memberId, pageable)
+                .toPageResponse()
         return ResponseWrapper.success(SuccessCode.GET_NOTIFICATIONS_SUCCESS, notifications)
     }
 
