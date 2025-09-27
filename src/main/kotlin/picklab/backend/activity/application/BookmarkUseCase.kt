@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import picklab.backend.activity.application.mapper.withBookmark
 import picklab.backend.activity.application.model.ActivityItemWithBookmark
 import picklab.backend.activity.application.model.GetMyBookmarkListCondition
 import picklab.backend.activity.domain.service.ActivityBookmarkService
@@ -46,11 +47,6 @@ class BookmarkUseCase(
 
         val bookmarkedActivityPage = activityQueryService.getBookmarkedActivityItems(member.id, condition, pageable)
 
-        return bookmarkedActivityPage.map {
-            ActivityItemWithBookmark.from(
-                item = it,
-                isBookmarked = true,
-            )
-        }
+        return bookmarkedActivityPage.map { it.withBookmark(true) }
     }
 }

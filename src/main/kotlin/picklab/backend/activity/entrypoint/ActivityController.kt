@@ -22,7 +22,6 @@ import picklab.backend.activity.entrypoint.mapper.toRecommendActivitiesCondition
 import picklab.backend.activity.entrypoint.request.ActivitySearchRequest
 import picklab.backend.activity.entrypoint.request.GetActivityPageRequest
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
-import picklab.backend.activity.entrypoint.response.GetActivityListResponse
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.PageResponse
 import picklab.backend.common.model.ResponseWrapper
@@ -40,17 +39,18 @@ class ActivityController(
         @Parameter(description = "데이터 개수")
         @RequestParam(defaultValue = "20") size: Int,
         @Parameter(description = "페이지 번호") @RequestParam(defaultValue = "1") page: Int,
-    ): ResponseEntity<ResponseWrapper<GetActivityListResponse>> {
+    ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>> {
         val authentication = SecurityContextHolder.getContext().authentication
         val memberId: Long? = (authentication?.principal as? MemberPrincipal)?.memberId
 
         val data =
-            activityUseCase.getActivities(
-                queryParams = condition.toCondition(),
-                size = size,
-                page = page,
-                memberId = memberId,
-            )
+            activityUseCase
+                .getActivities(
+                    queryParams = condition.toCondition(),
+                    size = size,
+                    page = page,
+                    memberId = memberId,
+                ).toPageResponse()
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.GET_ACTIVITIES, data))
     }
 
