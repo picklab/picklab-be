@@ -16,7 +16,16 @@ import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.common.model.SuccessCode
 import picklab.backend.member.application.MemberUseCase
-import picklab.backend.member.entrypoint.request.*
+import picklab.backend.member.entrypoint.request.AdditionalInfoRequest
+import picklab.backend.member.entrypoint.request.MemberWithdrawalRequest
+import picklab.backend.member.entrypoint.request.SendEmailRequest
+import picklab.backend.member.entrypoint.request.ToggleMemberNotificationRequest
+import picklab.backend.member.entrypoint.request.UpdateEmailAgreementRequest
+import picklab.backend.member.entrypoint.request.UpdateEmailRequest
+import picklab.backend.member.entrypoint.request.UpdateInfoRequest
+import picklab.backend.member.entrypoint.request.UpdateJobCategoriesRequest
+import picklab.backend.member.entrypoint.request.UpdateProfileImageRequest
+import picklab.backend.member.entrypoint.request.VerifyEmailCodeRequest
 import picklab.backend.member.entrypoint.response.GetSocialLoginsResponse
 
 @RestController

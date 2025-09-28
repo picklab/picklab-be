@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository
 import picklab.backend.archive.domain.entity.ArchiveReferenceUrl
 
 @Repository
-interface ArchiveReferenceUrlRepository : JpaRepository<ArchiveReferenceUrl, Long> {
-}
+interface ArchiveReferenceUrlRepository : JpaRepository<ArchiveReferenceUrl, Long>

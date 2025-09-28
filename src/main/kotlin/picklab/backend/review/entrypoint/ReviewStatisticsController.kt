@@ -9,9 +9,9 @@ import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.common.model.SuccessCode
 import picklab.backend.review.application.ReviewStatisticsUseCase
+import picklab.backend.review.entrypoint.mapper.toResponse
 import picklab.backend.review.entrypoint.response.JobRelevanceStatisticsResponse
 import picklab.backend.review.entrypoint.response.SatisfactionStatisticsResponse
-import picklab.backend.review.entrypoint.response.toResponse
 
 @RestController
 class ReviewStatisticsController(
@@ -34,8 +34,7 @@ class ReviewStatisticsController(
     ): ResponseEntity<ResponseWrapper<SatisfactionStatisticsResponse>> =
         reviewStatisticsUseCase
             .getSatisfactionStatistics(member?.memberId, activityId)
-            .map { it.toResponse() }
-            .let { SatisfactionStatisticsResponse(items = it) }
+            .toResponse()
             .let { ResponseWrapper.success(SuccessCode.GET_SATISFACTION_AVG_SCORES_SUCCESS, it) }
             .let { ResponseEntity.ok(it) }
 }

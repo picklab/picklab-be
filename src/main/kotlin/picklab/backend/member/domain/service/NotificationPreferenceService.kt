@@ -11,23 +11,20 @@ import picklab.backend.member.domain.repository.NotificationPreferenceRepository
 @Service
 @Transactional(readOnly = true)
 class NotificationPreferenceService(
-    private val notificationPreferenceRepository: NotificationPreferenceRepository
+    private val notificationPreferenceRepository: NotificationPreferenceRepository,
 ) {
-
     /**
      * 특정 사용자의 알림 설정을 조회합니다
      */
-    fun getNotificationPreference(memberId: Long): NotificationPreference {
-        return notificationPreferenceRepository.findByMemberId(memberId)
-    }
+    fun getNotificationPreference(memberId: Long): NotificationPreference = notificationPreferenceRepository.findByMemberId(memberId)
 
     /**
      * 여러 사용자의 알림 설정을 배치로 조회합니다 (성능 최적화용)
      */
-    fun getNotificationPreferences(memberIds: List<Long>): Map<Long, NotificationPreference> {
-        return notificationPreferenceRepository.findAllByMemberIdIn(memberIds)
+    fun getNotificationPreferences(memberIds: List<Long>): Map<Long, NotificationPreference> =
+        notificationPreferenceRepository
+            .findAllByMemberIdIn(memberIds)
             .associateBy { it.member.id }
-    }
 
     /**
      * 북마크 알림 수신에 동의한 사용자들만 필터링합니다
@@ -38,19 +35,20 @@ class NotificationPreferenceService(
             .filter { memberId -> preferences[memberId]?.notifyBookmarkedActivity == true }
     }
 
-
     /**
      * 인기 공고 알림 수신에 동의한 사용자들을 페이징으로 조회합니다 (성능 최적화용)
      */
-    fun getMembersWithPopularNotificationEnabledPaged(pageable: Pageable): Page<Long> {
-        return notificationPreferenceRepository.findMemberIdsWithPopularNotificationEnabled(pageable)
-    }
+    fun getMembersWithPopularNotificationEnabledPaged(pageable: Pageable): Page<Long> =
+        notificationPreferenceRepository.findMemberIdsWithPopularNotificationEnabled(pageable)
 
     /**
      * 사용자의 알림 설정을 토글합니다
      */
     @Transactional
-    fun toggleNotification(memberId: Long, type: NotificationType) {
+    fun toggleNotification(
+        memberId: Long,
+        type: NotificationType,
+    ) {
         val preference = getNotificationPreference(memberId)
 
         when (type) {
@@ -63,4 +61,4 @@ class NotificationPreferenceService(
 
     @Transactional
     fun save(entity: NotificationPreference) = notificationPreferenceRepository.save(entity)
-} 
+}

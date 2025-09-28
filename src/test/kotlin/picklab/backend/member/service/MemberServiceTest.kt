@@ -2,7 +2,11 @@ package picklab.backend.member.service
 
 import jakarta.persistence.EntityManager
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import picklab.backend.auth.domain.OAuthUserInfo
 import picklab.backend.common.model.BusinessException
@@ -12,13 +16,28 @@ import picklab.backend.job.domain.entity.JobCategory
 import picklab.backend.job.domain.enums.JobDetail
 import picklab.backend.job.domain.enums.JobGroup
 import picklab.backend.member.domain.MemberService
-import picklab.backend.member.domain.entity.*
+import picklab.backend.member.domain.entity.InterestedJobCategory
+import picklab.backend.member.domain.entity.Member
+import picklab.backend.member.domain.entity.MemberAgreement
+import picklab.backend.member.domain.entity.MemberVerification
+import picklab.backend.member.domain.entity.MemberWithdrawal
+import picklab.backend.member.domain.entity.NotificationPreference
+import picklab.backend.member.domain.entity.SocialLogin
 import picklab.backend.member.domain.enums.EmploymentType
 import picklab.backend.member.domain.enums.NotificationType
 import picklab.backend.member.domain.enums.SocialType
 import picklab.backend.member.domain.enums.WithdrawalType
-import picklab.backend.member.domain.repository.*
-import picklab.backend.member.entrypoint.request.*
+import picklab.backend.member.domain.repository.InterestedJobCategoryRepository
+import picklab.backend.member.domain.repository.MemberAgreementRepository
+import picklab.backend.member.domain.repository.MemberRepository
+import picklab.backend.member.domain.repository.MemberVerificationRepository
+import picklab.backend.member.domain.repository.NotificationPreferenceRepository
+import picklab.backend.member.domain.repository.SocialLoginRepository
+import picklab.backend.member.entrypoint.request.AdditionalInfoRequest
+import picklab.backend.member.entrypoint.request.JobCategoryDto
+import picklab.backend.member.entrypoint.request.MemberWithdrawalRequest
+import picklab.backend.member.entrypoint.request.UpdateInfoRequest
+import picklab.backend.member.entrypoint.request.UpdateProfileImageRequest
 import picklab.backend.template.IntegrationTest
 import java.time.LocalDateTime
 

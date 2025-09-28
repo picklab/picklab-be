@@ -6,6 +6,7 @@ plugins {
     kotlin("plugin.jpa") version "1.9.25"
     id("com.google.devtools.ksp") version "1.9.25-1.0.20"
     jacoco
+    id("org.jlleitschuh.gradle.ktlint") version "13.1.0"
 }
 
 group = "picklab"
@@ -144,6 +145,19 @@ tasks.jacocoTestCoverageVerification {
     }
 }
 
+tasks.named("check").configure { dependsOn("ktlintCheck") }
+
 jacoco {
     toolVersion = "0.8.11"
+}
+
+ktlint {
+    ignoreFailures.set(false)
+    filter {
+        exclude { element ->
+            val p = element.file.path
+            p.contains("${File.separator}build${File.separator}generated${File.separator}") ||
+                p.replace('\\', '/').contains("/build/generated/")
+        }
+    }
 }

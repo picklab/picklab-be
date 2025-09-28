@@ -2,7 +2,10 @@ package picklab.backend
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import picklab.backend.auth.domain.AuthException
 import picklab.backend.auth.infrastructure.GithubUserInfo
 import picklab.backend.auth.infrastructure.GoogleUserInfo

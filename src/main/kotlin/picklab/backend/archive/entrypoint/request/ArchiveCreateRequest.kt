@@ -33,17 +33,21 @@ class ArchiveCreateRequest(
     @field:Schema(description = "상세 역할에서 기타를 선택하여 직접 입력한 역할")
     val customRole: String?,
 ) {
-    fun toCreateEntity(member: Member, activity: Activity): Archive = Archive(
-        member = member,
-        activity = activity,
-        detailRole = detailRole,
-        activityType = activityType,
-        activityRecord = activityRecord,
-        userStartDate = startDate,
-        userEndDate = endDate,
-        role = role,
-        activityProgressStatus = ProgressStatus.IN_PROGRESSING,
-        writeStatus = WriteStatus.IN_PROGRESS,
-        customRole = customRole,
-    )
+    fun toCreateEntity(
+        member: Member,
+        activity: Activity,
+    ): Archive =
+        Archive(
+            member = member,
+            activity = activity,
+            detailRole = detailRole,
+            activityType = activityType,
+            activityRecord = activityRecord,
+            userStartDate = startDate,
+            userEndDate = endDate,
+            role = role,
+            activityProgressStatus = ProgressStatus.IN_PROGRESSING,
+            writeStatus = WriteStatus.IN_PROGRESS,
+            customRole = customRole,
+        )
 }

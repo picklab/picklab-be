@@ -34,8 +34,11 @@ interface FileStoragePort {
     /**
      * 요청된 키들 중 실제 존재하는 것만 영구저장소로 이동합니다.
      * @param requestedKeys 요청된 키 목록
-     * @param availableKeys prefix로 조회된 실제 존재하는 키 목록  
+     * @param availableKeys prefix로 조회된 실제 존재하는 키 목록
      * @return 영구 저장소로 이동된 파일들의 public read URL 목록
      */
-    fun moveValidTempFilesToPermanent(requestedKeys: List<String>, availableKeys: List<String>): List<String>
+    fun moveValidTempFilesToPermanent(
+        requestedKeys: List<String>,
+        availableKeys: List<String>,
+    ): List<String>
 }

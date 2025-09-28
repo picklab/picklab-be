@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.activity.domain.repository.ActivityBookmarkRepository
 import picklab.backend.activity.domain.service.ActivityService
-
 import picklab.backend.common.util.logger
 import picklab.backend.member.domain.MemberService
 import picklab.backend.member.domain.service.NotificationPreferenceService
@@ -25,9 +24,8 @@ class ActivityDeadlineNotificationService(
     private val sseEmitterService: SseEmitterService,
     private val memberService: MemberService,
     private val notificationPreferenceService: NotificationPreferenceService,
-    private val notificationProperties: NotificationProperties
+    private val notificationProperties: NotificationProperties,
 ) {
-
     private val logger = this.logger()
 
     /**
@@ -35,24 +33,28 @@ class ActivityDeadlineNotificationService(
      */
     fun sendAllConfiguredDeadlineNotifications(): Map<Int, Int> {
         logger.info("마감일 알림 전송 시작: ${notificationProperties.deadline.advanceDays} 일 전 대상")
-        
+
         val baseDate = LocalDate.now(ZoneId.of(notificationProperties.deadline.timezone))
-        val results = notificationProperties.deadline.advanceDays.associateWith { days ->
-            val sentCount = sendDeadlineNotificationsForDays(baseDate, days)
-            logger.info("마감 ${days}일 전 알림: $sentCount 건 전송 완료")
-            sentCount
-        }
-        
+        val results =
+            notificationProperties.deadline.advanceDays.associateWith { days ->
+                val sentCount = sendDeadlineNotificationsForDays(baseDate, days)
+                logger.info("마감 ${days}일 전 알림: $sentCount 건 전송 완료")
+                sentCount
+            }
+
         val totalSent = results.values.sum()
         logger.info("마감일 알림 전송 완료: 총 $totalSent 건")
-        
+
         return results
     }
 
     /**
      * 특정 일수 후 마감되는 활동들에 대한 알림을 생성하고 전송합니다
      */
-    fun sendDeadlineNotificationsForDays(baseDate: LocalDate, daysUntilDeadline: Int): Int {
+    fun sendDeadlineNotificationsForDays(
+        baseDate: LocalDate,
+        daysUntilDeadline: Int,
+    ): Int {
         val activities = activityService.getActivitiesEndingInDays(baseDate, daysUntilDeadline)
         return sendDeadlineNotifications(activities, daysUntilDeadline)
     }
@@ -60,16 +62,20 @@ class ActivityDeadlineNotificationService(
     /**
      * 마감일 알림을 생성하고 전송합니다
      */
-    private fun sendDeadlineNotifications(activities: List<Activity>, daysRemaining: Int): Int {
+    private fun sendDeadlineNotifications(
+        activities: List<Activity>,
+        daysRemaining: Int,
+    ): Int {
         if (activities.isEmpty()) {
             return 0
         }
 
         logger.info("마감 ${daysRemaining}일 전 대상 활동: ${activities.size}개")
-        
-        val totalNotificationsSent = activities.sumOf { activity ->
-            sendNotificationForActivity(activity, daysRemaining)
-        }
+
+        val totalNotificationsSent =
+            activities.sumOf { activity ->
+                sendNotificationForActivity(activity, daysRemaining)
+            }
 
         logger.info("마감 ${daysRemaining}일 전 알림: 총 $totalNotificationsSent 건 전송")
         return totalNotificationsSent
@@ -78,7 +84,10 @@ class ActivityDeadlineNotificationService(
     /**
      * 특정 활동에 대한 마감일 알림을 해당 활동을 북마크한 사용자들에게 전송합니다
      */
-    private fun sendNotificationForActivity(activity: Activity, daysRemaining: Int): Int {
+    private fun sendNotificationForActivity(
+        activity: Activity,
+        daysRemaining: Int,
+    ): Int {
         val bookmarks = bookmarkRepository.findAllByActivityId(activity.id)
 
         if (bookmarks.isEmpty()) {
@@ -92,12 +101,13 @@ class ActivityDeadlineNotificationService(
             return 0
         }
 
-        val notifications = eligibleMemberIds.map { memberId ->
-            createDeadlineNotification(activity, memberId, daysRemaining)
-        }
+        val notifications =
+            eligibleMemberIds.map { memberId ->
+                createDeadlineNotification(activity, memberId, daysRemaining)
+            }
 
         val savedNotifications = notificationRepository.saveAll(notifications)
-        
+
         savedNotifications.forEach { notification ->
             sendRealtimeNotification(notification)
         }
@@ -108,12 +118,17 @@ class ActivityDeadlineNotificationService(
     /**
      * 마감일 알림 엔티티를 생성합니다
      */
-    private fun createDeadlineNotification(activity: Activity, memberId: Long, daysRemaining: Int): Notification {
-        val title = if (daysRemaining == 1) {
-            "⏰ 내일 마감! '${activity.title}' 지원 마감 하루 전입니다"
-        } else {
-            "⚠️ ${daysRemaining}일 후 마감! '${activity.title}' 지원 마감이 ${daysRemaining}일 남았습니다"
-        }
+    private fun createDeadlineNotification(
+        activity: Activity,
+        memberId: Long,
+        daysRemaining: Int,
+    ): Notification {
+        val title =
+            if (daysRemaining == 1) {
+                "⏰ 내일 마감! '${activity.title}' 지원 마감 하루 전입니다"
+            } else {
+                "⚠️ ${daysRemaining}일 후 마감! '${activity.title}' 지원 마감이 ${daysRemaining}일 남았습니다"
+            }
 
         val member = memberService.findActiveMember(memberId)
 
@@ -121,7 +136,7 @@ class ActivityDeadlineNotificationService(
             title = title,
             type = NotificationType.ACTIVITY_DEADLINE_REMINDER,
             link = "/activities/${activity.id}",
-            member = member
+            member = member,
         )
     }
 
@@ -134,19 +149,21 @@ class ActivityDeadlineNotificationService(
                 return
             }
 
-            val eventData = mapOf(
-                "id" to notification.id,
-                "title" to notification.title,
-                "type" to notification.type.name,
-                "link" to notification.link,
-                "createdAt" to notification.createdAt
-            )
+            val eventData =
+                mapOf(
+                    "id" to notification.id,
+                    "title" to notification.title,
+                    "type" to notification.type.name,
+                    "link" to notification.link,
+                    "createdAt" to notification.createdAt,
+                )
 
-            val success = sseEmitterService.sendEventToUser(
-                notification.member.id,
-                "deadline_notification",
-                eventData
-            )
+            val success =
+                sseEmitterService.sendEventToUser(
+                    notification.member.id,
+                    "deadline_notification",
+                    eventData,
+                )
 
             if (!success) {
                 logger.warn("실시간 알림 전송 실패: 사용자 ${notification.member.id}")
@@ -155,4 +172,4 @@ class ActivityDeadlineNotificationService(
             logger.warn("실시간 알림 전송 중 오류 (사용자 ${notification.member.id}): ${exception.message}")
         }
     }
-} 
+}

@@ -11,12 +11,16 @@ import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.test.context.bean.override.mockito.MockitoBean
-import org.springframework.test.web.servlet.*
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.delete
+import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.patch
+import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.put
 import org.springframework.web.bind.MethodArgumentNotValidException
 import picklab.backend.common.model.SuccessCode
 import picklab.backend.helper.WithMockUser
 import picklab.backend.member.application.MemberUseCase
-import picklab.backend.member.entrypoint.request.*
 
 @WebMvcTest(MemberController::class)
 class MemberControllerTest {

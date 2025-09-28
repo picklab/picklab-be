@@ -9,7 +9,11 @@ import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.activity.domain.entity.ActivityBookmark
 import picklab.backend.activity.domain.entity.ActivityGroup
 import picklab.backend.activity.domain.entity.ExternalActivity
-import picklab.backend.activity.domain.enums.*
+import picklab.backend.activity.domain.enums.ActivityFieldType
+import picklab.backend.activity.domain.enums.LocationType
+import picklab.backend.activity.domain.enums.OrganizerType
+import picklab.backend.activity.domain.enums.ParticipantType
+import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.activity.domain.repository.ActivityBookmarkRepository
 import picklab.backend.activity.domain.repository.ActivityGroupRepository
 import picklab.backend.activity.domain.repository.ActivityRepository

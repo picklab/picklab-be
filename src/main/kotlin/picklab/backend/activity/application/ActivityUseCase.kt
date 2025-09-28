@@ -1,15 +1,19 @@
 package picklab.backend.activity.application
 
 import jakarta.servlet.http.HttpServletRequest
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
-import picklab.backend.activity.application.model.*
+import picklab.backend.activity.application.mapper.withBookmark
+import picklab.backend.activity.application.model.ActivityItemWithBookmark
+import picklab.backend.activity.application.model.ActivitySearchCondition
+import picklab.backend.activity.application.model.PopularActivitiesCondition
+import picklab.backend.activity.application.model.RecentlyViewedActivitiesCondition
+import picklab.backend.activity.application.model.RecommendActivitiesCondition
 import picklab.backend.activity.domain.service.ActivityBookmarkService
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
-import picklab.backend.activity.entrypoint.response.GetActivityListResponse
-import picklab.backend.common.model.PageResponse
 import picklab.backend.member.domain.MemberService
 import picklab.backend.member.domain.service.MemberActivityViewHistoryService
 
@@ -30,7 +34,7 @@ class ActivityUseCase(
         size: Int,
         page: Int,
         memberId: Long?,
-    ): GetActivityListResponse {
+    ): Page<ActivityItemWithBookmark> {
         val pageable = PageRequest.of(page - 1, size)
         val queryData = activityService.adjustQueryByCategory(queryParams)
 
@@ -40,27 +44,14 @@ class ActivityUseCase(
                 pageable = pageable,
             )
 
-        val activityItems = activityPage.content
-        val activityIds = activityItems.map { it.id }
+        val activityIds = activityPage.content.map { it.id }
 
         val bookmarkedActivityIds =
             activityBookmarkService.getMyBookmarkedActivityIds(
                 memberId = memberId,
                 activityIds = activityIds,
             )
-
-        val items =
-            activityItems.map {
-                ActivityItemWithBookmark.from(
-                    item = it,
-                    isBookmarked = bookmarkedActivityIds.contains(it.id),
-                )
-            }
-
-        return GetActivityListResponse.from(
-            activityPage = activityPage,
-            items = items,
-        )
+        return activityPage.map { it.withBookmark(it.id in bookmarkedActivityIds) }
     }
 
     /**
@@ -112,7 +103,7 @@ class ActivityUseCase(
     /**
      * 사용자의 직무에 해당하는 추천 활동을 조회합니다.
      */
-    fun getRecommendationActivities(condition: RecommendActivitiesCondition): PageResponse<ActivityItemWithBookmark> {
+    fun getRecommendationActivities(condition: RecommendActivitiesCondition): Page<ActivityItemWithBookmark> {
         val member = memberService.findActiveMember(condition.memberId)
 
         val pageable = PageRequest.of(condition.page - 1, condition.size)
@@ -128,15 +119,7 @@ class ActivityUseCase(
                 activityIds = activityIds,
             )
 
-        val itemsPage =
-            activityPage.map {
-                ActivityItemWithBookmark.from(
-                    item = it,
-                    isBookmarked = bookmarkedActivityIds.contains(it.id),
-                )
-            }
-
-        return PageResponse.from(itemsPage)
+        return activityPage.map { it.withBookmark(it.id in bookmarkedActivityIds) }
     }
 
     /**
@@ -144,7 +127,7 @@ class ActivityUseCase(
      * 인기도는 조회수와 북마크 수를 합산하여 계산합니다.
      */
     @Transactional(readOnly = true)
-    fun getPopularActivities(condition: PopularActivitiesCondition): PageResponse<ActivityItemWithBookmark> {
+    fun getPopularActivities(condition: PopularActivitiesCondition): Page<ActivityItemWithBookmark> {
         val pageable = PageRequest.of(condition.page - 1, condition.size)
 
         val activityPage = activityService.getPopularActivities(pageable)
@@ -155,22 +138,14 @@ class ActivityUseCase(
                 ?.let { activityBookmarkService.getMyBookmarkedActivityIds(it, activityIds) }
                 ?: emptySet()
 
-        val itemsPage =
-            activityPage.map {
-                ActivityItemWithBookmark.from(
-                    item = it,
-                    isBookmarked = bookmarkedActivityIds.contains(it.id),
-                )
-            }
-
-        return PageResponse.from(itemsPage)
+        return activityPage.map { it.withBookmark(it.id in bookmarkedActivityIds) }
     }
 
     /**
      * 사용자가 최근에 조회한 활동들을 조회합니다.
      */
     @Transactional(readOnly = true)
-    fun getRecentlyViewedActivities(condition: RecentlyViewedActivitiesCondition): PageResponse<ActivityItemWithBookmark> {
+    fun getRecentlyViewedActivities(condition: RecentlyViewedActivitiesCondition): Page<ActivityItemWithBookmark> {
         val pageable = PageRequest.of(condition.page - 1, condition.size)
 
         val activityPage = activityQueryService.getRecentlyViewedActivities(condition.memberId, pageable)
@@ -179,14 +154,6 @@ class ActivityUseCase(
         val bookmarkedActivityIds: Set<Long> =
             activityBookmarkService.getMyBookmarkedActivityIds(condition.memberId, activityIds)
 
-        val itemsPage =
-            activityPage.map {
-                ActivityItemWithBookmark.from(
-                    item = it,
-                    isBookmarked = bookmarkedActivityIds.contains(it.id),
-                )
-            }
-
-        return PageResponse.from(itemsPage)
+        return activityPage.map { it.withBookmark(it.id in bookmarkedActivityIds) }
     }
 }

@@ -1,5 +1,6 @@
 package picklab.backend.review.application
 
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Component
@@ -7,21 +8,21 @@ import org.springframework.transaction.annotation.Transactional
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
-import picklab.backend.common.model.PageResponse
 import picklab.backend.job.domain.service.JobService
 import picklab.backend.member.domain.MemberService
 import picklab.backend.participation.domain.service.ActivityParticipationService
-import picklab.backend.review.application.mapper.toResponse
+import picklab.backend.review.application.mapper.toDetailView
+import picklab.backend.review.application.mapper.toEntity
 import picklab.backend.review.application.model.ActivityReviewListQueryRequest
 import picklab.backend.review.application.model.MyReviewListQueryRequest
 import picklab.backend.review.application.model.ReviewCreateCommand
 import picklab.backend.review.application.model.ReviewUpdateCommand
+import picklab.backend.review.application.query.model.ActivityReviewListView
+import picklab.backend.review.application.query.model.MyReviewDetailView
+import picklab.backend.review.application.query.model.MyReviewListView
 import picklab.backend.review.application.service.ReviewOverviewQueryService
 import picklab.backend.review.domain.policy.ReviewApprovalDecider
 import picklab.backend.review.domain.service.ReviewService
-import picklab.backend.review.entrypoint.response.ActivityReviewResponse
-import picklab.backend.review.entrypoint.response.MyReviewResponse
-import picklab.backend.review.entrypoint.response.MyReviewsResponse
 
 @Component
 class ReviewUseCase(
@@ -29,7 +30,6 @@ class ReviewUseCase(
     private val memberService: MemberService,
     private val activityService: ActivityService,
     private val activityParticipationService: ActivityParticipationService,
-    private val reviewCreateConverter: ReviewCreateConverter,
     private val reviewOverviewQueryService: ReviewOverviewQueryService,
     private val jobService: JobService,
 ) {
@@ -47,24 +47,23 @@ class ReviewUseCase(
             jobService.getJobCategoryByGroupAndDetail(command.jobGroup, command.jobDetail)
                 ?: throw BusinessException(ErrorCode.JOB_CATEGORY_NOT_FOUND)
         val approvalStatus = ReviewApprovalDecider.decideOnCreate(command.url)
-        val review = reviewCreateConverter.toEntity(command, approvalStatus, member, activity, jobCategory)
-        reviewService.save(review)
+        reviewService.save(command.toEntity(approvalStatus, member, activity, jobCategory))
     }
 
     @Transactional(readOnly = true)
     fun getMyReview(
         id: Long,
         memberId: Long,
-    ): MyReviewResponse {
+    ): MyReviewDetailView {
         val review = reviewService.mustFindById(id)
         val member = memberService.findActiveMember(memberId)
         if (member.id != review.member.id) {
             throw BusinessException(ErrorCode.CANNOT_READ_REVIEW)
         }
-        return MyReviewResponse.from(review, review.jobCategory)
+        return review.toDetailView()
     }
 
-    fun getMyReviews(req: MyReviewListQueryRequest): PageResponse<MyReviewsResponse> {
+    fun getMyReviews(req: MyReviewListQueryRequest): Page<MyReviewListView> {
         val member = memberService.findActiveMember(req.memberId)
         val pageable =
             PageRequest.of(
@@ -72,10 +71,8 @@ class ReviewUseCase(
                 req.size,
                 Sort.by("createdAt").descending(),
             )
-        val views = reviewOverviewQueryService.findMyReviews(member.id, pageable)
-        val responsePage = views.map { MyReviewsResponse.from(it) }
 
-        return PageResponse.from(responsePage)
+        return reviewOverviewQueryService.findMyReviews(member.id, pageable)
     }
 
     fun getReviewsByActivity(
@@ -84,8 +81,8 @@ class ReviewUseCase(
         memberId: Long?,
         page: Int,
         size: Int,
-    ): PageResponse<ActivityReviewResponse> {
-        val member = memberId?.let { memberService.findActiveMember(it) }
+    ): Page<ActivityReviewListView> {
+        memberId?.let { memberService.findActiveMember(it) }
         val activity = activityService.mustFindById(activityId)
         val pageable =
             PageRequest.of(
@@ -93,13 +90,8 @@ class ReviewUseCase(
                 size,
                 Sort.by("createdAt").descending(),
             )
-        val views =
-            reviewOverviewQueryService
-                .findActivityReviews(request, activity.id, pageable)
-        val isLoggedIn = member != null
-        val responsePage = views.map { it.toResponse(isLoggedIn) }
-
-        return PageResponse.from(responsePage)
+        return reviewOverviewQueryService
+            .findActivityReviews(request, activity.id, pageable)
     }
 
     @Transactional

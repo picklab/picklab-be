@@ -12,12 +12,13 @@ import picklab.backend.member.domain.entity.Member
 class ArchiveService(
     private val archiveRepository: ArchiveRepository,
 ) {
-
     @Transactional
-    fun save(entity: Archive): Archive {
-        return archiveRepository.save(entity)
-    }
+    fun save(entity: Archive): Archive = archiveRepository.save(entity)
 
-    fun mustFindByIdAndMember(archiveId: Long, member: Member): Archive = archiveRepository
-        .findByIdAndMember(archiveId, member) ?: throw BusinessException(ErrorCode.NOT_FOUND_ARCHIVE)
+    fun mustFindByIdAndMember(
+        archiveId: Long,
+        member: Member,
+    ): Archive =
+        archiveRepository
+            .findByIdAndMember(archiveId, member) ?: throw BusinessException(ErrorCode.NOT_FOUND_ARCHIVE)
 }

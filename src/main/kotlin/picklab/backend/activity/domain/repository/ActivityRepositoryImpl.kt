@@ -13,7 +13,12 @@ import picklab.backend.activity.application.model.ActivitySearchCondition
 import picklab.backend.activity.application.model.ActivityView
 import picklab.backend.activity.domain.entity.QActivity
 import picklab.backend.activity.domain.entity.QActivityJobCategory
-import picklab.backend.activity.domain.enums.*
+import picklab.backend.activity.domain.enums.ActivityFieldType
+import picklab.backend.activity.domain.enums.ActivitySortType
+import picklab.backend.activity.domain.enums.DomainType
+import picklab.backend.activity.domain.enums.EducationCostType
+import picklab.backend.activity.domain.enums.EducationFormatType
+import picklab.backend.activity.domain.enums.LocationType
 import picklab.backend.activity.infrastructure.QActivityItem
 import picklab.backend.job.domain.entity.QJobCategory
 import java.time.LocalDate

@@ -10,7 +10,16 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.RequestBody
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.ResponseWrapper
-import picklab.backend.member.entrypoint.request.*
+import picklab.backend.member.entrypoint.request.AdditionalInfoRequest
+import picklab.backend.member.entrypoint.request.MemberWithdrawalRequest
+import picklab.backend.member.entrypoint.request.SendEmailRequest
+import picklab.backend.member.entrypoint.request.ToggleMemberNotificationRequest
+import picklab.backend.member.entrypoint.request.UpdateEmailAgreementRequest
+import picklab.backend.member.entrypoint.request.UpdateEmailRequest
+import picklab.backend.member.entrypoint.request.UpdateInfoRequest
+import picklab.backend.member.entrypoint.request.UpdateJobCategoriesRequest
+import picklab.backend.member.entrypoint.request.UpdateProfileImageRequest
+import picklab.backend.member.entrypoint.request.VerifyEmailCodeRequest
 import picklab.backend.member.entrypoint.response.GetSocialLoginsResponse
 
 @Tag(name = "회원 API", description = "회원 관련 작업을 하는 API")

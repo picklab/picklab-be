@@ -39,9 +39,6 @@ class UpdateReviewUnitTest {
     lateinit var activityParticipationService: ActivityParticipationService
 
     @MockK
-    lateinit var reviewCreateConverter: ReviewCreateConverter
-
-    @MockK
     lateinit var reviewOverviewQueryService: ReviewOverviewQueryService
 
     @MockK

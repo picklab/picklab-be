@@ -15,13 +15,13 @@ import picklab.backend.activity.application.model.ActivityItemWithBookmark
 import picklab.backend.activity.entrypoint.request.ActivitySearchRequest
 import picklab.backend.activity.entrypoint.request.GetActivityPageRequest
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
-import picklab.backend.activity.entrypoint.response.GetActivityListResponse
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.PageResponse
 import picklab.backend.common.model.ResponseWrapper
 
 @Tag(name = "활동 API", description = "활동 관련 API")
 interface ActivityApi {
+    @Suppress("ktlint:standard:max-line-length")
     @Operation(
         summary = "활동 조회",
         description =
@@ -57,7 +57,7 @@ interface ActivityApi {
         @Parameter(description = "데이터 개수")
         @RequestParam(defaultValue = "20") size: Int,
         @Parameter(description = "페이지 번호") @RequestParam(defaultValue = "1") page: Int,
-    ): ResponseEntity<ResponseWrapper<GetActivityListResponse>>
+    ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>>
 
     @Operation(
         summary = "활동 페이지 상세 조회",

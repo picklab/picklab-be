@@ -14,15 +14,15 @@ data class PageResponse<T>(
     val totalPages: Int,
     @Schema(description = "전체 요소 개수")
     val totalElements: Long,
-) {
-    companion object {
-        fun <T> from(page: Page<T>): PageResponse<T> =
-            PageResponse(
-                items = page.content,
-                page = page.number + 1,
-                size = page.size,
-                totalPages = page.totalPages,
-                totalElements = page.totalElements,
-            )
-    }
-}
+)
+
+fun <T, R> Page<T>.toPageResponse(mapper: (T) -> R): PageResponse<R> =
+    PageResponse(
+        items = this.map(mapper).content,
+        page = this.number + 1,
+        size = this.size,
+        totalPages = this.totalPages,
+        totalElements = this.totalElements,
+    )
+
+fun <R> Page<R>.toPageResponse(): PageResponse<R> = toPageResponse { it }

@@ -1,6 +1,11 @@
 package picklab.backend.member.domain.entity
 
-import jakarta.persistence.*
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.Table
+import jakarta.persistence.UniqueConstraint
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.common.model.BaseEntity
 

@@ -70,7 +70,6 @@ class Archive(
     @Column(name = "pass_or_fail_status", nullable = false)
     var passOrFailStatus: PassOrFailStatus = PassOrFailStatus.FAIL,
 ) : SoftDeleteEntity() {
-
     fun update(
         activityProgressStatus: ProgressStatus = this.activityProgressStatus,
         passOrFailStatus: PassOrFailStatus = this.passOrFailStatus,
