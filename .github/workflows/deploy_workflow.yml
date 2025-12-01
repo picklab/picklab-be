@@ -16,6 +16,7 @@ on:
         default: 'warning'
       tags:
         description: 'Test tags'
+
 permissions:
   contents: read
 
@@ -41,64 +42,142 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Login to Docker Hub
+      - name: Login to OCI Container Registry
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_TOKEN }}
+          registry: us-phoenix-1.ocir.io
+          username: ${{ secrets.OCI_TENANCY_NAMESPACE }}/${{ secrets.OCI_USERNAME }}
+          password: ${{ secrets.OCI_AUTH_TOKEN }}
 
-      - name: build docker
-        run: ./gradlew bootBuildImage --imageName=${{ secrets.DOCKER_REPO }}:${{ github.event.workflow_run.head_sha || github.sha }}
-
-      - name: Tag Version
+      - name: Build Docker Image with Gradle
         run: |
-          docker tag ${{ secrets.DOCKER_REPO }}:${{ github.event.workflow_run.head_sha || github.sha }} ${{ secrets.DOCKER_REPO }}:latest
+          ./gradlew bootBuildImage \
+            --imageName=us-phoenix-1.ocir.io/${{ secrets.OCI_TENANCY_NAMESPACE }}/picklab-be:${{ github.sha }}
 
-      - name: Publish Docker Images
+      - name: Tag as latest
         run: |
-          docker push ${{ secrets.DOCKER_REPO }}:latest
-          docker push ${{ secrets.DOCKER_REPO }}:${{ github.event.workflow_run.head_sha || github.sha }}
+          docker tag us-phoenix-1.ocir.io/${{ secrets.OCI_TENANCY_NAMESPACE }}/picklab-be:${{ github.sha }} \
+                     us-phoenix-1.ocir.io/${{ secrets.OCI_TENANCY_NAMESPACE }}/picklab-be:latest
 
-  deploy-to-ncp:
+      - name: Push Docker Images to OCI Registry
+        run: |
+          docker push us-phoenix-1.ocir.io/${{ secrets.OCI_TENANCY_NAMESPACE }}/picklab-be:${{ github.sha }}
+          docker push us-phoenix-1.ocir.io/${{ secrets.OCI_TENANCY_NAMESPACE }}/picklab-be:latest
+
+  deploy-via-bastion:
     needs: docker-build-push
-    name: Deploy to NCP Server
+    name: Deploy via Bastion
     runs-on: ubuntu-latest
+
+    env:
+      OCI_CLI_USER: ${{ secrets.OCI_USER_OCID }}
+      OCI_CLI_TENANCY: ${{ secrets.OCI_TENANCY_OCID }}
+      OCI_CLI_FINGERPRINT: ${{ secrets.OCI_FINGERPRINT }}
+      OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_PRIVATE_KEY }}
+      OCI_CLI_REGION: us-phoenix-1
+
     steps:
-      - name: Checkout Repository with submodules for deploy files
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          token: ${{ secrets.PRIVATE_REPO_TOKEN }}
+      - name: Install OCI CLI
+        run: |
+          curl -L -O https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh
+          chmod +x install.sh
+          ./install.sh --accept-all-defaults
+          echo "$HOME/bin" >> $GITHUB_PATH
 
-      - name: Copy deploy files to NCP server
-        uses: appleboy/scp-action@v1.0.0
-        with:
-          host: ${{ secrets.NCP_SERVER_IP }}
-          username: ${{ secrets.NCP_USERNAME }}
-          key: ${{ secrets.NCP_SSH_PRIVATE_KEY }}
-          port: ${{ secrets.NCP_SSH_PORT }}
-          source: ${{ secrets.DEPLOY_SCRIPT_PATH }}
-          target: "."
-          strip_components: 4
+      - name: Configure OCI CLI
+        run: |
+          mkdir -p ~/.oci
+          echo "${{ secrets.OCI_PRIVATE_KEY }}" > ~/.oci/oci_api_key.pem
+          chmod 600 ~/.oci/oci_api_key.pem
 
-      - name: Deploy to NCP Server
-        uses: appleboy/ssh-action@v1.2.2
-        with:
-          host: ${{ secrets.NCP_SERVER_IP }}
-          username: ${{ secrets.NCP_USERNAME }}
-          key: ${{ secrets.NCP_SSH_PRIVATE_KEY }}
-          port: ${{ secrets.NCP_SSH_PORT }}
-          script: |
-            chmod +x ${{ secrets.DEPLOY_FILE }} && \
-            bash ${{ secrets.DEPLOY_FILE }} \
-              ${{ secrets.APP_NAME }} \
-              ${{ secrets.DOCKER_REPO }} \
-              ${{ github.event.workflow_run.head_sha || github.sha }}
+      - name: Setup SSH
+        run: |
+          ssh-keygen -b 2048 -t rsa -f ~/.ssh/id_rsa -q -N ""
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Create Managed SSH Session
+        run: |
+          echo "Creating bastion managed SSH session..."
+          oci bastion session create-managed-ssh \
+            --bastion-id ${{ secrets.OCI_BASTION_OCID }} \
+            --display-name "github-deploy-${{ github.run_id }}" \
+            --ssh-public-key-file ~/.ssh/id_rsa.pub \
+            --key-type PUB \
+            --target-resource-id ${{ secrets.OCI_INSTANCE_OCID }} \
+            --target-os-username ubuntu \
+            --session-ttl 10800 > ~/bastion_session.json
+
+          SESSION_ID=$(jq -r '.data.id' ~/bastion_session.json)
+          echo "Session ID: $SESSION_ID"
+
+          for i in {1..60}; do
+            STATE=$(oci bastion session get \
+              --session-id $SESSION_ID \
+              --query 'data."lifecycle-state"' \
+              --raw-output)
+
+            echo "Attempt $i/60: $STATE"
+
+            if [ "$STATE" = "ACTIVE" ]; then
+              echo "✓ Session active"
+              break
+            fi
+
+            if [ $i -eq 60 ]; then
+              echo "✗ Timeout"
+              exit 1
+            fi
+
+            sleep 5
+          done
+
+          echo "bastion_session_ocid=$SESSION_ID" >> "$GITHUB_ENV"
+
+      - name: Deploy Application
+        run: |
+          ssh -i ~/.ssh/id_rsa \
+            -o ProxyCommand="ssh -i ~/.ssh/id_rsa -W %h:%p -p 22 -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedKeyTypes=+ssh-rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ env.bastion_session_ocid }}@host.bastion.us-phoenix-1.oci.oraclecloud.com" \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            -p 22 \
+            ubuntu@${{ secrets.OCI_INSTANCE_PRIVATE_IP }} << 'ENDSSH'
+          
+          set -e
+          
+          echo '${{ secrets.OCI_AUTH_TOKEN }}' | docker login us-phoenix-1.ocir.io \
+            -u ${{ secrets.OCI_TENANCY_NAMESPACE }}/${{ secrets.OCI_USERNAME }} --password-stdin
+          
+          APP_NAME=picklab-be
+          DOCKER_REPO=us-phoenix-1.ocir.io/${{ secrets.OCI_TENANCY_NAMESPACE }}/picklab-be
+          IMAGE_TAG=${{ github.sha }}
+          
+          sudo docker stop $APP_NAME || true
+          sudo docker rm $APP_NAME || true
+          sudo docker image prune -f
+          sudo docker pull $DOCKER_REPO:$IMAGE_TAG
+          
+          sudo docker run -d --name $APP_NAME \
+            -v /etc/localtime:/etc/localtime:ro \
+            -e TZ=Asia/Seoul \
+            -e SPRING_PROFILES_ACTIVE=prod \
+            -p 8080:8080 \
+            --memory=1g --memory-swap=1g \
+            $DOCKER_REPO:$IMAGE_TAG
+          ENDSSH
+
+      - name: Cleanup Bastion Session
+        if: always()
+        run: |
+          if [ -n "${{ env.bastion_session_ocid }}" ]; then
+            oci bastion session delete \
+              --session-id ${{ env.bastion_session_ocid }} \
+              --force || true
+          fi
 
   notify-deploy-statement:
     name: Discord Notification for Deployment Result
     runs-on: ubuntu-latest
-    needs: [ docker-build-push, deploy-to-ncp ]
+    needs: [ docker-build-push, deploy-via-bastion ]
     if: always()
     steps:
       - name: Notify Discord
@@ -106,8 +185,9 @@ jobs:
         with:
           webhook: ${{ secrets.DEPLOY_WEBHOOK_URL }}
           status: ${{ job.status }}
-          title: "PickLab BE 배포"
+          title: "PickLab BE 배포 (OCI via Bastion)"
           description: |
             Repository: ${{ github.repository }}
-            Commit: ${{ github.event.workflow_run.head_sha || github.sha }}
-            ${{ needs.deploy-to-ncp.result == 'success' && '✅ 배포 성공!' || '❌ 배포 실패!' }}
+            Commit: ${{ github.sha }}
+            Target: OCI Compute Instance
+            ${{ needs.deploy-via-bastion.result == 'success' && '✅ 배포 성공!' || '❌ 배포 실패!' }}
