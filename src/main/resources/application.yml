@@ -87,14 +87,14 @@ jwt:
     secret: ${JWT_REFRESH_SECRET}
     expiration: 604800000 # 1주일
 
-ncp:
+oci:
   cloud:
-    region: ${NCP_REGION}
-    end-point: ${NCP_ENDPOINT}
-    access-key: ${NCP_ACCESS_KEY}
-    secret-key: ${NCP_SECRET_KEY}
+    region: ${OCI_REGION:us-phoenix-1}
+    end-point: "https://${OCI_NAMESPACE}.compat.objectstorage.${OCI_REGION}.oraclecloud.com"
+    access-key: ${OCI_ACCESS_KEY}
+    secret-key: ${OCI_SECRET_KEY}
   storage:
-    bucket-name: ${NCP_BUCKET_NAME}
+    bucket-name: ${OCI_BUCKET_NAME}
 
 ---
 spring:
@@ -140,7 +140,7 @@ jwt:
     secret: testRefreshSecrettestRefreshSecret
     expiration: 2000 # 2초
 
-ncp:
+oci:
   cloud:
     region: ap-northeast-2
     end-point: http://localhost:4566

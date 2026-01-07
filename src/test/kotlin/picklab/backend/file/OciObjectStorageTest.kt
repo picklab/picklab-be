@@ -22,8 +22,8 @@ import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 
-class NcpObjectStorageTest(
-    @Value("\${ncp.storage.bucket-name}")
+class OciObjectStorageTest(
+    @Value("\${oci.storage.bucket-name}")
     private val testBucketName: String,
 ) : IntegrationTest() {
     @Autowired

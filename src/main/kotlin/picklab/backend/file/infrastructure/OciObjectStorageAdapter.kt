@@ -12,19 +12,18 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException
-import software.amazon.awssdk.services.s3.model.ObjectCannedACL
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import software.amazon.awssdk.services.s3.presigner.S3Presigner
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest
 import java.time.Duration
 
 @Service
-class NCPObjectStorageAdapter(
+class OciObjectStorageAdapter(
     private val presigner: S3Presigner,
     private val s3client: S3Client,
-    @Value("\${ncp.cloud.end-point:https://kr.object.ncloudstorage.com}")
+    @Value("\${oci.cloud.end-point}")
     private val endPoint: String,
-    @Value("\${ncp.storage.bucket-name}")
+    @Value("\${oci.storage.bucket-name}")
     private val bucketName: String,
 ) : FileStoragePort {
     val logger = logger()
@@ -40,8 +39,7 @@ class NCPObjectStorageAdapter(
                 .bucket(bucketName)
                 .key(key)
                 .contentType(contentType)
-                .contentLength(fileSize)
-                .acl(ObjectCannedACL.PUBLIC_READ)
+                // OCI가 ACL을 지원하지 않을 수 있어서 ACL 제거.
                 .build()
 
         val presignRequest =
@@ -82,7 +80,7 @@ class NCPObjectStorageAdapter(
                     .sourceKey(key)
                     .destinationBucket(bucketName)
                     .destinationKey(permanentKey)
-                    .acl(ObjectCannedACL.PUBLIC_READ)
+                    // OCI가 ACL을 지원하지 않을 수 있어서 ACL 제거.
                     .build()
 
             s3client.copyObject(copyRequest)
