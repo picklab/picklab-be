@@ -55,6 +55,7 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.springframework.boot:spring-boot-starter-mail")
     testImplementation("org.testcontainers:localstack:$localStackContainerVersion")
+    testImplementation("org.testcontainers:testcontainers:2.0.2")
 
     // jjwt
     implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
