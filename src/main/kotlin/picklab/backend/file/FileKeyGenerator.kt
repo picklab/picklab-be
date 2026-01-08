@@ -10,7 +10,7 @@ import java.util.*
 
 @Component
 class FileKeyGenerator(
-    @Value("\${ncp.storage.bucket-name}")
+    @Value("\${oci.storage.bucket-name}")
     private val bucketName: String,
 ) {
     /**

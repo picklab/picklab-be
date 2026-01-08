@@ -9,20 +9,21 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider
 import software.amazon.awssdk.regions.Region
 import software.amazon.awssdk.services.s3.S3Client
+import software.amazon.awssdk.services.s3.S3Configuration
 import software.amazon.awssdk.services.s3.presigner.S3Presigner
 
 @TestConfiguration(proxyBeanMethods = false)
 class TestS3Config(
-    @Value("\${ncp.cloud.access-key}")
+    @Value("\${oci.cloud.access-key}")
     private val accessKey: String,
-    @Value("\${ncp.cloud.secret-key}")
+    @Value("\${oci.cloud.secret-key}")
     private val secretKey: String,
-    @Value("\${ncp.cloud.region:kr-standard}")
+    @Value("\${oci.cloud.region:us-phoenix-1}")
     private val region: String,
 ) {
     @Bean
     @Primary
-    fun testNcpObjectStorageClient(awsS3Container: LocalStackContainer): S3Client =
+    fun testOciObjectStorageClient(awsS3Container: LocalStackContainer): S3Client =
         S3Client
             .builder()
             .endpointOverride(awsS3Container.getEndpointOverride(LocalStackContainer.Service.S3))
@@ -31,12 +32,16 @@ class TestS3Config(
                     AwsBasicCredentials.create(accessKey, secretKey),
                 ),
             ).region(Region.of(region))
-            .forcePathStyle(true)
-            .build()
+            .serviceConfiguration(
+                S3Configuration
+                    .builder()
+                    .pathStyleAccessEnabled(true)
+                    .build(),
+            ).build()
 
     @Bean
     @Primary
-    fun testNcpObjectStoragePresigner(awsS3Container: LocalStackContainer): S3Presigner =
+    fun testOciObjectStoragePresigner(awsS3Container: LocalStackContainer): S3Presigner =
         S3Presigner
             .builder()
             .endpointOverride(awsS3Container.getEndpointOverride(LocalStackContainer.Service.S3))
@@ -45,5 +50,10 @@ class TestS3Config(
                     AwsBasicCredentials.create(accessKey, secretKey),
                 ),
             ).region(Region.of(region))
-            .build()
+            .serviceConfiguration(
+                S3Configuration
+                    .builder()
+                    .pathStyleAccessEnabled(true)
+                    .build(),
+            ).build()
 }
