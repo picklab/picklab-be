@@ -19,6 +19,7 @@ on:
 
 permissions:
   contents: read
+  packages: write
 
 jobs:
   docker-build-push:
@@ -135,36 +136,40 @@ jobs:
 
       - name: Deploy Application
         run: |
+          GITHUB_USER="${{ github.actor }}"
+          GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_REPO="${{ github.repository_owner }}"
+          IMAGE_TAG="${{ github.sha }}"
+          
           ssh -i ~/.ssh/id_rsa \
             -o ProxyCommand="ssh -i ~/.ssh/id_rsa -W %h:%p -p 22 -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedKeyTypes=+ssh-rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ env.bastion_session_ocid }}@host.bastion.us-phoenix-1.oci.oraclecloud.com" \
             -o StrictHostKeyChecking=no \
             -o UserKnownHostsFile=/dev/null \
             -p 22 \
-            ubuntu@${{ secrets.OCI_INSTANCE_PRIVATE_IP }} << 'ENDSSH'
+            ubuntu@${{ secrets.OCI_INSTANCE_PRIVATE_IP }} << ENDSSH
           
           set -e
-    
-          echo '${{ secrets.GITHUB_TOKEN }}' | docker login ghcr.io \
-          -u ${{ github.actor }} --password-stdin
+          
+          echo '${GITHUB_TOKEN}' | sudo docker login ghcr.io \
+            -u ${GITHUB_USER} --password-stdin
           
           APP_NAME=picklab-be
-          DOCKER_REPO=ghcr.io/${{ github.repository_owner }}/picklab-be
-          IMAGE_TAG=${{ github.sha }}
+          DOCKER_REPO=ghcr.io/${GITHUB_REPO}/picklab-be
+          IMAGE_TAG=${IMAGE_TAG}
           
-          sudo docker stop $APP_NAME || true
-          sudo docker rm $APP_NAME || true
+          sudo docker stop \$APP_NAME || true
+          sudo docker rm \$APP_NAME || true
           sudo docker image prune -f
-          sudo docker pull $DOCKER_REPO:$IMAGE_TAG
+          sudo docker pull \$DOCKER_REPO:\$IMAGE_TAG
           
-          sudo docker run -d --name $APP_NAME \
+          sudo docker run -d --name \$APP_NAME \
             -v /etc/localtime:/etc/localtime:ro \
             -e TZ=Asia/Seoul \
             -e SPRING_PROFILES_ACTIVE=prod \
             -p 8080:8080 \
             --memory=1g --memory-swap=1g \
-            $DOCKER_REPO:$IMAGE_TAG
+            \$DOCKER_REPO:\$IMAGE_TAG
           ENDSSH
-
       - name: Cleanup Bastion Session
         if: always()
         run: |
