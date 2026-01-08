@@ -19,6 +19,7 @@ on:
 
 permissions:
   contents: read
+  packages: write
 
 jobs:
   docker-build-push:
@@ -42,27 +43,27 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Login to OCI Container Registry
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
-          registry: us-phoenix-1.ocir.io
-          username: ${{ secrets.OCI_TENANCY_NAMESPACE }}/${{ secrets.OCI_USERNAME }}
-          password: ${{ secrets.OCI_AUTH_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Docker Image with Gradle
         run: |
           ./gradlew bootBuildImage \
-            --imageName=us-phoenix-1.ocir.io/${{ secrets.OCI_TENANCY_NAMESPACE }}/picklab-be:${{ github.sha }}
+          --imageName=ghcr.io/${{ github.repository_owner }}/picklab-be:${{ github.sha }}
 
       - name: Tag as latest
         run: |
-          docker tag us-phoenix-1.ocir.io/${{ secrets.OCI_TENANCY_NAMESPACE }}/picklab-be:${{ github.sha }} \
-                     us-phoenix-1.ocir.io/${{ secrets.OCI_TENANCY_NAMESPACE }}/picklab-be:latest
+          docker tag ghcr.io/${{ github.repository_owner }}/picklab-be:${{ github.sha }} \
+                  ghcr.io/${{ github.repository_owner }}/picklab-be:latest
 
-      - name: Push Docker Images to OCI Registry
+      - name: Push Docker Images to GitHub Container Registry
         run: |
-          docker push us-phoenix-1.ocir.io/${{ secrets.OCI_TENANCY_NAMESPACE }}/picklab-be:${{ github.sha }}
-          docker push us-phoenix-1.ocir.io/${{ secrets.OCI_TENANCY_NAMESPACE }}/picklab-be:latest
+          docker push ghcr.io/${{ github.repository_owner }}/picklab-be:${{ github.sha }}
+          docker push ghcr.io/${{ github.repository_owner }}/picklab-be:latest
 
   deploy-via-bastion:
     needs: docker-build-push
@@ -135,36 +136,40 @@ jobs:
 
       - name: Deploy Application
         run: |
+          GITHUB_USER="${{ github.actor }}"
+          GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_REPO="${{ github.repository_owner }}"
+          IMAGE_TAG="${{ github.sha }}"
+          
           ssh -i ~/.ssh/id_rsa \
             -o ProxyCommand="ssh -i ~/.ssh/id_rsa -W %h:%p -p 22 -o HostKeyAlgorithms=+ssh-rsa -o PubkeyAcceptedKeyTypes=+ssh-rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null ${{ env.bastion_session_ocid }}@host.bastion.us-phoenix-1.oci.oraclecloud.com" \
             -o StrictHostKeyChecking=no \
             -o UserKnownHostsFile=/dev/null \
             -p 22 \
-            ubuntu@${{ secrets.OCI_INSTANCE_PRIVATE_IP }} << 'ENDSSH'
+            ubuntu@${{ secrets.OCI_INSTANCE_PRIVATE_IP }} << ENDSSH
           
           set -e
           
-          echo '${{ secrets.OCI_AUTH_TOKEN }}' | docker login us-phoenix-1.ocir.io \
-            -u ${{ secrets.OCI_TENANCY_NAMESPACE }}/${{ secrets.OCI_USERNAME }} --password-stdin
+          echo '${GITHUB_TOKEN}' | sudo docker login ghcr.io \
+            -u ${GITHUB_USER} --password-stdin
           
           APP_NAME=picklab-be
-          DOCKER_REPO=us-phoenix-1.ocir.io/${{ secrets.OCI_TENANCY_NAMESPACE }}/picklab-be
-          IMAGE_TAG=${{ github.sha }}
+          DOCKER_REPO=ghcr.io/${GITHUB_REPO}/picklab-be
+          IMAGE_TAG=${IMAGE_TAG}
           
-          sudo docker stop $APP_NAME || true
-          sudo docker rm $APP_NAME || true
+          sudo docker stop \$APP_NAME || true
+          sudo docker rm \$APP_NAME || true
           sudo docker image prune -f
-          sudo docker pull $DOCKER_REPO:$IMAGE_TAG
+          sudo docker pull \$DOCKER_REPO:\$IMAGE_TAG
           
-          sudo docker run -d --name $APP_NAME \
+          sudo docker run -d --name \$APP_NAME \
             -v /etc/localtime:/etc/localtime:ro \
             -e TZ=Asia/Seoul \
             -e SPRING_PROFILES_ACTIVE=prod \
             -p 8080:8080 \
             --memory=1g --memory-swap=1g \
-            $DOCKER_REPO:$IMAGE_TAG
+            \$DOCKER_REPO:\$IMAGE_TAG
           ENDSSH
-
       - name: Cleanup Bastion Session
         if: always()
         run: |
