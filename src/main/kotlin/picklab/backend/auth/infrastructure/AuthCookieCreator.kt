@@ -11,18 +11,18 @@ class AuthCookieCreator {
             ResponseCookie
                 .from("accessToken", tokens.accessToken)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
                 .path("/")
                 .maxAge(60 * 60)
-                .sameSite("None")
+                .sameSite("Lax")
                 .build(),
             ResponseCookie
                 .from("refreshToken", tokens.refreshToken)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
                 .path("/")
                 .maxAge(60 * 60 * 24 * 7)
-                .sameSite("None")
+                .sameSite("Lax")
                 .build(),
         )
 }

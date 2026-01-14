@@ -59,6 +59,7 @@ springdoc:
   api-docs:
     groups:
       enabled: true
+  trim-kotlin-indent: true
 
 oauth:
   kakao:
