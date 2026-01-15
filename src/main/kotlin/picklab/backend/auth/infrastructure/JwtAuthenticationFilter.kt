@@ -23,6 +23,7 @@ class JwtAuthenticationFilter(
     companion object {
         private const val ACCESS_COOKIE_NAME = "accessToken"
         private const val ACCESS_TOKEN_TYPE = "access"
+        private const val BEARER_PREFIX = "Bearer "
     }
 
     override fun doFilterInternal(
@@ -30,7 +31,9 @@ class JwtAuthenticationFilter(
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
-        val accessToken = resolveCookie(request, ACCESS_COOKIE_NAME)
+        val accessToken =
+            resolveCookie(request, ACCESS_COOKIE_NAME)
+                ?: resolveHeader(request)
 
         if (!accessToken.isNullOrEmpty()) {
             try {
@@ -53,6 +56,12 @@ class JwtAuthenticationFilter(
         request: HttpServletRequest,
         cookieName: String,
     ): String? = request.cookies?.firstOrNull { it.name == cookieName }?.value
+
+    private fun resolveHeader(request: HttpServletRequest): String? =
+        request
+            .getHeader("Authorization")
+            ?.takeIf { it.startsWith(BEARER_PREFIX) }
+            ?.substring(BEARER_PREFIX.length)
 
     private fun getUserDetails(accessToken: String): MemberPrincipal {
         val userId = accessTokenProvider.getSubject(accessToken).toLong()
