@@ -30,7 +30,6 @@ class SecurityConfig(
             "/swagger-ui/**",
             "/swagger",
             "/v1/auth/login/*",
-            "/v1/auth/callback/*",
             "/v1/activities",
             "/v1/activities/**",
             "/v1/search/autocomplete",
@@ -51,6 +50,7 @@ class SecurityConfig(
                 authorize(HttpMethod.OPTIONS, "/**", permitAll)
                 readOnlyUrl.forEach { path -> authorize(HttpMethod.GET, path, permitAll) }
                 authorize(HttpMethod.POST, "/v1/activities/{activityId}/view", permitAll)
+                authorize(HttpMethod.POST, "/v1/auth/callback/*", permitAll)
                 authorize(anyRequest, authenticated)
             }
             exceptionHandling {
