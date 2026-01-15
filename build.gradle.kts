@@ -11,7 +11,7 @@ plugins {
 
 group = "picklab"
 version = "0.0.1-SNAPSHOT"
-val swaggerVersion = "2.8.8"
+val swaggerVersion = "2.8.14"
 val jjwtVersion = "0.12.6"
 val queryDSLVersion = "7.0"
 val archUnitVersion = "1.4.1"

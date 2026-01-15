@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
-import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.member.domain.enums.SocialType
 
 @Tag(name = "소셜 로그인 API", description = "소셜 로그인을 관리하는 API")
@@ -26,11 +25,14 @@ interface AuthApi {
 
     @Operation(
         summary = "소셜 로그인 콜백 처리",
-        description = "소셜 로그인 제공자로부터 전달받은 인증 코드를 바탕으로 사용자 정보를 조회하고 로그인 처리를 수행합니다.",
+        description = """
+            소셜 로그인 제공자로부터 전달받은 인증 코드를 바탕으로 사용자 정보를 조회하고 로그인 처리를 수행합니다.  
+            처리 완료 후 쿠키에 인증 토큰을 담아 프론트엔드로 리다이렉트합니다.
+            """,
         responses = [
             ApiResponse(
-                responseCode = "200",
-                description = "로그인 처리가 완료되었습니다.",
+                responseCode = "302",
+                description = "로그인 성공. 프론트엔드로 리다이렉트 (쿠키에 토큰 포함)",
             ),
             ApiResponse(
                 responseCode = "400",
@@ -49,5 +51,5 @@ interface AuthApi {
     fun handleCallback(
         @Parameter(description = "소셜 로그인 제공자", required = true) provider: SocialType,
         @Parameter(description = "인증 코드", required = true) code: String,
-    ): ResponseEntity<ResponseWrapper<Unit>>
+    ): ResponseEntity<Unit>
 }
