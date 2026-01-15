@@ -40,6 +40,7 @@ class SecurityConfig(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http {
+            cors { }
             csrf { disable() }
             formLogin { disable() }
             logout { disable() }

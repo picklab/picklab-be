@@ -47,7 +47,7 @@ class AuthController(
             headers.add("Set-Cookie", cookie.toString())
         }
 
-        headers.location = URI.create("http://localhost:3000/auth/callback")
+        headers.location = URI.create("http://localhost:3000/")
 
         return ResponseEntity
             .status(HttpStatus.FOUND)
