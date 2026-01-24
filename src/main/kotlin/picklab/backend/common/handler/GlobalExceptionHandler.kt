@@ -1,6 +1,7 @@
 package picklab.backend.common.handler
 
 import com.fasterxml.jackson.databind.JsonMappingException
+import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import org.springframework.beans.ConversionNotSupportedException
 import org.springframework.beans.TypeMismatchException
 import org.springframework.http.ResponseEntity
@@ -57,6 +58,24 @@ class GlobalExceptionHandler {
     fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<ErrorResponseWrapper> {
         log.warn("[handleMethodValidationException] ${e.message}", e)
 
+        for (fieldError in e.bindingResult.fieldErrors) {
+            if (fieldError.code == "typeMismatch") {
+                val field = e.bindingResult.getFieldType(fieldError.field)
+                if (field?.isEnum == true) {
+                    val enumConstants = field.enumConstants.joinToString(", ") { (it as Enum<*>).name }
+                    return ResponseEntity
+                        .status(ErrorCode.INVALID_INPUT_VALUE.status)
+                        .body(
+                            ErrorResponseWrapper.error(
+                                code = ErrorCode.INVALID_INPUT_VALUE,
+                                message = "존재하지 않는 값입니다: ${fieldError.rejectedValue} (가능한 값: $enumConstants)",
+                                errors = emptyList(),
+                            ),
+                        )
+                }
+            }
+        }
+
         val errors =
             e.bindingResult.fieldErrors.map { fieldError ->
                 ErrorField(
@@ -80,16 +99,38 @@ class GlobalExceptionHandler {
     fun handleHttpMessageNotReadableException(e: HttpMessageNotReadableException): ResponseEntity<ErrorResponseWrapper> {
         log.warn("[handleHttpMessageNotReadableException] ${e.message}", e)
 
+        if (e.cause is InvalidFormatException) {
+            val invalidFormatException = e.cause as InvalidFormatException
+
+            if (invalidFormatException.targetType.isEnum) {
+                val enumClass = invalidFormatException.targetType as Class<Enum<*>>
+                val enumConstants = enumClass.enumConstants.joinToString(", ") { it.name }
+                val rejectedValue = invalidFormatException.value
+
+                return ResponseEntity
+                    .status(ErrorCode.INVALID_INPUT_VALUE.status)
+                    .body(
+                        ErrorResponseWrapper.error(
+                            code = ErrorCode.INVALID_INPUT_VALUE,
+                            message = "존재하지 않는 값입니다: $rejectedValue (가능한 값: $enumConstants)",
+                            errors = emptyList(),
+                        ),
+                    )
+            }
+        }
+
         if (e.cause is JsonMappingException) {
             val mappingException = e.cause as JsonMappingException
 
             val errors =
                 mappingException.path
                     .mapNotNull { path ->
-                        ErrorField(
-                            field = path.fieldName,
-                            message = "${path.fieldName} 필드가 올바르지 않습니다.",
-                        )
+                        path.fieldName?.let { fieldName ->
+                            ErrorField(
+                                field = path.fieldName,
+                                message = "${path.fieldName} 필드가 올바르지 않습니다.",
+                            )
+                        }
                     }
 
             return ResponseEntity

@@ -8,5 +8,5 @@ data class UpdateJobCategoriesRequest(
     @field:NotEmpty(message = "관심 직무 카테고리는 필수 입력값입니다.")
     @field:JsonProperty("interested_job_categories")
     @field:Schema(description = "관심 직무 카테고리")
-    val interestedJobCategories: List<JobCategoryDto>,
+    val interestedJobCategories: List<MemberJobCategoryDto>,
 )

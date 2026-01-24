@@ -9,12 +9,12 @@ import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PathVariable
-import picklab.backend.archive.entrypoint.request.ReviewCreateRequest
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.PageResponse
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.review.entrypoint.request.ActivityReviewListRequest
 import picklab.backend.review.entrypoint.request.MyReviewListRequest
+import picklab.backend.review.entrypoint.request.ReviewCreateRequest
 import picklab.backend.review.entrypoint.request.ReviewUpdateRequest
 import picklab.backend.review.entrypoint.response.ActivityReviewResponse
 import picklab.backend.review.entrypoint.response.MyReviewResponse

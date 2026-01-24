@@ -1,11 +1,10 @@
-package picklab.backend.archive.entrypoint.request
+package picklab.backend.review.entrypoint.request
 
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.Size
 import picklab.backend.review.application.model.ReviewCreateCommand
-import picklab.backend.review.entrypoint.request.JobCategoryDto
 
 class ReviewCreateRequest(
     @field:Schema(description = "활동 ID")
@@ -45,7 +44,7 @@ class ReviewCreateRequest(
     @field:Schema(description = "리뷰 인증 자료 URL")
     val url: String? = null,
     @field:Schema(description = "직무 정보")
-    val jobCategory: JobCategoryDto,
+    val jobCategory: ReviewJobCategoryDto,
 ) {
     fun toCommand(memberId: Long): ReviewCreateCommand =
         ReviewCreateCommand(

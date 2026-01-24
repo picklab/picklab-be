@@ -24,7 +24,7 @@ class JwtExceptionFilter(
         } catch (e: AuthException) {
             log.error("JWT Exception: {}", e.message)
             response.status = e.errorCode.status.value()
-            response.contentType = "application/json"
+            response.contentType = "application/json; charset=UTF-8"
             objectMapper.writeValue(response.writer, ErrorResponseWrapper.error(e.errorCode))
         }
     }

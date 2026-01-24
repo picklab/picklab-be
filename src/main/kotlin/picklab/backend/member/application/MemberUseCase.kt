@@ -5,12 +5,10 @@ import picklab.backend.auth.domain.VerificationCodeService
 import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
 import picklab.backend.file.application.FileManagementService
-import picklab.backend.job.domain.enums.JobDetail
-import picklab.backend.job.domain.enums.JobGroup
 import picklab.backend.job.domain.service.JobService
 import picklab.backend.member.domain.MemberService
 import picklab.backend.member.entrypoint.request.AdditionalInfoRequest
-import picklab.backend.member.entrypoint.request.JobCategoryDto
+import picklab.backend.member.entrypoint.request.MemberJobCategoryDto
 import picklab.backend.member.entrypoint.request.MemberWithdrawalRequest
 import picklab.backend.member.entrypoint.request.SendEmailRequest
 import picklab.backend.member.entrypoint.request.ToggleMemberNotificationRequest
@@ -59,14 +57,14 @@ class MemberUseCase(
 
     fun updateJobCategories(
         memberId: Long,
-        request: List<JobCategoryDto>,
+        request: List<MemberJobCategoryDto>,
     ) {
         if (request.size > 5) {
             throw BusinessException(ErrorCode.JOB_CATEGORY_LIMIT)
         }
         val member = memberService.clearInterestedJobCategories(memberId)
 
-        val jobCategoryList = request.map { JobGroup.valueOf(it.group) to JobDetail.valueOf(it.detail) }
+        val jobCategoryList = request.map { it.group to it.detail }
 
         val jobCategories = jobService.findJobCategoriesByGroupAndDetail(jobCategoryList)
 
