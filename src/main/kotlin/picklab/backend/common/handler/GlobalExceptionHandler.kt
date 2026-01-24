@@ -57,6 +57,24 @@ class GlobalExceptionHandler {
     fun handleMethodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<ErrorResponseWrapper> {
         log.warn("[handleMethodValidationException] ${e.message}", e)
 
+        for (fieldError in e.bindingResult.fieldErrors) {
+            if (fieldError.code == "typeMismatch") {
+                val field = e.bindingResult.getFieldType(fieldError.field)
+                if (field?.isEnum == true) {
+                    val enumConstants = field.enumConstants.joinToString(", ") { (it as Enum<*>).name }
+                    return ResponseEntity
+                        .status(ErrorCode.INVALID_INPUT_VALUE.status)
+                        .body(
+                            ErrorResponseWrapper.error(
+                                code = ErrorCode.INVALID_INPUT_VALUE,
+                                message = "존재하지 않는 값입니다: ${fieldError.rejectedValue} (가능한 값: $enumConstants)",
+                                errors = emptyList(),
+                            ),
+                        )
+                }
+            }
+        }
+
         val errors =
             e.bindingResult.fieldErrors.map { fieldError ->
                 ErrorField(
