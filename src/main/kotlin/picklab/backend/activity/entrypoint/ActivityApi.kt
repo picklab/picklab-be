@@ -6,9 +6,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestParam
 import picklab.backend.activity.application.model.ActivityItemWithBookmark
@@ -53,7 +53,7 @@ interface ActivityApi {
         ],
     )
     fun getActivities(
-        @ModelAttribute condition: ActivitySearchRequest,
+        @ParameterObject condition: ActivitySearchRequest,
         @Parameter(description = "데이터 개수")
         @RequestParam(defaultValue = "20") size: Int,
         @Parameter(description = "페이지 번호") @RequestParam(defaultValue = "1") page: Int,
@@ -94,7 +94,7 @@ interface ActivityApi {
     )
     fun getRecommendationActivities(
         @AuthenticationPrincipal member: MemberPrincipal,
-        @Valid @ModelAttribute request: GetActivityPageRequest,
+        @Valid @ParameterObject request: GetActivityPageRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>>
 
     @Operation(
@@ -105,7 +105,7 @@ interface ActivityApi {
         ],
     )
     fun getWeeklyPopularActivities(
-        @Valid @ModelAttribute request: GetActivityPageRequest,
+        @Valid @ParameterObject request: GetActivityPageRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>>
 
     @Operation(
@@ -117,6 +117,6 @@ interface ActivityApi {
     )
     fun getRecentlyViewedActivities(
         @AuthenticationPrincipal member: MemberPrincipal,
-        @Valid @ModelAttribute request: GetActivityPageRequest,
+        @Valid @ParameterObject request: GetActivityPageRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>>
 }

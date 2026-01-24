@@ -2,12 +2,12 @@ package picklab.backend.activity.entrypoint
 
 import io.swagger.v3.oas.annotations.Parameter
 import jakarta.validation.Valid
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
@@ -51,7 +51,7 @@ class ActivityBookmarkController(
     @GetMapping("/v1/bookmarks")
     override fun getBookmarks(
         @AuthenticationPrincipal member: MemberPrincipal,
-        @Valid @ModelAttribute request: GetMyBookmarkListRequest,
+        @Valid @ParameterObject request: GetMyBookmarkListRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>> =
         bookmarkUseCase
             .getBookmarks(request.toCondition(member.memberId))
