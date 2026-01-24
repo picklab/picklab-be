@@ -3,11 +3,11 @@ package picklab.backend.activity.entrypoint
 import io.swagger.v3.oas.annotations.Parameter
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -35,7 +35,7 @@ class ActivityController(
 ) : ActivityApi {
     @GetMapping("")
     override fun getActivities(
-        @ModelAttribute condition: ActivitySearchRequest,
+        @ParameterObject condition: ActivitySearchRequest,
         @Parameter(description = "데이터 개수")
         @RequestParam(defaultValue = "20") size: Int,
         @Parameter(description = "페이지 번호") @RequestParam(defaultValue = "1") page: Int,
@@ -80,7 +80,7 @@ class ActivityController(
     @GetMapping("/recommendations")
     override fun getRecommendationActivities(
         @AuthenticationPrincipal member: MemberPrincipal,
-        @Valid @ModelAttribute request: GetActivityPageRequest,
+        @Valid @ParameterObject request: GetActivityPageRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>> {
         val data =
             activityUseCase
@@ -91,7 +91,7 @@ class ActivityController(
 
     @GetMapping("/popular")
     override fun getWeeklyPopularActivities(
-        @Valid @ModelAttribute request: GetActivityPageRequest,
+        @Valid @ParameterObject request: GetActivityPageRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>> {
         val authentication = SecurityContextHolder.getContext().authentication
         val memberId: Long? = (authentication?.principal as? MemberPrincipal)?.memberId
@@ -106,7 +106,7 @@ class ActivityController(
     @GetMapping("/recently-viewed")
     override fun getRecentlyViewedActivities(
         @AuthenticationPrincipal member: MemberPrincipal,
-        @Valid @ModelAttribute request: GetActivityPageRequest,
+        @Valid @ParameterObject request: GetActivityPageRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>> {
         val data =
             activityUseCase

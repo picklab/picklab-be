@@ -7,17 +7,17 @@ import java.time.LocalDateTime
 
 @Schema(description = "알림 응답")
 data class NotificationResponse(
-    @Schema(description = "알림 ID", example = "1")
+    @field:Schema(description = "알림 ID", example = "1")
     val id: Long,
-    @Schema(description = "알림 제목", example = "새로운 활동이 등록되었습니다")
+    @field:Schema(description = "알림 제목", example = "새로운 활동이 등록되었습니다")
     val title: String,
-    @Schema(description = "알림 타입", example = "ACTIVITY_CREATED")
+    @field:Schema(description = "알림 타입", example = "ACTIVITY_CREATED")
     val type: NotificationType,
-    @Schema(description = "클릭 시 이동할 링크", example = "/activities/123")
+    @field:Schema(description = "클릭 시 이동할 링크", example = "/activities/123")
     val link: String,
-    @Schema(description = "읽음 여부", example = "false")
+    @field:Schema(description = "읽음 여부", example = "false")
     val isRead: Boolean,
-    @Schema(description = "생성일시", example = "2024-01-01T12:00:00")
+    @field:Schema(description = "생성일시", example = "2024-01-01T12:00:00")
     val createdAt: LocalDateTime,
 ) {
     companion object {
