@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
-import picklab.backend.archive.entrypoint.request.ReviewCreateRequest
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.PageResponse
 import picklab.backend.common.model.ResponseWrapper
@@ -22,6 +21,7 @@ import picklab.backend.review.application.query.model.MyReviewListView
 import picklab.backend.review.entrypoint.mapper.toResponse
 import picklab.backend.review.entrypoint.request.ActivityReviewListRequest
 import picklab.backend.review.entrypoint.request.MyReviewListRequest
+import picklab.backend.review.entrypoint.request.ReviewCreateRequest
 import picklab.backend.review.entrypoint.request.ReviewUpdateRequest
 import picklab.backend.review.entrypoint.response.ActivityReviewResponse
 import picklab.backend.review.entrypoint.response.MyReviewResponse

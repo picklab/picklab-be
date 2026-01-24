@@ -34,7 +34,7 @@ import picklab.backend.member.domain.repository.MemberVerificationRepository
 import picklab.backend.member.domain.repository.NotificationPreferenceRepository
 import picklab.backend.member.domain.repository.SocialLoginRepository
 import picklab.backend.member.entrypoint.request.AdditionalInfoRequest
-import picklab.backend.member.entrypoint.request.JobCategoryDto
+import picklab.backend.member.entrypoint.request.MemberJobCategoryDto
 import picklab.backend.member.entrypoint.request.MemberWithdrawalRequest
 import picklab.backend.member.entrypoint.request.UpdateInfoRequest
 import picklab.backend.member.entrypoint.request.UpdateProfileImageRequest
@@ -203,7 +203,7 @@ class MemberServiceTest : IntegrationTest() {
 
             val jobCategories =
                 listOf(
-                    JobCategoryDto("PLANNING", "SERVICE_PLANNING"),
+                    MemberJobCategoryDto(JobGroup.PLANNING, JobDetail.SERVICE_PLANNING),
                 )
 
             val additionalInfo =

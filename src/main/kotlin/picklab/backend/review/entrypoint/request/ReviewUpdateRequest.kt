@@ -44,7 +44,7 @@ data class ReviewUpdateRequest(
     @field:Schema(description = "리뷰 인증 자료 URL")
     val url: String? = null,
     @field:Schema(description = "직무 정보")
-    val jobCategory: JobCategoryDto,
+    val jobCategory: ReviewJobCategoryDto,
 ) {
     fun toCommand(
         id: Long,
