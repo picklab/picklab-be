@@ -42,7 +42,7 @@ interface SearchApi {
               }
             }
             ```
-        """,
+            """,
     )
     fun autocomplete(
         @Parameter(description = "검색 키워드 (앞글자부터 매칭)", required = true, example = "개발")
@@ -77,7 +77,7 @@ interface SearchApi {
             - 각 항목에 삭제 가능한 ID 포함
             - 같은 키워드를 다시 검색하면 기존 기록의 시간만 업데이트됨
             - 중복 키워드 없이 깔끔한 검색 기록 관리
-        """,
+            """,
     )
     fun getRecentKeywords(
         @AuthenticationPrincipal member: MemberPrincipal,
