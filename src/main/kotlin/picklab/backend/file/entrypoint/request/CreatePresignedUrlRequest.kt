@@ -10,7 +10,7 @@ data class CreatePresignedUrlRequest(
     @field:Schema(description = "업로드 할 파일 전체 이름(확장자 포함)", example = "example.jpg")
     val fileName: String,
     @field:NotBlank(message = "카테고리는 필수입니다.")
-    @field:Schema(description = "이미지가 업로드 되는 카테고리(PROFILE, ARCHIVE, REVIEW)", example = "PROFILE")
+    @field:Schema(description = "이미지가 업로드 되는 카테고리", example = "PROFILE")
     val category: FileCategory,
     @field:NotBlank(message = "파일 크기는 필수입니다.")
     @field:Schema(description = "업로드 할 파일 크기(Byte)", example = "2048")

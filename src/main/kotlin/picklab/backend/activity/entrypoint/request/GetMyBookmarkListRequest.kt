@@ -8,13 +8,13 @@ import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.job.domain.enums.JobGroup
 
 data class GetMyBookmarkListRequest(
-    @field:Schema(description = "활동 분류 (extracurricular, seminar, education, competition)")
+    @field:Schema(description = "활동 분류")
     val activityTypes: List<ActivityType>? = null,
-    @field:Schema(description = "관련 직무(PLANNING, DESIGN, DEVELOPMENT, MARKETING, AI)")
+    @field:Schema(description = "관련 직무")
     val jobGroups: List<JobGroup>? = null,
-    @field:Schema(description = "모집 상태 (OPEN, CLOSED)")
+    @field:Schema(description = "모집 상태")
     val recruitmentStatus: RecruitmentStatus? = null,
-    @field:Schema(description = "정렬 기준 (RECENTLY_BOOKMARKED, LATEST, DEADLINE_ASC, DEADLINE_DESC)")
+    @field:Schema(description = "정렬 기준")
     val sortType: ActivityBookmarkSortType = ActivityBookmarkSortType.RECENTLY_BOOKMARKED,
     @field:Schema(description = "요청 페이지 (기본값 0)")
     val page: Int = 0,
