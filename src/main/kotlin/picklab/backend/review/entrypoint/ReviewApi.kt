@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import picklab.backend.archive.entrypoint.request.ReviewCreateRequest
 import picklab.backend.common.model.MemberPrincipal
@@ -54,36 +53,36 @@ interface ReviewApi {
     @Operation(
         summary = "내가 작성한 리뷰 리스트 조회",
         description = """
-        로그인한 사용자가 작성한 리뷰 리스트를 조회합니다.
-
-        요청 파라미터:
-        - size: 한번에 가져올 데이터 개수 (기본값 10)
-        - page: 페이지 번호 (기본값 1)
-        """,
+            로그인한 사용자가 작성한 리뷰 리스트를 조회합니다.
+            
+            요청 파라미터:
+            - size: 한번에 가져올 데이터 개수 (기본값 10)
+            - page: 페이지 번호 (기본값 1)
+            """,
         responses = [
             ApiResponse(responseCode = "200", description = "리뷰 조회에 성공했습니다."),
         ],
     )
     fun getMyReviews(
         member: MemberPrincipal,
-        @ModelAttribute @ParameterObject request: MyReviewListRequest,
+        @ParameterObject request: MyReviewListRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<MyReviewsResponse>>>
 
     @Operation(
         summary = "특정 활동에 대한 리뷰 리스트 조회",
         description = """
-        특정 활동에 대한 리뷰 리스트를 조회합니다.
+            특정 활동에 대한 리뷰 리스트를 조회합니다.
+            
+            요청 파라미터:
+            - page: 페이지 번호 (1부터 시작, 기본값 1)
+            - size: 한번에 가져올 데이터 개수 (1~100, 기본값 10)
+            - rating: 활동 총 평점 필터 (1~5)
+            - jobGroup: 관심 직무 필터 (대분류 전체 리스트)
+            - jobDetail: 관심 직무 필터 (세부 직무 리스트)
+            - status: 수료 상태 필터 (IN_PROGRESSING, COMPLETED, DROPPED)
 
-        요청 파라미터:
-        - page: 페이지 번호 (1부터 시작, 기본값 1)
-        - size: 한번에 가져올 데이터 개수 (1~100, 기본값 10)
-        - rating: 활동 총 평점 필터 (1~5)
-        - jobGroup: 관심 직무 필터 (대분류 전체 리스트)
-        - jobDetail: 관심 직무 필터 (세부 직무 리스트)
-        - status: 수료 상태 필터 (IN_PROGRESSING, COMPLETED, DROPPED)
-
-        로그인 여부에 따라 응답 데이터가 달라집니다.
-    """,
+            로그인 여부에 따라 응답 데이터가 달라집니다.
+            """,
         responses = [
             ApiResponse(responseCode = "200", description = "리뷰 조회에 성공했습니다."),
         ],
@@ -91,7 +90,7 @@ interface ReviewApi {
     fun getReviewsByActivity(
         @Parameter(description = "활동 ID값") @PathVariable activityId: Long,
         member: MemberPrincipal?,
-        @ModelAttribute @ParameterObject request: ActivityReviewListRequest,
+        @ParameterObject request: ActivityReviewListRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityReviewResponse>>>
 
     @Operation(

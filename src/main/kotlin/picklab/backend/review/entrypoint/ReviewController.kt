@@ -1,11 +1,11 @@
 package picklab.backend.review.entrypoint
 
 import jakarta.validation.Valid
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -54,7 +54,7 @@ class ReviewController(
     @GetMapping("/v1/reviews")
     override fun getMyReviews(
         @AuthenticationPrincipal member: MemberPrincipal,
-        @Valid @ModelAttribute request: MyReviewListRequest,
+        @Valid @ParameterObject request: MyReviewListRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<MyReviewsResponse>>> =
         reviewUseCase
             .getMyReviews(request.toQueryRequest(member.memberId))
@@ -66,7 +66,7 @@ class ReviewController(
     override fun getReviewsByActivity(
         @PathVariable activityId: Long,
         @AuthenticationPrincipal member: MemberPrincipal?,
-        @Valid @ModelAttribute request: ActivityReviewListRequest,
+        @Valid @ParameterObject request: ActivityReviewListRequest,
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityReviewResponse>>> =
         reviewUseCase
             .getReviewsByActivity(
