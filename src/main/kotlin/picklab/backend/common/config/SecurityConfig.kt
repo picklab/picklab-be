@@ -51,6 +51,7 @@ class SecurityConfig(
                 readOnlyUrl.forEach { path -> authorize(HttpMethod.GET, path, permitAll) }
                 authorize(HttpMethod.POST, "/v1/activities/{activityId}/view", permitAll)
                 authorize(HttpMethod.POST, "/v1/auth/callback/*", permitAll)
+                authorize(HttpMethod.POST, "/v1/auth/refresh", permitAll)
                 authorize(anyRequest, authenticated)
             }
             exceptionHandling {
