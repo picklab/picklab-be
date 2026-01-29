@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.RequestHeader
 import picklab.backend.auth.domain.AuthToken
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.member.domain.enums.SocialType
@@ -53,5 +54,29 @@ interface AuthApi {
     fun handleCallback(
         @Parameter(description = "소셜 로그인 제공자", required = true) provider: SocialType,
         @Parameter(description = "인증 코드", required = true) code: String,
+    ): ResponseEntity<ResponseWrapper<AuthToken>>
+
+    @Operation(
+        summary = "액세스 토큰 재발급",
+        description = """
+            리프레시 토큰을 이용하여 만료된 액세스 토큰을 재발급 받습니다.  
+            요청 헤더에 리프레시 토큰을 포함하여 전송하면, 토큰 검증 후 새로운 액세스 토큰을 발급합니다.  
+            Note: 스웨거 UI에서는 Authorization 헤더 입력이 제한됩니다.  
+            다른 도구(Postman, curl)를 통해 테스트를 권장합니다.  
+        """,
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "액세스 토큰 재발급 성공",
+            ),
+            ApiResponse(
+                responseCode = "401",
+                description = "토큰이 유효하지 않거나 만료되었습니다.",
+            ),
+        ],
+    )
+    fun refreshAccessToken(
+        @Parameter(description = "리프레시 토큰", required = true)
+        @RequestHeader("Refresh-Token") authorization: String,
     ): ResponseEntity<ResponseWrapper<AuthToken>>
 }
