@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.util.matcher.RegexRequestMatcher
 import picklab.backend.auth.infrastructure.JwtAccessDeniedHandler
 import picklab.backend.auth.infrastructure.JwtAuthenticationEntryPoint
 import picklab.backend.auth.infrastructure.JwtAuthenticationFilter
@@ -31,7 +32,6 @@ class SecurityConfig(
             "/swagger",
             "/v1/auth/login/*",
             "/v1/activities",
-            "/v1/activities/**",
             "/v1/search/autocomplete",
             "/v1/activities/*/reviews/statistics/**",
         )
@@ -48,6 +48,10 @@ class SecurityConfig(
             addFilterBefore<JwtAuthenticationFilter>(jwtExceptionFilter)
             authorizeHttpRequests {
                 authorize(HttpMethod.OPTIONS, "/**", permitAll)
+                authorize(
+                    RegexRequestMatcher("/v1/activities/\\d+.*", HttpMethod.GET.name()),
+                    permitAll,
+                )
                 readOnlyUrl.forEach { path -> authorize(HttpMethod.GET, path, permitAll) }
                 authorize(HttpMethod.POST, "/v1/activities/{activityId}/view", permitAll)
                 authorize(HttpMethod.POST, "/v1/auth/callback/*", permitAll)
