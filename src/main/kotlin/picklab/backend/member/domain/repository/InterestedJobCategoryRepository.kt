@@ -9,6 +9,19 @@ import picklab.backend.member.domain.entity.Member
 interface InterestedJobCategoryRepository : JpaRepository<InterestedJobCategory, Long> {
     fun deleteAllByMember(member: Member)
 
+    @Query(
+        """
+        SELECT ijc
+        FROM InterestedJobCategory ijc
+        JOIN FETCH ijc.jobCategory jc
+        WHERE ijc.member.id = :memberId
+        ORDER BY ijc.id
+        """,
+    )
+    fun findAllByMemberIdWithJobCategory(
+        @Param("memberId") memberId: Long,
+    ): List<InterestedJobCategory>
+
     @Query("SELECT jc.id FROM InterestedJobCategory ijc JOIN ijc.jobCategory jc WHERE ijc.member.id = :memberId")
     fun findJobCategoryIdsByMemberId(
         @Param("memberId") memberId: Long,
