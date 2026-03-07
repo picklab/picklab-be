@@ -97,6 +97,8 @@ oci:
   storage:
     bucket-name: ${OCI_BUCKET_NAME}
 
+cors:
+  allowed-origins: http://localhost:3000, https://picklab-fe.vercel.app
 ---
 spring:
   config:
