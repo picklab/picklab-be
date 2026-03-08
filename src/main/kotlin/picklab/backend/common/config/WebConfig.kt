@@ -1,5 +1,6 @@
 package picklab.backend.common.config
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
 import org.springframework.format.FormatterRegistry
 import org.springframework.web.servlet.config.annotation.CorsRegistry
@@ -7,7 +8,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import picklab.backend.common.converter.CaseInsensitiveEnumConverterFactory
 
 @Configuration
-class WebConfig : WebMvcConfigurer {
+class WebConfig(
+    @Value("\${cors.allowed-origins}")
+    private val allowedOrigins: String,
+) : WebMvcConfigurer {
     override fun addFormatters(registry: FormatterRegistry) {
         registry.addConverterFactory(CaseInsensitiveEnumConverterFactory())
     }
@@ -15,7 +19,7 @@ class WebConfig : WebMvcConfigurer {
     override fun addCorsMappings(registry: CorsRegistry) {
         registry
             .addMapping("/**")
-            .allowedOrigins("http://localhost:3000")
+            .allowedOrigins(*allowedOrigins.split(",").toTypedArray())
             .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
             .allowedHeaders("*")
             .allowCredentials(true)

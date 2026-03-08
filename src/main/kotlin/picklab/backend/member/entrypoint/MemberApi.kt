@@ -20,6 +20,7 @@ import picklab.backend.member.entrypoint.request.UpdateInfoRequest
 import picklab.backend.member.entrypoint.request.UpdateJobCategoriesRequest
 import picklab.backend.member.entrypoint.request.UpdateProfileImageRequest
 import picklab.backend.member.entrypoint.request.VerifyEmailCodeRequest
+import picklab.backend.member.entrypoint.response.GetMemberMeResponse
 import picklab.backend.member.entrypoint.response.GetSocialLoginsResponse
 
 @Tag(name = "회원 API", description = "회원 관련 작업을 하는 API")
@@ -176,6 +177,21 @@ interface MemberApi {
     fun getSocialLogins(
         @AuthenticationPrincipal member: MemberPrincipal,
     ): ResponseEntity<ResponseWrapper<GetSocialLoginsResponse>>
+
+    @Operation(
+        summary = "내 정보 조회",
+        description = "로그인한 사용자의 기본 프로필, 관심 직무, 재직 상태를 조회합니다.",
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "내 정보 조회에 성공했습니다."),
+            ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
+            ApiResponse(responseCode = "500", description = "서버 오류입니다."),
+        ],
+    )
+    fun getMyInfo(
+        @AuthenticationPrincipal member: MemberPrincipal,
+    ): ResponseEntity<ResponseWrapper<GetMemberMeResponse>>
 
     @Operation(
         summary = "회원 탈퇴",

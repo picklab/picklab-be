@@ -16,6 +16,7 @@ import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.common.model.SuccessCode
 import picklab.backend.member.application.MemberUseCase
+import picklab.backend.member.entrypoint.mapper.toResponse
 import picklab.backend.member.entrypoint.request.AdditionalInfoRequest
 import picklab.backend.member.entrypoint.request.MemberWithdrawalRequest
 import picklab.backend.member.entrypoint.request.SendEmailRequest
@@ -26,6 +27,7 @@ import picklab.backend.member.entrypoint.request.UpdateInfoRequest
 import picklab.backend.member.entrypoint.request.UpdateJobCategoriesRequest
 import picklab.backend.member.entrypoint.request.UpdateProfileImageRequest
 import picklab.backend.member.entrypoint.request.VerifyEmailCodeRequest
+import picklab.backend.member.entrypoint.response.GetMemberMeResponse
 import picklab.backend.member.entrypoint.response.GetSocialLoginsResponse
 
 @RestController
@@ -151,17 +153,27 @@ class MemberController(
     override fun getSocialLogins(
         @AuthenticationPrincipal member: MemberPrincipal,
     ): ResponseEntity<ResponseWrapper<GetSocialLoginsResponse>> {
-        memberUseCase.getSocialLogins(member.memberId)
+        val response = memberUseCase.getSocialLogins(member.memberId)
 
         return ResponseEntity
             .status(HttpStatus.OK)
             .body(
                 ResponseWrapper.success(
                     SuccessCode.GET_MEMBER_SOCIAL_LOGINS,
-                    memberUseCase.getSocialLogins(member.memberId),
+                    response,
                 ),
             )
     }
+
+    @GetMapping("/me")
+    override fun getMyInfo(
+        @AuthenticationPrincipal member: MemberPrincipal,
+    ): ResponseEntity<ResponseWrapper<GetMemberMeResponse>> =
+        memberUseCase
+            .getMemberMe(member.memberId)
+            .toResponse()
+            .let { ResponseWrapper.success(SuccessCode.GET_MEMBER_ME, it) }
+            .let { ResponseEntity.ok(it) }
 
     @DeleteMapping("")
     override fun withdrawMember(

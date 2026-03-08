@@ -236,6 +236,9 @@ class MemberService(
         )
     }
 
+    fun findInterestedJobCategories(memberId: Long): List<InterestedJobCategory> =
+        interestedJobCategoryRepository.findAllByMemberIdWithJobCategory(memberId)
+
     @Transactional
     fun withdrawMember(memberId: Long) {
         val member = findActiveMember(memberId)

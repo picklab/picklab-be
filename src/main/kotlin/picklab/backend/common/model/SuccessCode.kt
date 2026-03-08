@@ -20,6 +20,7 @@ enum class SuccessCode(
     VERIFY_EMAIL_CODE(HttpStatus.OK, "이메일 코드 인증에 성공했습니다."),
     UPDATE_EMAIL_AGREEMENT(HttpStatus.OK, "이메일 마케팅 수신 동의 정보 수정에 성공했습니다."),
     GET_MEMBER_SOCIAL_LOGINS(HttpStatus.OK, "소셜 로그인 연동 정보 조회에 성공했습니다."),
+    GET_MEMBER_ME(HttpStatus.OK, "내 정보 조회에 성공했습니다."),
     MEMBER_WITHDRAW(HttpStatus.OK, "회원 탈퇴에 성공했습니다."),
     SUBMIT_SURVEY(HttpStatus.OK, "탈퇴 설문 제출에 성공했습니다."),
     MEMBER_NOTIFICATION_UPDATED(HttpStatus.OK, "알림 변경에 성공했습니다."),

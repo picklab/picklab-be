@@ -1,11 +1,14 @@
 package picklab.backend.member.application
 
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import picklab.backend.auth.domain.VerificationCodeService
 import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
 import picklab.backend.file.application.FileManagementService
 import picklab.backend.job.domain.service.JobService
+import picklab.backend.member.application.mapper.toMemberMeResult
+import picklab.backend.member.application.model.MemberMeResult
 import picklab.backend.member.domain.MemberService
 import picklab.backend.member.entrypoint.request.AdditionalInfoRequest
 import picklab.backend.member.entrypoint.request.MemberJobCategoryDto
@@ -126,6 +129,13 @@ class MemberUseCase(
     }
 
     fun getSocialLogins(memberId: Long) = memberService.getSocialLogins(memberId)
+
+    @Transactional(readOnly = true)
+    fun getMemberMe(memberId: Long): MemberMeResult {
+        val member = memberService.findActiveMember(memberId)
+        val interestedJobCategories = memberService.findInterestedJobCategories(memberId)
+        return member.toMemberMeResult(interestedJobCategories)
+    }
 
     fun withdrawMember(memberId: Long) {
         memberService.withdrawMember(memberId)
