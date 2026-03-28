@@ -44,6 +44,7 @@ enum class ErrorCode(
      * 활동 도메인 관련
      */
     NOT_FOUND_ACTIVITY(HttpStatus.BAD_REQUEST, "활동 정보를 찾을 수 없습니다."),
+    NOT_FOUND_ACTIVITY_GROUP(HttpStatus.NOT_FOUND, "활동 그룹 정보를 찾을 수 없습니다."),
 
     /**
      * 활동 참여 도메인 관련

@@ -40,6 +40,9 @@ class ActivityService(
         pageable = pageable,
     )
 
+    @Transactional
+    fun save(entity: Activity): Activity = activityRepository.save(entity)
+
     /**
      * 활동 카테고리 별, 불필요한 데이터가 파라미터로 넘어올 경우 이를 제거하고 정의된 규격에 맞게 파라미터 값을 조정합니다
      */

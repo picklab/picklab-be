@@ -28,7 +28,7 @@ class CompetitionActivity(
     activityHomepageUrl: String?,
     activityApplicationUrl: String?,
     activityThumbnailUrl: String?,
-    description: String,
+    description: String?,
     benefit: String,
     activityGroup: ActivityGroup,
     @Column(name = "domain")

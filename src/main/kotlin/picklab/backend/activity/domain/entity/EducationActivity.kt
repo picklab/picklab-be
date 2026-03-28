@@ -34,7 +34,7 @@ class EducationActivity(
     activityHomepageUrl: String?,
     activityApplicationUrl: String?,
     activityThumbnailUrl: String?,
-    description: String,
+    description: String?,
     benefit: String,
     @Column(name = "cost")
     @Comment("교육비용(교육)")
