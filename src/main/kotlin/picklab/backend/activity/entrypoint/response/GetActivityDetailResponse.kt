@@ -45,8 +45,8 @@ data class GetActivityDetailResponse(
     val applyStatus: String,
     @field:Schema(description = "북마크 여부")
     val isBookmarked: Boolean,
-    @field:Schema(description = "살세 설명")
-    val description: String,
+    @field:Schema(description = "상세 설명")
+    val description: String?,
     @field:Schema(description = "해택")
     val benefits: String,
     @field:Schema(description = "필요 서류들")

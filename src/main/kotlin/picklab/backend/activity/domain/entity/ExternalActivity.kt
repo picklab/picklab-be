@@ -33,6 +33,7 @@ class ExternalActivity(
     activityHomepageUrl: String?,
     activityApplicationUrl: String?,
     activityThumbnailUrl: String?,
+    description: String?,
     benefit: String,
     activityGroup: ActivityGroup,
     @Column(name = "activity_field")
@@ -53,6 +54,7 @@ class ExternalActivity(
         activityHomepageUrl = activityHomepageUrl,
         activityApplicationUrl = activityApplicationUrl,
         activityThumbnailUrl = activityThumbnailUrl,
+        description = description,
         benefit = benefit,
         activityGroup = activityGroup,
     )

@@ -10,8 +10,10 @@ import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import picklab.backend.activity.application.model.ActivityItemWithBookmark
+import picklab.backend.activity.entrypoint.request.ActivityCreateRequest
 import picklab.backend.activity.entrypoint.request.ActivitySearchRequest
 import picklab.backend.activity.entrypoint.request.GetActivityPageRequest
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
@@ -21,6 +23,29 @@ import picklab.backend.common.model.ResponseWrapper
 
 @Tag(name = "활동 API", description = "활동 관련 API")
 interface ActivityApi {
+    @Operation(
+        summary = "활동 생성",
+        description =
+            "activity DDL 기준으로 활동을 생성합니다.\n\n" +
+                "공통 필수값은 activityType, activityGroupId, title, organizer, targetAudience, " +
+                "recruitmentStartDate, recruitmentEndDate, startDate, endDate, status, duration 입니다.\n\n" +
+                "공통 선택값은 activityHomepageUrl, activityApplicationUrl, activityThumbnailUrl, " +
+                "description, benefit, jobCategories, uploadFiles 입니다.\n\n" +
+                "타입별 필수값:\n" +
+                "- EXTRACURRICULAR: location, activityField\n" +
+                "- SEMINAR: location\n" +
+                "- EDUCATION: location, cost, costType, educationFormat\n" +
+                "- COMPETITION: domain, cost",
+        responses = [
+            ApiResponse(responseCode = "200", description = "활동 생성에 성공했습니다."),
+            ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
+            ApiResponse(responseCode = "404", description = "활동 그룹 또는 직무 정보를 찾을 수 없습니다."),
+        ],
+    )
+    fun createActivity(
+        @Valid @RequestBody request: ActivityCreateRequest,
+    ): ResponseEntity<ResponseWrapper<Unit>>
+
     @Suppress("ktlint:standard:max-line-length")
     @Operation(
         summary = "활동 조회",

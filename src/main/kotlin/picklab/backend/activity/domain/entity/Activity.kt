@@ -78,7 +78,7 @@ abstract class Activity(
     var activityThumbnailUrl: String? = null,
     @Column(name = "description", length = 2000)
     @Comment("활동 내용")
-    var description: String = "",
+    var description: String? = null,
     @Column(name = "benefit", length = 2000)
     @Comment("활동 혜택")
     var benefit: String = "",

@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -19,6 +20,7 @@ import picklab.backend.activity.entrypoint.mapper.toCondition
 import picklab.backend.activity.entrypoint.mapper.toPopularActivitiesCondition
 import picklab.backend.activity.entrypoint.mapper.toRecentlyViewedActivitiesCondition
 import picklab.backend.activity.entrypoint.mapper.toRecommendActivitiesCondition
+import picklab.backend.activity.entrypoint.request.ActivityCreateRequest
 import picklab.backend.activity.entrypoint.request.ActivitySearchRequest
 import picklab.backend.activity.entrypoint.request.GetActivityPageRequest
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
@@ -33,6 +35,14 @@ import picklab.backend.common.model.toPageResponse
 class ActivityController(
     private val activityUseCase: ActivityUseCase,
 ) : ActivityApi {
+    @PostMapping("")
+    override fun createActivity(
+        @Valid @RequestBody request: ActivityCreateRequest,
+    ): ResponseEntity<ResponseWrapper<Unit>> {
+        activityUseCase.createActivity(request.toCommand())
+        return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.CREATE_ACTIVITY))
+    }
+
     @GetMapping("")
     override fun getActivities(
         @ParameterObject condition: ActivitySearchRequest,

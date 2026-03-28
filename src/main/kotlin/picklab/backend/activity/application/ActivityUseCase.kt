@@ -5,15 +5,25 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import picklab.backend.activity.application.mapper.toEntities
+import picklab.backend.activity.application.mapper.toEntity
+import picklab.backend.activity.application.mapper.toUploadFileEntities
 import picklab.backend.activity.application.mapper.withBookmark
+import picklab.backend.activity.application.model.ActivityCreateCommand
 import picklab.backend.activity.application.model.ActivityItemWithBookmark
 import picklab.backend.activity.application.model.ActivitySearchCondition
 import picklab.backend.activity.application.model.PopularActivitiesCondition
 import picklab.backend.activity.application.model.RecentlyViewedActivitiesCondition
 import picklab.backend.activity.application.model.RecommendActivitiesCondition
 import picklab.backend.activity.domain.service.ActivityBookmarkService
+import picklab.backend.activity.domain.service.ActivityGroupService
+import picklab.backend.activity.domain.service.ActivityJobCategoryService
 import picklab.backend.activity.domain.service.ActivityService
+import picklab.backend.activity.domain.service.ActivityUploadFileService
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
+import picklab.backend.common.model.BusinessException
+import picklab.backend.common.model.ErrorCode
+import picklab.backend.job.domain.service.JobService
 import picklab.backend.member.domain.MemberService
 import picklab.backend.member.domain.service.MemberActivityViewHistoryService
 
@@ -23,9 +33,36 @@ class ActivityUseCase(
     private val activityService: ActivityService,
     private val activityQueryService: ActivityQueryService,
     private val activityBookmarkService: ActivityBookmarkService,
+    private val activityGroupService: ActivityGroupService,
+    private val activityJobCategoryService: ActivityJobCategoryService,
+    private val activityUploadFileService: ActivityUploadFileService,
     private val viewCountLimiterPort: ViewCountLimiterPort,
     private val memberActivityViewHistoryService: MemberActivityViewHistoryService,
+    private val jobService: JobService,
 ) {
+    @Transactional
+    fun createActivity(command: ActivityCreateCommand) {
+        command.jobCategories.forEach { jobCategory ->
+            if (jobCategory.jobDetail != null && jobCategory.jobDetail.group != jobCategory.jobGroup) {
+                throw BusinessException(ErrorCode.JOB_CATEGORY_MISMATCH_INPUT)
+            }
+        }
+
+        val activityGroup = activityGroupService.mustFindById(command.activityGroupId)
+        val activity =
+            activityService.save(
+                command.toEntity(activityGroup),
+            )
+        val jobCategories =
+            command.jobCategories.map { jobCategory ->
+                jobService.getJobCategoryByGroupAndDetail(jobCategory.jobGroup, jobCategory.jobDetail)
+                    ?: throw BusinessException(ErrorCode.JOB_CATEGORY_NOT_FOUND)
+            }
+
+        activityJobCategoryService.saveAll(jobCategories.toEntities(activity))
+        activityUploadFileService.saveAll(command.toUploadFileEntities(activity))
+    }
+
     /**
      * 검색 필터에 일치하는 활동 리스트 및 북마크 여부를 페이징으로 가져옵니다.
      */

@@ -32,6 +32,7 @@ class SeminarActivity(
     activityHomepageUrl: String?,
     activityApplicationUrl: String?,
     activityThumbnailUrl: String?,
+    description: String?,
     benefit: String,
     activityGroup: ActivityGroup,
 ) : Activity(
@@ -48,6 +49,7 @@ class SeminarActivity(
         activityHomepageUrl = activityHomepageUrl,
         activityApplicationUrl = activityApplicationUrl,
         activityThumbnailUrl = activityThumbnailUrl,
+        description = description,
         benefit = benefit,
         activityGroup = activityGroup,
     )
