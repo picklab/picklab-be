@@ -191,6 +191,7 @@ class ActivityDeadlineNotificationServiceTest : IntegrationTest() {
                 activityHomepageUrl = null,
                 activityApplicationUrl = null,
                 activityThumbnailUrl = null,
+                description = null,
                 activityGroup = activityGroup,
                 activityField = ActivityFieldType.MENTORING,
                 benefit = "테스트 혜택",
