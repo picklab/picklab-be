@@ -28,6 +28,7 @@ class CompetitionActivity(
     activityHomepageUrl: String?,
     activityApplicationUrl: String?,
     activityThumbnailUrl: String?,
+    description: String,
     benefit: String,
     activityGroup: ActivityGroup,
     @Column(name = "domain")
@@ -51,6 +52,7 @@ class CompetitionActivity(
         activityHomepageUrl = activityHomepageUrl,
         activityApplicationUrl = activityApplicationUrl,
         activityThumbnailUrl = activityThumbnailUrl,
+        description = description,
         benefit = benefit,
         activityGroup = activityGroup,
     )
