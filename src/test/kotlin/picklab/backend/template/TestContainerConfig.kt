@@ -15,7 +15,6 @@ class TestContainerConfig {
 
     @Bean
     fun awsS3Container(): LocalStackContainer =
-        LocalStackContainer(DockerImageName.parse("localstack/localstack"))
+        LocalStackContainer(DockerImageName.parse("localstack/localstack:4.14.0"))
             .withServices(LocalStackContainer.Service.S3)
-            .also { it.start() }
 }
