@@ -30,6 +30,7 @@ enum class SuccessCode(
     GET_ACTIVITY_DETAIL(HttpStatus.OK, "활동 상세 조회에 성공했습니다."),
     CREATE_ACTIVITY(HttpStatus.OK, "활동 생성에 성공했습니다."),
     CREATE_ACTIVITY_GROUP(HttpStatus.OK, "활동 그룹 생성에 성공했습니다."),
+    GET_ACTIVITY_GROUPS(HttpStatus.OK, "활동 그룹 목록 조회에 성공했습니다."),
     ACTIVITY_BOOKMARK_CREATED(HttpStatus.CREATED, "북마크가 추가되었습니다."),
     ACTIVITY_BOOKMARK_REMOVED(HttpStatus.OK, "북마크가 삭제되었습니다."),
     GET_BOOKMARKS(HttpStatus.OK, "북마크 목록 조회에 성공했습니다."),
