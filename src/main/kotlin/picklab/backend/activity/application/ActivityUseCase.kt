@@ -16,11 +16,11 @@ import picklab.backend.activity.application.model.PopularActivitiesCondition
 import picklab.backend.activity.application.model.RecentlyViewedActivitiesCondition
 import picklab.backend.activity.application.model.RecommendActivitiesCondition
 import picklab.backend.activity.domain.service.ActivityBookmarkService
-import picklab.backend.activity.domain.service.ActivityGroupService
 import picklab.backend.activity.domain.service.ActivityJobCategoryService
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.activity.domain.service.ActivityUploadFileService
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
+import picklab.backend.activitygroup.domain.service.ActivityGroupService
 import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
 import picklab.backend.job.domain.service.JobService

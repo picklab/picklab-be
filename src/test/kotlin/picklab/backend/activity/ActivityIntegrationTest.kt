@@ -11,7 +11,6 @@ import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import picklab.backend.activity.application.ViewCountLimiterPort.Companion.MAX_VIEW_ATTEMPTS
 import picklab.backend.activity.domain.entity.ActivityBookmark
-import picklab.backend.activity.domain.entity.ActivityGroup
 import picklab.backend.activity.domain.entity.ActivityJobCategory
 import picklab.backend.activity.domain.entity.CompetitionActivity
 import picklab.backend.activity.domain.entity.EducationActivity
@@ -26,11 +25,12 @@ import picklab.backend.activity.domain.enums.OrganizerType
 import picklab.backend.activity.domain.enums.ParticipantType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.activity.domain.repository.ActivityBookmarkRepository
-import picklab.backend.activity.domain.repository.ActivityGroupRepository
 import picklab.backend.activity.domain.repository.ActivityJobCategoryRepository
 import picklab.backend.activity.domain.repository.ActivityRepository
 import picklab.backend.activity.entrypoint.response.GetActivityDetailResponse
 import picklab.backend.activity.entrypoint.response.GetActivityListResponse
+import picklab.backend.activitygroup.domain.entity.ActivityGroup
+import picklab.backend.activitygroup.domain.repository.ActivityGroupRepository
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.common.model.SuccessCode
 import picklab.backend.helper.WithMockUser

@@ -10,6 +10,7 @@ import picklab.backend.activity.domain.enums.LocationType
 import picklab.backend.activity.domain.enums.OrganizerType
 import picklab.backend.activity.domain.enums.ParticipantType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
+import picklab.backend.activitygroup.domain.entity.ActivityGroup
 import java.time.LocalDate
 
 @Entity
