@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.CacheManager
+import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import picklab.backend.activity.application.ViewCountLimiterPort.Companion.MAX_VIEW_ATTEMPTS
@@ -84,6 +85,54 @@ class ActivityIntegrationTest : IntegrationTest() {
                     description = "테스트 그룹 설명",
                 ),
             )
+    }
+
+    @Nested
+    @DisplayName("활동 생성 통합 테스트")
+    inner class CreateActivityTest {
+        @Test
+        @WithMockUser
+        @DisplayName("[성공] snake_case activity_type 으로 대외활동을 생성한다.")
+        fun `snake_case activity_type 으로 대외활동을 생성한다`() {
+            val requestBody =
+                """
+                {
+                  "activity_type": "EXTRACURRICULAR",
+                  "activity_group_id": ${activityGroup.id},
+                  "title": "활동명",
+                  "organizer": "LARGE_CORPORATION",
+                  "target_audience": "ALL",
+                  "recruitment_start_date": "2026-04-01",
+                  "recruitment_end_date": "2026-05-01",
+                  "start_date": "2026-05-01",
+                  "end_date": "2026-11-01",
+                  "status": "OPEN",
+                  "duration": 180,
+                  "activity_homepage_url": "homepage_url",
+                  "activity_application_url": "app_url",
+                  "activity_thumbnail_url": "thumbnail_url",
+                  "description": "설명",
+                  "benefit": "활동혜택",
+                  "job_categories": [],
+                  "upload_files": [],
+                  "location": "SEOUL_INCHEON",
+                  "activity_field": "MENTORING"
+                }
+                """.trimIndent()
+
+            mockMvc
+                .post("/v1/activities") {
+                    contentType = MediaType.APPLICATION_JSON
+                    content = requestBody
+                }.andExpect { status { isOk() } }
+                .andExpect { jsonPath("$.code") { value(SuccessCode.CREATE_ACTIVITY.status.value()) } }
+                .andExpect { jsonPath("$.message") { value(SuccessCode.CREATE_ACTIVITY.message) } }
+
+            val savedActivities = activityRepository.findAll()
+            assertThat(savedActivities).hasSize(1)
+            assertThat(savedActivities.first().title).isEqualTo("활동명")
+            assertThat(savedActivities.first().activityType).isEqualTo(ActivityType.EXTRACURRICULAR.name)
+        }
     }
 
     @Nested
