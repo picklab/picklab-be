@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.activity.domain.entity.ActivityBookmark
-import picklab.backend.activity.domain.entity.ActivityGroup
 import picklab.backend.activity.domain.entity.ExternalActivity
 import picklab.backend.activity.domain.enums.ActivityFieldType
 import picklab.backend.activity.domain.enums.LocationType
@@ -15,8 +14,9 @@ import picklab.backend.activity.domain.enums.OrganizerType
 import picklab.backend.activity.domain.enums.ParticipantType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.activity.domain.repository.ActivityBookmarkRepository
-import picklab.backend.activity.domain.repository.ActivityGroupRepository
 import picklab.backend.activity.domain.repository.ActivityRepository
+import picklab.backend.activitygroup.domain.entity.ActivityGroup
+import picklab.backend.activitygroup.domain.repository.ActivityGroupRepository
 import picklab.backend.member.domain.entity.Member
 import picklab.backend.member.domain.entity.NotificationPreference
 import picklab.backend.member.domain.repository.MemberRepository

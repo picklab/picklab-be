@@ -1,8 +1,9 @@
-package picklab.backend.activity.domain.service
+package picklab.backend.activitygroup.domain.service
 
 import org.springframework.stereotype.Service
-import picklab.backend.activity.domain.entity.ActivityGroup
-import picklab.backend.activity.domain.repository.ActivityGroupRepository
+import org.springframework.transaction.annotation.Transactional
+import picklab.backend.activitygroup.domain.entity.ActivityGroup
+import picklab.backend.activitygroup.domain.repository.ActivityGroupRepository
 import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
 
@@ -10,6 +11,10 @@ import picklab.backend.common.model.ErrorCode
 class ActivityGroupService(
     private val activityGroupRepository: ActivityGroupRepository,
 ) {
+    @Transactional
+    fun save(entity: ActivityGroup): ActivityGroup = activityGroupRepository.save(entity)
+
+    @Transactional(readOnly = true)
     fun mustFindById(id: Long): ActivityGroup =
         activityGroupRepository
             .findById(id)

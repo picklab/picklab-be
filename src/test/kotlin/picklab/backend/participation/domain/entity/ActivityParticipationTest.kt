@@ -4,10 +4,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import picklab.backend.activity.domain.entity.Activity
-import picklab.backend.activity.domain.entity.ActivityGroup
 import picklab.backend.activity.domain.enums.OrganizerType
 import picklab.backend.activity.domain.enums.ParticipantType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
+import picklab.backend.activitygroup.domain.entity.ActivityGroup
 import picklab.backend.member.domain.entity.Member
 import picklab.backend.participation.domain.enums.ApplicationStatus
 import picklab.backend.participation.domain.enums.ProgressStatus

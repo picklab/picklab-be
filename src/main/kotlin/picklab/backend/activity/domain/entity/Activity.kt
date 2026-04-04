@@ -18,6 +18,7 @@ import org.hibernate.annotations.SQLRestriction
 import picklab.backend.activity.domain.enums.OrganizerType
 import picklab.backend.activity.domain.enums.ParticipantType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
+import picklab.backend.activitygroup.domain.entity.ActivityGroup
 import picklab.backend.common.model.SoftDeleteEntity
 import java.time.LocalDate
 

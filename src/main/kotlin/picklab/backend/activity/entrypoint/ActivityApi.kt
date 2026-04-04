@@ -27,14 +27,14 @@ interface ActivityApi {
         summary = "활동 생성",
         description =
             "activity DDL 기준으로 활동을 생성합니다.\n\n" +
-                "공통 필수값은 activityType, activityGroupId, title, organizer, targetAudience, " +
+                "공통 필수값은 activity_type, activity_group_id, title, organizer, target_audience, " +
                 "recruitmentStartDate, recruitmentEndDate, startDate, endDate, status, duration 입니다.\n\n" +
-                "공통 선택값은 activityHomepageUrl, activityApplicationUrl, activityThumbnailUrl, " +
-                "description, benefit, jobCategories, uploadFiles 입니다.\n\n" +
+                "공통 선택값은 activity_homepage_url, activity_application_url, activity_thumbnail_url, " +
+                "description, benefit, job_categories, upload_files 입니다.\n\n" +
                 "타입별 필수값:\n" +
-                "- EXTRACURRICULAR: location, activityField\n" +
+                "- EXTRACURRICULAR: location, activity_field\n" +
                 "- SEMINAR: location\n" +
-                "- EDUCATION: location, cost, costType, educationFormat\n" +
+                "- EDUCATION: location, cost, cost_type, education_format\n" +
                 "- COMPETITION: domain, cost",
         responses = [
             ApiResponse(responseCode = "200", description = "활동 생성에 성공했습니다."),

@@ -5,16 +5,16 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import picklab.backend.activity.domain.entity.ActivityGroup
 import picklab.backend.activity.domain.entity.ExternalActivity
 import picklab.backend.activity.domain.enums.ActivityFieldType
 import picklab.backend.activity.domain.enums.LocationType
 import picklab.backend.activity.domain.enums.OrganizerType
 import picklab.backend.activity.domain.enums.ParticipantType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
-import picklab.backend.activity.domain.repository.ActivityGroupRepository
 import picklab.backend.activity.domain.repository.ActivityRepository
 import picklab.backend.activity.domain.service.ActivityService
+import picklab.backend.activitygroup.domain.entity.ActivityGroup
+import picklab.backend.activitygroup.domain.repository.ActivityGroupRepository
 import picklab.backend.template.IntegrationTest
 import java.time.LocalDate
 

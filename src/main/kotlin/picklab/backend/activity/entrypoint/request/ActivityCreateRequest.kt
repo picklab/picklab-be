@@ -32,7 +32,7 @@ import java.time.LocalDate
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
     include = JsonTypeInfo.As.EXISTING_PROPERTY,
-    property = "activityType",
+    property = "activity_type",
     visible = true,
 )
 @JsonSubTypes(
@@ -42,8 +42,8 @@ import java.time.LocalDate
     JsonSubTypes.Type(value = CompetitionActivityCreateRequest::class, name = "COMPETITION"),
 )
 @Schema(
-    description = "활동 생성 요청. activityType 값에 따라 타입별 필드를 입력합니다.",
-    discriminatorProperty = "activityType",
+    description = "활동 생성 요청. activity_type 값에 따라 타입별 필드를 입력합니다.",
+    discriminatorProperty = "activity_type",
     oneOf = [
         ExternalActivityCreateRequest::class,
         SeminarActivityCreateRequest::class,
