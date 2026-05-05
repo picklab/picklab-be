@@ -35,7 +35,10 @@ class ActivityRepositoryImpl(
             BooleanBuilder().apply {
                 and(QActivity.activity.activityType.eq(queryData.category.name))
                 and(QActivity.activity.deletedAt.isNull)
-                and(QActivity.activity.recruitmentEndDate.goe(LocalDate.now()))
+                and(
+                    QActivity.activity.recruitmentEndDate.isNull
+                        .or(QActivity.activity.recruitmentEndDate.goe(LocalDate.now())),
+                )
                 andIfNotNullOrEmpty(queryData.jobTag) { QJobCategory.jobCategory.jobDetail.`in`(queryData.jobTag) }
                 andIfNotNullOrEmpty(queryData.organizer) { QActivity.activity.organizer.`in`(queryData.organizer) }
                 andIfNotNullOrEmpty(queryData.target) { QActivity.activity.targetAudience.`in`(queryData.target) }
