@@ -121,14 +121,14 @@ data class ActivityPeriod(
     @field:Schema(description = "시작일")
     val startDate: LocalDate,
     @field:Schema(description = "종료일")
-    val endDate: LocalDate,
+    val endDate: LocalDate?,
 )
 
 data class RecruitPeriod(
     @field:Schema(description = "시작일")
     val startDate: LocalDate,
     @field:Schema(description = "종료일")
-    val endDate: LocalDate,
+    val endDate: LocalDate?,
 )
 
 data class RequiredFile(

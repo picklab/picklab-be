@@ -74,11 +74,11 @@ sealed class ActivityCreateRequest(
     @field:Schema(description = "모집 시작일")
     open val recruitmentStartDate: LocalDate,
     @field:Schema(description = "모집 종료일")
-    open val recruitmentEndDate: LocalDate,
+    open val recruitmentEndDate: LocalDate?,
     @field:Schema(description = "활동 시작일")
     open val startDate: LocalDate,
     @field:Schema(description = "활동 종료일")
-    open val endDate: LocalDate,
+    open val endDate: LocalDate?,
     @field:Schema(description = "모집 상태")
     open val status: RecruitmentStatus,
     @field:Min(0)
@@ -131,11 +131,11 @@ data class ExternalActivityCreateRequest(
     @field:Schema(description = "모집 시작일")
     override val recruitmentStartDate: LocalDate,
     @field:Schema(description = "모집 종료일")
-    override val recruitmentEndDate: LocalDate,
+    override val recruitmentEndDate: LocalDate? = null,
     @field:Schema(description = "활동 시작일")
     override val startDate: LocalDate,
     @field:Schema(description = "활동 종료일")
-    override val endDate: LocalDate,
+    override val endDate: LocalDate? = null,
     @field:Schema(description = "모집 상태")
     override val status: RecruitmentStatus,
     @field:Min(0)
@@ -223,11 +223,11 @@ data class SeminarActivityCreateRequest(
     @field:Schema(description = "모집 시작일")
     override val recruitmentStartDate: LocalDate,
     @field:Schema(description = "모집 종료일")
-    override val recruitmentEndDate: LocalDate,
+    override val recruitmentEndDate: LocalDate? = null,
     @field:Schema(description = "활동 시작일")
     override val startDate: LocalDate,
     @field:Schema(description = "활동 종료일")
-    override val endDate: LocalDate,
+    override val endDate: LocalDate? = null,
     @field:Schema(description = "모집 상태")
     override val status: RecruitmentStatus,
     @field:Min(0)
@@ -312,11 +312,11 @@ data class EducationActivityCreateRequest(
     @field:Schema(description = "모집 시작일")
     override val recruitmentStartDate: LocalDate,
     @field:Schema(description = "모집 종료일")
-    override val recruitmentEndDate: LocalDate,
+    override val recruitmentEndDate: LocalDate? = null,
     @field:Schema(description = "활동 시작일")
     override val startDate: LocalDate,
     @field:Schema(description = "활동 종료일")
-    override val endDate: LocalDate,
+    override val endDate: LocalDate? = null,
     @field:Schema(description = "모집 상태")
     override val status: RecruitmentStatus,
     @field:Min(0)
@@ -411,11 +411,11 @@ data class CompetitionActivityCreateRequest(
     @field:Schema(description = "모집 시작일")
     override val recruitmentStartDate: LocalDate,
     @field:Schema(description = "모집 종료일")
-    override val recruitmentEndDate: LocalDate,
+    override val recruitmentEndDate: LocalDate? = null,
     @field:Schema(description = "활동 시작일")
     override val startDate: LocalDate,
     @field:Schema(description = "활동 종료일")
-    override val endDate: LocalDate,
+    override val endDate: LocalDate? = null,
     @field:Schema(description = "모집 상태")
     override val status: RecruitmentStatus,
     @field:Min(0)
