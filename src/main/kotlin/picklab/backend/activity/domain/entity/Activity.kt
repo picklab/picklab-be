@@ -49,15 +49,15 @@ abstract class Activity(
     @Column(name = "recruitment_start_date", nullable = false)
     @Comment("모집 시작일")
     var recruitmentStartDate: LocalDate,
-    @Column(name = "recruitment_end_date", nullable = false)
-    @Comment("모집 종료일")
-    var recruitmentEndDate: LocalDate,
+    @Column(name = "recruitment_end_date")
+    @Comment("모집 종료일 (null이면 상시모집)")
+    var recruitmentEndDate: LocalDate?,
     @Column(name = "start_date", nullable = false)
     @Comment("활동 시작일")
     var startDate: LocalDate,
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "end_date")
     @Comment("활동 종료일")
-    var endDate: LocalDate,
+    var endDate: LocalDate?,
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     @Comment("모집 상태(모집 중, 모집 마감)")
@@ -94,4 +94,7 @@ abstract class Activity(
     fun increaseViewCount() {
         this.viewCount++
     }
+
+    fun isRecruiting(today: LocalDate): Boolean =
+        if (recruitmentEndDate != null) !today.isAfter(recruitmentEndDate) else status == RecruitmentStatus.OPEN
 }

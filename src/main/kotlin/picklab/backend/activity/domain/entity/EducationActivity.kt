@@ -26,9 +26,9 @@ class EducationActivity(
     @Comment("모임지역")
     var location: LocationType,
     recruitmentStartDate: LocalDate,
-    recruitmentEndDate: LocalDate,
+    recruitmentEndDate: LocalDate?,
     startDate: LocalDate,
-    endDate: LocalDate,
+    endDate: LocalDate?,
     status: RecruitmentStatus,
     viewCount: Long,
     duration: Int,
