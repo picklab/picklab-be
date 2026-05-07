@@ -2,6 +2,7 @@ package picklab.backend.activity.infrastructure
 
 import com.querydsl.core.annotations.QueryProjection
 import picklab.backend.activity.application.model.ActivityView
+import picklab.backend.activity.domain.enums.RecruitmentEndType
 import java.time.LocalDate
 
 @QueryProjection
@@ -13,4 +14,7 @@ data class ActivityItem(
     override val category: String,
     override val jobTags: List<String>,
     override val thumbnailUrl: String?,
+    override val viewCount: Long,
+    override val recruitmentEndDate: LocalDate?,
+    override val recruitmentEndType: RecruitmentEndType,
 ) : ActivityView

@@ -8,6 +8,7 @@ import picklab.backend.activity.domain.enums.EducationFormatType
 import picklab.backend.activity.domain.enums.LocationType
 import picklab.backend.activity.domain.enums.OrganizerType
 import picklab.backend.activity.domain.enums.ParticipantType
+import picklab.backend.activity.domain.enums.RecruitmentEndType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
 import java.time.LocalDate
 
@@ -19,6 +20,7 @@ sealed class ActivityCreateCommand(
     open val targetAudience: ParticipantType,
     open val recruitmentStartDate: LocalDate,
     open val recruitmentEndDate: LocalDate?,
+    open val recruitmentEndType: RecruitmentEndType,
     open val startDate: LocalDate,
     open val endDate: LocalDate?,
     open val status: RecruitmentStatus,
@@ -39,6 +41,7 @@ data class ExternalActivityCreateCommand(
     override val targetAudience: ParticipantType,
     override val recruitmentStartDate: LocalDate,
     override val recruitmentEndDate: LocalDate?,
+    override val recruitmentEndType: RecruitmentEndType,
     override val startDate: LocalDate,
     override val endDate: LocalDate?,
     override val status: RecruitmentStatus,
@@ -60,6 +63,7 @@ data class ExternalActivityCreateCommand(
         targetAudience = targetAudience,
         recruitmentStartDate = recruitmentStartDate,
         recruitmentEndDate = recruitmentEndDate,
+        recruitmentEndType = recruitmentEndType,
         startDate = startDate,
         endDate = endDate,
         status = status,
@@ -80,6 +84,7 @@ data class SeminarActivityCreateCommand(
     override val targetAudience: ParticipantType,
     override val recruitmentStartDate: LocalDate,
     override val recruitmentEndDate: LocalDate?,
+    override val recruitmentEndType: RecruitmentEndType,
     override val startDate: LocalDate,
     override val endDate: LocalDate?,
     override val status: RecruitmentStatus,
@@ -100,6 +105,7 @@ data class SeminarActivityCreateCommand(
         targetAudience = targetAudience,
         recruitmentStartDate = recruitmentStartDate,
         recruitmentEndDate = recruitmentEndDate,
+        recruitmentEndType = recruitmentEndType,
         startDate = startDate,
         endDate = endDate,
         status = status,
@@ -120,6 +126,7 @@ data class EducationActivityCreateCommand(
     override val targetAudience: ParticipantType,
     override val recruitmentStartDate: LocalDate,
     override val recruitmentEndDate: LocalDate?,
+    override val recruitmentEndType: RecruitmentEndType,
     override val startDate: LocalDate,
     override val endDate: LocalDate?,
     override val status: RecruitmentStatus,
@@ -143,6 +150,7 @@ data class EducationActivityCreateCommand(
         targetAudience = targetAudience,
         recruitmentStartDate = recruitmentStartDate,
         recruitmentEndDate = recruitmentEndDate,
+        recruitmentEndType = recruitmentEndType,
         startDate = startDate,
         endDate = endDate,
         status = status,
@@ -163,6 +171,7 @@ data class CompetitionActivityCreateCommand(
     override val targetAudience: ParticipantType,
     override val recruitmentStartDate: LocalDate,
     override val recruitmentEndDate: LocalDate?,
+    override val recruitmentEndType: RecruitmentEndType,
     override val startDate: LocalDate,
     override val endDate: LocalDate?,
     override val status: RecruitmentStatus,
@@ -184,6 +193,7 @@ data class CompetitionActivityCreateCommand(
         targetAudience = targetAudience,
         recruitmentStartDate = recruitmentStartDate,
         recruitmentEndDate = recruitmentEndDate,
+        recruitmentEndType = recruitmentEndType,
         startDate = startDate,
         endDate = endDate,
         status = status,

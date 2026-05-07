@@ -19,6 +19,7 @@ import picklab.backend.activity.domain.enums.DomainType
 import picklab.backend.activity.domain.enums.EducationCostType
 import picklab.backend.activity.domain.enums.EducationFormatType
 import picklab.backend.activity.domain.enums.LocationType
+import picklab.backend.activity.domain.enums.RecruitmentEndType
 import picklab.backend.activity.infrastructure.QActivityItem
 import picklab.backend.job.domain.entity.QJobCategory
 import java.time.LocalDate
@@ -36,7 +37,9 @@ class ActivityRepositoryImpl(
                 and(QActivity.activity.activityType.eq(queryData.category.name))
                 and(QActivity.activity.deletedAt.isNull)
                 and(
-                    QActivity.activity.recruitmentEndDate.isNull
+                    Expressions
+                        .enumPath(RecruitmentEndType::class.java, "recruitmentEndType")
+                        .ne(RecruitmentEndType.FIXED)
                         .or(QActivity.activity.recruitmentEndDate.goe(LocalDate.now())),
                 )
                 andIfNotNullOrEmpty(queryData.jobTag) { QJobCategory.jobCategory.jobDetail.`in`(queryData.jobTag) }
@@ -122,6 +125,9 @@ class ActivityRepositoryImpl(
                             QActivity.activity.activityType,
                             GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),
                             QActivity.activity.activityThumbnailUrl,
+                            QActivity.activity.viewCount,
+                            QActivity.activity.recruitmentEndDate,
+                            QActivity.activity.recruitmentEndType,
                         ),
                     ),
                 ).map { it as ActivityView }

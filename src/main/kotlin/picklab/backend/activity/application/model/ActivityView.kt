@@ -1,5 +1,6 @@
 package picklab.backend.activity.application.model
 
+import picklab.backend.activity.domain.enums.RecruitmentEndType
 import java.time.LocalDate
 
 interface ActivityView {
@@ -10,4 +11,7 @@ interface ActivityView {
     val category: String
     val jobTags: List<String>
     val thumbnailUrl: String?
+    val viewCount: Long
+    val recruitmentEndDate: LocalDate?
+    val recruitmentEndType: RecruitmentEndType
 }

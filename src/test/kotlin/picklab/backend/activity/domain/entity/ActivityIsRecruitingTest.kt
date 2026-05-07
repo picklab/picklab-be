@@ -5,6 +5,7 @@ import picklab.backend.activity.domain.enums.ActivityFieldType
 import picklab.backend.activity.domain.enums.LocationType
 import picklab.backend.activity.domain.enums.OrganizerType
 import picklab.backend.activity.domain.enums.ParticipantType
+import picklab.backend.activity.domain.enums.RecruitmentEndType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.activitygroup.domain.entity.ActivityGroup
 import java.time.LocalDate
@@ -17,6 +18,7 @@ class ActivityIsRecruitingTest {
 
     private fun activity(
         recruitmentEndDate: LocalDate?,
+        recruitmentEndType: RecruitmentEndType,
         status: RecruitmentStatus = RecruitmentStatus.OPEN,
     ) = ExternalActivity(
         title = "테스트 활동",
@@ -25,6 +27,7 @@ class ActivityIsRecruitingTest {
         location = LocationType.ALL,
         recruitmentStartDate = LocalDate.of(2026, 1, 1),
         recruitmentEndDate = recruitmentEndDate,
+        recruitmentEndType = recruitmentEndType,
         startDate = LocalDate.of(2026, 6, 1),
         endDate = null,
         status = status,
@@ -40,32 +43,38 @@ class ActivityIsRecruitingTest {
     )
 
     @Test
-    @DisplayName("마감일이 오늘 이후면 모집 중")
-    fun endDateAfterTodayIsRecruiting() {
-        assertTrue(activity(today.plusDays(1)).isRecruiting(today))
+    @DisplayName("FIXED: 마감일이 오늘 이후면 모집 중")
+    fun fixedBeforeDeadlineIsRecruiting() {
+        assertTrue(activity(today.plusDays(1), RecruitmentEndType.FIXED).isRecruiting(today))
     }
 
     @Test
-    @DisplayName("마감일이 오늘이면 모집 중")
-    fun endDateTodayIsRecruiting() {
-        assertTrue(activity(today).isRecruiting(today))
+    @DisplayName("FIXED: 마감일이 오늘이면 모집 중")
+    fun fixedOnDeadlineIsRecruiting() {
+        assertTrue(activity(today, RecruitmentEndType.FIXED).isRecruiting(today))
     }
 
     @Test
-    @DisplayName("마감일이 지나면 모집 종료")
-    fun endDateBeforeTodayIsNotRecruiting() {
-        assertFalse(activity(today.minusDays(1)).isRecruiting(today))
+    @DisplayName("FIXED: 마감일이 지나면 모집 종료")
+    fun fixedAfterDeadlineIsNotRecruiting() {
+        assertFalse(activity(today.minusDays(1), RecruitmentEndType.FIXED).isRecruiting(today))
     }
 
     @Test
-    @DisplayName("상시모집(null)이고 status가 OPEN이면 모집 중")
-    fun nullEndDateWithOpenStatusIsRecruiting() {
-        assertTrue(activity(recruitmentEndDate = null, status = RecruitmentStatus.OPEN).isRecruiting(today))
+    @DisplayName("ALWAYS_OPEN: status와 무관하게 항상 모집 중")
+    fun alwaysOpenIsAlwaysRecruiting() {
+        assertTrue(activity(null, RecruitmentEndType.ALWAYS_OPEN, RecruitmentStatus.CLOSED).isRecruiting(today))
     }
 
     @Test
-    @DisplayName("상시모집(null)이어도 status가 CLOSED이면 모집 종료")
-    fun nullEndDateWithClosedStatusIsNotRecruiting() {
-        assertFalse(activity(recruitmentEndDate = null, status = RecruitmentStatus.CLOSED).isRecruiting(today))
+    @DisplayName("CLOSE_ON_HIRE: status가 OPEN이면 모집 중")
+    fun closeOnHireWithOpenStatusIsRecruiting() {
+        assertTrue(activity(null, RecruitmentEndType.CLOSE_ON_HIRE, RecruitmentStatus.OPEN).isRecruiting(today))
+    }
+
+    @Test
+    @DisplayName("CLOSE_ON_HIRE: status가 CLOSED이면 모집 종료")
+    fun closeOnHireWithClosedStatusIsNotRecruiting() {
+        assertFalse(activity(null, RecruitmentEndType.CLOSE_ON_HIRE, RecruitmentStatus.CLOSED).isRecruiting(today))
     }
 }

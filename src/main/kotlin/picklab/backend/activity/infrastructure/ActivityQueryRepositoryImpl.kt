@@ -93,6 +93,9 @@ class ActivityQueryRepositoryImpl(
                             QActivity.activity.activityType,
                             GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),
                             QActivity.activity.activityThumbnailUrl,
+                            QActivity.activity.viewCount,
+                            QActivity.activity.recruitmentEndDate,
+                            QActivity.activity.recruitmentEndType,
                         ),
                     ),
                 ).map { it as ActivityView }
@@ -172,6 +175,9 @@ class ActivityQueryRepositoryImpl(
                             QActivity.activity.activityType,
                             GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),
                             QActivity.activity.activityThumbnailUrl,
+                            QActivity.activity.viewCount,
+                            QActivity.activity.recruitmentEndDate,
+                            QActivity.activity.recruitmentEndType,
                         ),
                     ),
                 ).map { it as ActivityView }
@@ -258,6 +264,9 @@ class ActivityQueryRepositoryImpl(
                             QActivity.activity.activityType,
                             GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),
                             QActivity.activity.activityThumbnailUrl,
+                            QActivity.activity.viewCount,
+                            QActivity.activity.recruitmentEndDate,
+                            QActivity.activity.recruitmentEndType,
                         ),
                     ),
                 ).map { it as ActivityView }
@@ -336,6 +345,9 @@ class ActivityQueryRepositoryImpl(
                             QActivity.activity.activityType,
                             GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),
                             QActivity.activity.activityThumbnailUrl,
+                            QActivity.activity.viewCount,
+                            QActivity.activity.recruitmentEndDate,
+                            QActivity.activity.recruitmentEndType,
                         ),
                     ),
                 )

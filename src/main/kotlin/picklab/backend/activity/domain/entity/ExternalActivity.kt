@@ -10,6 +10,7 @@ import picklab.backend.activity.domain.enums.ActivityFieldType
 import picklab.backend.activity.domain.enums.LocationType
 import picklab.backend.activity.domain.enums.OrganizerType
 import picklab.backend.activity.domain.enums.ParticipantType
+import picklab.backend.activity.domain.enums.RecruitmentEndType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.activitygroup.domain.entity.ActivityGroup
 import java.time.LocalDate
@@ -26,6 +27,7 @@ class ExternalActivity(
     var location: LocationType,
     recruitmentStartDate: LocalDate,
     recruitmentEndDate: LocalDate?,
+    recruitmentEndType: RecruitmentEndType = RecruitmentEndType.FIXED,
     startDate: LocalDate,
     endDate: LocalDate?,
     status: RecruitmentStatus,
@@ -47,6 +49,7 @@ class ExternalActivity(
         targetAudience = targetAudience,
         recruitmentStartDate = recruitmentStartDate,
         recruitmentEndDate = recruitmentEndDate,
+        recruitmentEndType = recruitmentEndType,
         startDate = startDate,
         endDate = endDate,
         status = status,
