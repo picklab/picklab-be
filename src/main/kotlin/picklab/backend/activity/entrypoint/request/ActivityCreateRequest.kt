@@ -24,6 +24,7 @@ import picklab.backend.activity.domain.enums.EducationFormatType
 import picklab.backend.activity.domain.enums.LocationType
 import picklab.backend.activity.domain.enums.OrganizerType
 import picklab.backend.activity.domain.enums.ParticipantType
+import picklab.backend.activity.domain.enums.RecruitmentEndType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.job.domain.enums.JobDetail
 import picklab.backend.job.domain.enums.JobGroup
@@ -75,6 +76,8 @@ sealed class ActivityCreateRequest(
     open val recruitmentStartDate: LocalDate,
     @field:Schema(description = "모집 종료일")
     open val recruitmentEndDate: LocalDate?,
+    @field:Schema(description = "모집 종료 유형")
+    open val recruitmentEndType: RecruitmentEndType = RecruitmentEndType.FIXED,
     @field:Schema(description = "활동 시작일")
     open val startDate: LocalDate,
     @field:Schema(description = "활동 종료일")
@@ -132,6 +135,8 @@ data class ExternalActivityCreateRequest(
     override val recruitmentStartDate: LocalDate,
     @field:Schema(description = "모집 종료일")
     override val recruitmentEndDate: LocalDate? = null,
+    @field:Schema(description = "모집 종료 유형")
+    override val recruitmentEndType: RecruitmentEndType = RecruitmentEndType.FIXED,
     @field:Schema(description = "활동 시작일")
     override val startDate: LocalDate,
     @field:Schema(description = "활동 종료일")
@@ -169,6 +174,7 @@ data class ExternalActivityCreateRequest(
         targetAudience = targetAudience,
         recruitmentStartDate = recruitmentStartDate,
         recruitmentEndDate = recruitmentEndDate,
+        recruitmentEndType = recruitmentEndType,
         startDate = startDate,
         endDate = endDate,
         status = status,
@@ -189,6 +195,7 @@ data class ExternalActivityCreateRequest(
             targetAudience = targetAudience,
             recruitmentStartDate = recruitmentStartDate,
             recruitmentEndDate = recruitmentEndDate,
+            recruitmentEndType = recruitmentEndType,
             startDate = startDate,
             endDate = endDate,
             status = status,
@@ -224,6 +231,8 @@ data class SeminarActivityCreateRequest(
     override val recruitmentStartDate: LocalDate,
     @field:Schema(description = "모집 종료일")
     override val recruitmentEndDate: LocalDate? = null,
+    @field:Schema(description = "모집 종료 유형")
+    override val recruitmentEndType: RecruitmentEndType = RecruitmentEndType.FIXED,
     @field:Schema(description = "활동 시작일")
     override val startDate: LocalDate,
     @field:Schema(description = "활동 종료일")
@@ -259,6 +268,7 @@ data class SeminarActivityCreateRequest(
         targetAudience = targetAudience,
         recruitmentStartDate = recruitmentStartDate,
         recruitmentEndDate = recruitmentEndDate,
+        recruitmentEndType = recruitmentEndType,
         startDate = startDate,
         endDate = endDate,
         status = status,
@@ -279,6 +289,7 @@ data class SeminarActivityCreateRequest(
             targetAudience = targetAudience,
             recruitmentStartDate = recruitmentStartDate,
             recruitmentEndDate = recruitmentEndDate,
+            recruitmentEndType = recruitmentEndType,
             startDate = startDate,
             endDate = endDate,
             status = status,
@@ -313,6 +324,8 @@ data class EducationActivityCreateRequest(
     override val recruitmentStartDate: LocalDate,
     @field:Schema(description = "모집 종료일")
     override val recruitmentEndDate: LocalDate? = null,
+    @field:Schema(description = "모집 종료 유형")
+    override val recruitmentEndType: RecruitmentEndType = RecruitmentEndType.FIXED,
     @field:Schema(description = "활동 시작일")
     override val startDate: LocalDate,
     @field:Schema(description = "활동 종료일")
@@ -355,6 +368,7 @@ data class EducationActivityCreateRequest(
         targetAudience = targetAudience,
         recruitmentStartDate = recruitmentStartDate,
         recruitmentEndDate = recruitmentEndDate,
+        recruitmentEndType = recruitmentEndType,
         startDate = startDate,
         endDate = endDate,
         status = status,
@@ -375,6 +389,7 @@ data class EducationActivityCreateRequest(
             targetAudience = targetAudience,
             recruitmentStartDate = recruitmentStartDate,
             recruitmentEndDate = recruitmentEndDate,
+            recruitmentEndType = recruitmentEndType,
             startDate = startDate,
             endDate = endDate,
             status = status,
@@ -412,6 +427,8 @@ data class CompetitionActivityCreateRequest(
     override val recruitmentStartDate: LocalDate,
     @field:Schema(description = "모집 종료일")
     override val recruitmentEndDate: LocalDate? = null,
+    @field:Schema(description = "모집 종료 유형")
+    override val recruitmentEndType: RecruitmentEndType = RecruitmentEndType.FIXED,
     @field:Schema(description = "활동 시작일")
     override val startDate: LocalDate,
     @field:Schema(description = "활동 종료일")
@@ -450,6 +467,7 @@ data class CompetitionActivityCreateRequest(
         targetAudience = targetAudience,
         recruitmentStartDate = recruitmentStartDate,
         recruitmentEndDate = recruitmentEndDate,
+        recruitmentEndType = recruitmentEndType,
         startDate = startDate,
         endDate = endDate,
         status = status,
@@ -470,6 +488,7 @@ data class CompetitionActivityCreateRequest(
             targetAudience = targetAudience,
             recruitmentStartDate = recruitmentStartDate,
             recruitmentEndDate = recruitmentEndDate,
+            recruitmentEndType = recruitmentEndType,
             startDate = startDate,
             endDate = endDate,
             status = status,

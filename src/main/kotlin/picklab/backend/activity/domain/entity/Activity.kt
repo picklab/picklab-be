@@ -17,6 +17,7 @@ import org.hibernate.annotations.SQLDelete
 import org.hibernate.annotations.SQLRestriction
 import picklab.backend.activity.domain.enums.OrganizerType
 import picklab.backend.activity.domain.enums.ParticipantType
+import picklab.backend.activity.domain.enums.RecruitmentEndType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.activitygroup.domain.entity.ActivityGroup
 import picklab.backend.common.model.SoftDeleteEntity
@@ -50,8 +51,12 @@ abstract class Activity(
     @Comment("모집 시작일")
     var recruitmentStartDate: LocalDate,
     @Column(name = "recruitment_end_date")
-    @Comment("모집 종료일 (null이면 상시모집)")
+    @Comment("모집 종료일")
     var recruitmentEndDate: LocalDate?,
+    @Column(name = "recruitment_end_type", nullable = false, length = 50)
+    @Enumerated(EnumType.STRING)
+    @Comment("모집 종료 유형")
+    var recruitmentEndType: RecruitmentEndType = RecruitmentEndType.FIXED,
     @Column(name = "start_date", nullable = false)
     @Comment("활동 시작일")
     var startDate: LocalDate,
@@ -87,6 +92,12 @@ abstract class Activity(
     @JoinColumn(name = "group_id", nullable = false)
     val activityGroup: ActivityGroup,
 ) : SoftDeleteEntity() {
+    init {
+        require(recruitmentEndType != RecruitmentEndType.FIXED || recruitmentEndDate != null) {
+            "날짜 지정 유형은 모집 종료일이 필수입니다."
+        }
+    }
+
     companion object {
         const val UNLIMITED_DURATION = -1
     }
@@ -96,5 +107,9 @@ abstract class Activity(
     }
 
     fun isRecruiting(today: LocalDate): Boolean =
-        if (recruitmentEndDate != null) !today.isAfter(recruitmentEndDate) else status == RecruitmentStatus.OPEN
+        when (recruitmentEndType) {
+            RecruitmentEndType.FIXED -> !today.isAfter(recruitmentEndDate!!)
+            RecruitmentEndType.ALWAYS_OPEN -> true
+            RecruitmentEndType.CLOSE_ON_HIRE -> status == RecruitmentStatus.OPEN
+        }
 }

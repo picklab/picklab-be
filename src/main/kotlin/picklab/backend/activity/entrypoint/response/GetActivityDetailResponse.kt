@@ -7,6 +7,7 @@ import picklab.backend.activity.domain.entity.EducationActivity
 import picklab.backend.activity.domain.entity.ExternalActivity
 import picklab.backend.activity.domain.entity.SeminarActivity
 import picklab.backend.activity.domain.enums.ActivityType
+import picklab.backend.activity.domain.enums.RecruitmentEndType
 import java.time.LocalDate
 
 // TODO 파일 업로드, Review 관련 내용 추가 필요함
@@ -66,6 +67,7 @@ data class GetActivityDetailResponse(
                 RecruitPeriod(
                     startDate = activity.recruitmentStartDate,
                     endDate = activity.recruitmentEndDate,
+                    recruitmentEndType = activity.recruitmentEndType,
                 ),
             activityPeriod =
                 ActivityPeriod(
@@ -129,6 +131,8 @@ data class RecruitPeriod(
     val startDate: LocalDate,
     @field:Schema(description = "종료일")
     val endDate: LocalDate?,
+    @field:Schema(description = "모집 종료 유형")
+    val recruitmentEndType: RecruitmentEndType,
 )
 
 data class RequiredFile(

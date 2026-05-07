@@ -35,7 +35,7 @@ interface ActivityRepository :
         SELECT a FROM Activity a
         LEFT JOIN ActivityBookmark ab ON ab.activity.id = a.id
         WHERE a.status = 'OPEN'
-        AND (a.recruitmentEndDate IS NULL OR a.recruitmentEndDate >= CURRENT_DATE)
+        AND (a.recruitmentEndType <> 'FIXED' OR a.recruitmentEndDate >= CURRENT_DATE)
         GROUP BY a.id
         ORDER BY (a.viewCount + COALESCE(COUNT(ab.id), 0)) DESC
         LIMIT 1
