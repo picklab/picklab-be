@@ -27,11 +27,12 @@ interface ActivityApi {
         summary = "활동 생성",
         description =
             "activity DDL 기준으로 활동을 생성합니다.\n\n" +
-                "공통 필수값은 activity_type, activity_group_id, title, organizer, target_audience, " +
-                "recruitmentStartDate, recruitmentEndDate, startDate, endDate, status, duration 입니다.\n\n" +
-                "공통 선택값은 activity_homepage_url, activity_application_url, activity_thumbnail_url, " +
-                "description, benefit, job_categories, upload_files 입니다.\n\n" +
-                "타입별 필수값:\n" +
+                "**공통 필수값:** activity_type, activity_group_id, title, organizer_type, target_audience, " +
+                "recruitment_start_date, start_date, status, duration\n\n" +
+                "**공통 선택값:** organizer(주최 기관명), recruitment_end_date, recruitment_end_type(기본: FIXED), " +
+                "end_date, activity_homepage_url, activity_application_url, activity_thumbnail_url, " +
+                "description, benefit, job_categories, upload_files\n\n" +
+                "**타입별 필수값:**\n" +
                 "- EXTRACURRICULAR: location, activity_field\n" +
                 "- SEMINAR: location\n" +
                 "- EDUCATION: location, cost, cost_type, education_format\n" +
@@ -60,7 +61,7 @@ interface ActivityApi {
                 "**요청 파라미터:**\n" +
                 "- category: 활동 분류 (extracurricular, seminar, education, competition)\n" +
                 "- jobTag: 직무 태그 (ex. frontend, backend)\n" +
-                "- organizer: 주최 기관 (large_corporation, medium_corporation, small_corporation, public_organization, foreign_corporation, non_profit, startup, financial_institution, hospital, etc.)\n" +
+                "- organizerType: 주최 기관 유형 (LARGE_CORPORATION, MEDIUM_CORPORATION, SMALL_CORPORATION, PUBLIC_ORGANIZATION, FOREIGN_CORPORATION, NON_PROFIT, STARTUP, FINANCIAL_INSTITUTION, HOSPITAL, ETC)\n" +
                 "- target: 참여 대상(all, university_student, worker)\n" +
                 "- field: 분야 (ex. supporters, marketer, mentoring, press, overseas_volunteer, domestic_volunteer)\n" +
                 "- location: 모임 지역 (all, seoul_incheon, gyeonggi_gangwon, daejeon_sejong_chungnam, busan_daegu_gyeongsang, gwangju_jeolla, jeju, overseas)\n" +

@@ -18,7 +18,8 @@ import java.time.LocalDate
 @DiscriminatorValue("COMPETITION")
 class CompetitionActivity(
     title: String,
-    organizer: OrganizerType,
+    organizer: String? = null,
+    organizerType: OrganizerType,
     targetAudience: ParticipantType,
     recruitmentStartDate: LocalDate,
     recruitmentEndDate: LocalDate?,
@@ -44,6 +45,7 @@ class CompetitionActivity(
 ) : Activity(
         title = title,
         organizer = organizer,
+        organizerType = organizerType,
         targetAudience = targetAudience,
         recruitmentStartDate = recruitmentStartDate,
         recruitmentEndDate = recruitmentEndDate,

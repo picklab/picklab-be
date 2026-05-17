@@ -43,7 +43,7 @@ class ActivityRepositoryImpl(
                         .or(QActivity.activity.recruitmentEndDate.goe(LocalDate.now())),
                 )
                 andIfNotNullOrEmpty(queryData.jobTag) { QJobCategory.jobCategory.jobDetail.`in`(queryData.jobTag) }
-                andIfNotNullOrEmpty(queryData.organizer) { QActivity.activity.organizer.`in`(queryData.organizer) }
+                andIfNotNullOrEmpty(queryData.organizerType) { QActivity.activity.organizerType.`in`(queryData.organizerType) }
                 andIfNotNullOrEmpty(queryData.target) { QActivity.activity.targetAudience.`in`(queryData.target) }
                 andIfNotNullOrEmpty(queryData.field) {
                     Expressions.enumPath(ActivityFieldType::class.javaObjectType, "activityField").`in`(queryData.field)
@@ -120,7 +120,8 @@ class ActivityRepositoryImpl(
                         QActivityItem(
                             QActivity.activity.id,
                             QActivity.activity.title,
-                            QActivity.activity.organizer.stringValue(),
+                            QActivity.activity.organizer,
+                            QActivity.activity.organizerType.stringValue(),
                             QActivity.activity.startDate,
                             QActivity.activity.activityType,
                             GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),

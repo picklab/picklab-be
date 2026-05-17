@@ -20,7 +20,8 @@ import java.time.LocalDate
 @DiscriminatorValue("EDUCATION")
 class EducationActivity(
     title: String,
-    organizer: OrganizerType,
+    organizer: String? = null,
+    organizerType: OrganizerType,
     targetAudience: ParticipantType,
     @Column(name = "location", length = 50)
     @Enumerated(EnumType.STRING)
@@ -54,6 +55,7 @@ class EducationActivity(
 ) : Activity(
         title = title,
         organizer = organizer,
+        organizerType = organizerType,
         targetAudience = targetAudience,
         recruitmentStartDate = recruitmentStartDate,
         recruitmentEndDate = recruitmentEndDate,

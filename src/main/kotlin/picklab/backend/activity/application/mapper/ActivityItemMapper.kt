@@ -18,6 +18,7 @@ fun ActivityView.withBookmark(isBookmarked: Boolean): ActivityItemWithBookmark {
         id,
         title,
         organization,
+        organizerType,
         startDate,
         category,
         jobTags,

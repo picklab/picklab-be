@@ -7,7 +7,7 @@ fun ActivitySearchRequest.toCondition(): ActivitySearchCondition =
     ActivitySearchCondition(
         category = category,
         jobTag = jobTag,
-        organizer = organizer,
+        organizerType = organizerType,
         target = target,
         field = field,
         location = location,

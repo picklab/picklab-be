@@ -11,6 +11,7 @@ fun MyReviewListView.toResponse(): MyReviewsResponse =
         id = id,
         title = title,
         organizer = organizer,
+        organizerType = organizerType,
         activityType = activityType,
         createdAt = createdAt,
         approvalStatus = approvalStatus,

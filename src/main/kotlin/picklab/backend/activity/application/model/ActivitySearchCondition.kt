@@ -14,7 +14,7 @@ import picklab.backend.job.domain.enums.JobDetail
 data class ActivitySearchCondition(
     val category: ActivityType,
     val jobTag: List<JobDetail>?,
-    val organizer: List<OrganizerType>?,
+    val organizerType: List<OrganizerType>?,
     val target: List<ParticipantType>?,
     val field: List<ActivityFieldType>?,
     val location: List<LocationType>?,
