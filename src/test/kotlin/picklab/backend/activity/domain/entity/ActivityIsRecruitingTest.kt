@@ -22,7 +22,7 @@ class ActivityIsRecruitingTest {
         status: RecruitmentStatus = RecruitmentStatus.OPEN,
     ) = ExternalActivity(
         title = "테스트 활동",
-        organizer = OrganizerType.LARGE_CORPORATION,
+        organizerType = OrganizerType.LARGE_CORPORATION,
         targetAudience = ParticipantType.ALL,
         location = LocationType.ALL,
         recruitmentStartDate = LocalDate.of(2026, 1, 1),

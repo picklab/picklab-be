@@ -42,7 +42,7 @@ class ActivityQuerySanitizeTest {
             ActivitySearchCondition(
                 category = ActivityType.EXTRACURRICULAR,
                 jobTag = listOf(JobDetail.BACKEND),
-                organizer = listOf(OrganizerType.LARGE_CORPORATION),
+                organizerType = listOf(OrganizerType.LARGE_CORPORATION),
                 target = listOf(ParticipantType.ALL),
                 field = listOf(ActivityFieldType.MENTORING),
                 location = listOf(LocationType.SEOUL_INCHEON),
@@ -72,7 +72,7 @@ class ActivityQuerySanitizeTest {
             ActivitySearchCondition(
                 category = ActivityType.SEMINAR,
                 jobTag = listOf(JobDetail.BACKEND),
-                organizer = listOf(OrganizerType.LARGE_CORPORATION),
+                organizerType = listOf(OrganizerType.LARGE_CORPORATION),
                 target = listOf(ParticipantType.ALL),
                 field = listOf(ActivityFieldType.MENTORING),
                 location = listOf(LocationType.SEOUL_INCHEON),
@@ -106,7 +106,7 @@ class ActivityQuerySanitizeTest {
                 ActivitySearchCondition(
                     category = ActivityType.EDUCATION,
                     jobTag = listOf(JobDetail.BACKEND),
-                    organizer = listOf(OrganizerType.LARGE_CORPORATION),
+                    organizerType = listOf(OrganizerType.LARGE_CORPORATION),
                     target = listOf(ParticipantType.ALL),
                     field = listOf(ActivityFieldType.MENTORING),
                     location = listOf(LocationType.SEOUL_INCHEON),
@@ -134,7 +134,7 @@ class ActivityQuerySanitizeTest {
                 ActivitySearchCondition(
                     category = ActivityType.EDUCATION,
                     jobTag = listOf(JobDetail.BACKEND),
-                    organizer = listOf(OrganizerType.LARGE_CORPORATION),
+                    organizerType = listOf(OrganizerType.LARGE_CORPORATION),
                     target = listOf(ParticipantType.ALL),
                     field = listOf(ActivityFieldType.MENTORING),
                     location = listOf(LocationType.SEOUL_INCHEON),
@@ -164,7 +164,7 @@ class ActivityQuerySanitizeTest {
                     ActivitySearchCondition(
                         category = ActivityType.COMPETITION,
                         jobTag = listOf(JobDetail.BACKEND),
-                        organizer = listOf(OrganizerType.LARGE_CORPORATION),
+                        organizerType = listOf(OrganizerType.LARGE_CORPORATION),
                         target = listOf(ParticipantType.ALL),
                         field = listOf(ActivityFieldType.MENTORING),
                         location = listOf(LocationType.SEOUL_INCHEON),
@@ -193,7 +193,7 @@ class ActivityQuerySanitizeTest {
                     ActivitySearchCondition(
                         category = ActivityType.COMPETITION,
                         jobTag = listOf(JobDetail.BACKEND),
-                        organizer = listOf(OrganizerType.LARGE_CORPORATION),
+                        organizerType = listOf(OrganizerType.LARGE_CORPORATION),
                         target = listOf(ParticipantType.ALL),
                         field = listOf(ActivityFieldType.MENTORING),
                         location = listOf(LocationType.SEOUL_INCHEON),
@@ -222,7 +222,7 @@ class ActivityQuerySanitizeTest {
                     ActivitySearchCondition(
                         category = ActivityType.COMPETITION,
                         jobTag = listOf(JobDetail.BACKEND),
-                        organizer = listOf(OrganizerType.LARGE_CORPORATION),
+                        organizerType = listOf(OrganizerType.LARGE_CORPORATION),
                         target = listOf(ParticipantType.ALL),
                         field = listOf(ActivityFieldType.MENTORING),
                         location = listOf(LocationType.SEOUL_INCHEON),

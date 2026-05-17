@@ -142,7 +142,7 @@ class ActivityDeadlineServiceTest : IntegrationTest() {
     ): ExternalActivity =
         ExternalActivity(
             title = title,
-            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
             targetAudience = ParticipantType.ALL,
             location = LocationType.SEOUL_INCHEON,
             recruitmentStartDate = recruitmentEndDate.minusDays(30),

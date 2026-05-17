@@ -100,7 +100,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                   "activity_type": "EXTRACURRICULAR",
                   "activity_group_id": ${activityGroup.id},
                   "title": "활동명",
-                  "organizer": "LARGE_CORPORATION",
+                  "organizer_type": "LARGE_CORPORATION",
                   "target_audience": "ALL",
                   "recruitment_start_date": "2026-04-01",
                   "recruitment_end_date": "2026-05-01",
@@ -149,7 +149,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         ExternalActivity(
                             title = "테스트 대외활동",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                             targetAudience = ParticipantType.WORKER,
                             location = LocationType.SEOUL_INCHEON,
                             recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -176,7 +176,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         ExternalActivity(
                             title = "테스트 대외활동",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                             targetAudience = ParticipantType.WORKER,
                             location = LocationType.SEOUL_INCHEON,
                             recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -232,7 +232,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         ExternalActivity(
                             title = "테스트 대외활동1",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                             targetAudience = ParticipantType.WORKER,
                             location = LocationType.SEOUL_INCHEON,
                             recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -258,7 +258,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                 activityRepository.save(
                     ExternalActivity(
                         title = "테스트 대외활동2",
-                        organizer = OrganizerType.LARGE_CORPORATION,
+                        organizerType = OrganizerType.LARGE_CORPORATION,
                         targetAudience = ParticipantType.WORKER,
                         location = LocationType.SEOUL_INCHEON,
                         recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -286,7 +286,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     mockMvc
                         .get("/v1/activities") {
                             param("category", "extracurricular")
-                            param("organizer", "public_organization")
+                            param("organizerType", "public_organization")
                             param("sort", "latest")
                             param("size", "20")
                             param("page", "1")
@@ -315,7 +315,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         ExternalActivity(
                             title = "테스트 대외활동",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                             targetAudience = ParticipantType.WORKER,
                             location = LocationType.SEOUL_INCHEON,
                             recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -341,7 +341,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                 activityRepository.save(
                     ExternalActivity(
                         title = "테스트 대외활동2",
-                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                        organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                         targetAudience = ParticipantType.UNIVERSITY_STUDENT,
                         location = LocationType.SEOUL_INCHEON,
                         recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -398,7 +398,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         ExternalActivity(
                             title = "테스트 대외활동",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                             targetAudience = ParticipantType.WORKER,
                             location = LocationType.SEOUL_INCHEON,
                             recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -424,7 +424,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                 activityRepository.save(
                     ExternalActivity(
                         title = "테스트 대외활동2",
-                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                        organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                         targetAudience = ParticipantType.WORKER,
                         location = LocationType.BUSAN_DAEGU_GYEONGSANG,
                         recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -481,7 +481,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         ExternalActivity(
                             title = "테스트 대외활동",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                             targetAudience = ParticipantType.WORKER,
                             location = LocationType.SEOUL_INCHEON,
                             recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -507,7 +507,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                 activityRepository.save(
                     ExternalActivity(
                         title = "테스트 대외활동2",
-                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                        organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                         targetAudience = ParticipantType.WORKER,
                         location = LocationType.SEOUL_INCHEON,
                         recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -567,7 +567,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                         activityRepository.save(
                             EducationActivity(
                                 title = "테스트 교육활동",
-                                organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                                organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                                 targetAudience = ParticipantType.WORKER,
                                 location = LocationType.SEOUL_INCHEON,
                                 recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -595,7 +595,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         EducationActivity(
                             title = "테스트 교육활동",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                             targetAudience = ParticipantType.WORKER,
                             location = LocationType.SEOUL_INCHEON,
                             recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -654,7 +654,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                         activityRepository.save(
                             EducationActivity(
                                 title = "테스트 교육활동",
-                                organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                                organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                                 targetAudience = ParticipantType.WORKER,
                                 location = LocationType.SEOUL_INCHEON,
                                 recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -682,7 +682,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         EducationActivity(
                             title = "테스트 교육활동2",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                             targetAudience = ParticipantType.WORKER,
                             location = LocationType.SEOUL_INCHEON,
                             recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -742,7 +742,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         EducationActivity(
                             title = "테스트 교육활동",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                             targetAudience = ParticipantType.WORKER,
                             location = LocationType.SEOUL_INCHEON,
                             recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -770,7 +770,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                 activityRepository.save(
                     EducationActivity(
                         title = "테스트 교육활동2",
-                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                        organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                         targetAudience = ParticipantType.WORKER,
                         location = LocationType.SEOUL_INCHEON,
                         recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -829,7 +829,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         EducationActivity(
                             title = "테스트 교육활동",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                             targetAudience = ParticipantType.WORKER,
                             location = LocationType.SEOUL_INCHEON,
                             recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -857,7 +857,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                 activityRepository.save(
                     EducationActivity(
                         title = "테스트 교육활동2",
-                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                        organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                         targetAudience = ParticipantType.WORKER,
                         location = LocationType.SEOUL_INCHEON,
                         recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -915,7 +915,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         CompetitionActivity(
                             title = "테스트 공모전",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                             targetAudience = ParticipantType.UNIVERSITY_STUDENT,
                             recruitmentStartDate = LocalDate.now().plusDays(1),
                             recruitmentEndDate = LocalDate.now().plusMonths(1),
@@ -941,7 +941,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                 activityRepository.save(
                     CompetitionActivity(
                         title = "테스트 공모전2",
-                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                        organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                         targetAudience = ParticipantType.UNIVERSITY_STUDENT,
                         recruitmentStartDate = LocalDate.now().plusDays(1),
                         recruitmentEndDate = LocalDate.now().plusMonths(1),
@@ -997,7 +997,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         CompetitionActivity(
                             title = "테스트 공모전",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                             targetAudience = ParticipantType.UNIVERSITY_STUDENT,
                             recruitmentStartDate = LocalDate.now().plusDays(1),
                             recruitmentEndDate = LocalDate.now().plusMonths(1),
@@ -1023,7 +1023,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                 activityRepository.save(
                     CompetitionActivity(
                         title = "테스트 공모전2",
-                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                        organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                         targetAudience = ParticipantType.UNIVERSITY_STUDENT,
                         recruitmentStartDate = LocalDate.now().plusDays(1),
                         recruitmentEndDate = LocalDate.now().plusMonths(1),
@@ -1079,7 +1079,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                 activityRepository.save(
                     ExternalActivity(
                         title = "테스트 대외활동1",
-                        organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                        organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                         targetAudience = ParticipantType.WORKER,
                         location = LocationType.SEOUL_INCHEON,
                         recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -1106,7 +1106,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         ExternalActivity(
                             title = "테스트 대외활동2",
-                            organizer = OrganizerType.LARGE_CORPORATION,
+                            organizerType = OrganizerType.LARGE_CORPORATION,
                             targetAudience = ParticipantType.WORKER,
                             location = LocationType.SEOUL_INCHEON,
                             recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -1161,7 +1161,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         ExternalActivity(
                             title = "테스트 대외활동1",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                             targetAudience = ParticipantType.WORKER,
                             location = LocationType.SEOUL_INCHEON,
                             recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -1187,7 +1187,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                 activityRepository.save(
                     ExternalActivity(
                         title = "테스트 대외활동2",
-                        organizer = OrganizerType.LARGE_CORPORATION,
+                        organizerType = OrganizerType.LARGE_CORPORATION,
                         targetAudience = ParticipantType.WORKER,
                         location = LocationType.SEOUL_INCHEON,
                         recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -1243,7 +1243,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         ExternalActivity(
                             title = "테스트 대외활동1",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                             targetAudience = ParticipantType.WORKER,
                             location = LocationType.SEOUL_INCHEON,
                             recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -1345,7 +1345,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         ExternalActivity(
                             title = "관심 직무 활동 1",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                             targetAudience = ParticipantType.WORKER,
                             location = LocationType.SEOUL_INCHEON,
                             recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -1369,7 +1369,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         ExternalActivity(
                             title = "관심 직무 활동 2",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                             targetAudience = ParticipantType.WORKER,
                             location = LocationType.SEOUL_INCHEON,
                             recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -1419,7 +1419,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         ExternalActivity(
                             title = "관심없는 직무 활동",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                             targetAudience = ParticipantType.WORKER,
                             location = LocationType.SEOUL_INCHEON,
                             recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -1480,7 +1480,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         ExternalActivity(
                             title = "테스트 대외활동",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                             targetAudience = ParticipantType.WORKER,
                             location = LocationType.SEOUL_INCHEON,
                             recruitmentStartDate = LocalDate.now().plusDays(1),
@@ -1558,7 +1558,7 @@ class ActivityIntegrationTest : IntegrationTest() {
                     activityRepository.save(
                         ExternalActivity(
                             title = "테스트 대외활동",
-                            organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                            organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                             targetAudience = ParticipantType.WORKER,
                             location = LocationType.SEOUL_INCHEON,
                             recruitmentStartDate = LocalDate.now().plusDays(1),

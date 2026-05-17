@@ -38,7 +38,7 @@ class ActivityParticipationTest {
         mockActivity =
             object : Activity(
                 title = "테스트 활동",
-                organizer = OrganizerType.ETC,
+                organizerType = OrganizerType.ETC,
                 targetAudience = ParticipantType.ALL,
                 recruitmentStartDate = fixedDate,
                 recruitmentEndDate = fixedDate,
