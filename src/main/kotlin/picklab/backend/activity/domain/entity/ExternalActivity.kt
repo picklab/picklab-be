@@ -19,7 +19,8 @@ import java.time.LocalDate
 @DiscriminatorValue("EXTRACURRICULAR")
 class ExternalActivity(
     title: String,
-    organizer: OrganizerType,
+    organizer: String? = null,
+    organizerType: OrganizerType,
     targetAudience: ParticipantType,
     @Column(name = "location", length = 50)
     @Enumerated(EnumType.STRING)
@@ -46,6 +47,7 @@ class ExternalActivity(
 ) : Activity(
         title = title,
         organizer = organizer,
+        organizerType = organizerType,
         targetAudience = targetAudience,
         recruitmentStartDate = recruitmentStartDate,
         recruitmentEndDate = recruitmentEndDate,

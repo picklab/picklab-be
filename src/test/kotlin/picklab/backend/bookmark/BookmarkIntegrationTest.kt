@@ -70,7 +70,7 @@ class BookmarkIntegrationTest : IntegrationTest() {
             activityRepository.save(
                 ExternalActivity(
                     title = "테스트 대외활동",
-                    organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                    organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                     targetAudience = ParticipantType.WORKER,
                     location = LocationType.SEOUL_INCHEON,
                     recruitmentStartDate = LocalDate.now().plusDays(1),

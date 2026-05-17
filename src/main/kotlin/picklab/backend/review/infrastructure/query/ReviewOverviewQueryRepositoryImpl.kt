@@ -36,6 +36,7 @@ class ReviewOverviewQueryRepositoryImpl(
                         review.id,
                         activity.title,
                         activity.organizer,
+                        activity.organizerType.stringValue(),
                         activity.activityType,
                         review.createdAt,
                         review.reviewApprovalStatus,

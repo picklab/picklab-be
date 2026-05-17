@@ -16,8 +16,10 @@ data class GetActivityDetailResponse(
     val id: Long,
     @field:Schema(description = "활동 제목")
     val title: String,
-    @field:Schema(description = "조직")
-    val organization: String,
+    @field:Schema(description = "조직명")
+    val organization: String?,
+    @field:Schema(description = "조직 유형")
+    val organizerType: String,
     @field:Schema(description = "대상")
     val target: String,
     @field:Schema(description = "모집 기간")
@@ -61,7 +63,8 @@ data class GetActivityDetailResponse(
         ) = GetActivityDetailResponse(
             id = activity.id,
             title = activity.title,
-            organization = activity.organizer.name,
+            organization = activity.organizer,
+            organizerType = activity.organizerType.name,
             target = activity.targetAudience.name,
             recruitPeriod =
                 RecruitPeriod(

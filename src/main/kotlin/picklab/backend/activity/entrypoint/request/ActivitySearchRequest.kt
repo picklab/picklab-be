@@ -17,8 +17,8 @@ data class ActivitySearchRequest(
     val category: ActivityType,
     @field:Schema(description = "관련 직무")
     val jobTag: List<JobDetail>?,
-    @field:Schema(description = "주최 기관")
-    val organizer: List<OrganizerType>?,
+    @field:Schema(description = "주최 기관 유형")
+    val organizerType: List<OrganizerType>?,
     @field:Schema(description = "참여 대상")
     val target: List<ParticipantType>?,
     @field:Schema(description = "활동 분야")

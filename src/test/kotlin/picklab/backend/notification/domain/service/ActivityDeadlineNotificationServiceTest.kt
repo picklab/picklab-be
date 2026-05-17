@@ -178,7 +178,7 @@ class ActivityDeadlineNotificationServiceTest : IntegrationTest() {
         activityRepository.save(
             ExternalActivity(
                 title = "테스트 활동",
-                organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                 targetAudience = ParticipantType.ALL,
                 location = LocationType.SEOUL_INCHEON,
                 recruitmentStartDate = recruitmentEndDate.minusDays(30),

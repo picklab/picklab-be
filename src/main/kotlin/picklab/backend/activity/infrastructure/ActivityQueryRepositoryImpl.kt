@@ -88,7 +88,8 @@ class ActivityQueryRepositoryImpl(
                         QActivityItem(
                             QActivity.activity.id,
                             QActivity.activity.title,
-                            QActivity.activity.organizer.stringValue(),
+                            QActivity.activity.organizer,
+                            QActivity.activity.organizerType.stringValue(),
                             QActivity.activity.startDate,
                             QActivity.activity.activityType,
                             GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),
@@ -170,7 +171,8 @@ class ActivityQueryRepositoryImpl(
                         QActivityItem(
                             QActivity.activity.id,
                             QActivity.activity.title,
-                            QActivity.activity.organizer.stringValue(),
+                            QActivity.activity.organizer,
+                            QActivity.activity.organizerType.stringValue(),
                             QActivity.activity.startDate,
                             QActivity.activity.activityType,
                             GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),
@@ -259,7 +261,8 @@ class ActivityQueryRepositoryImpl(
                         QActivityItem(
                             QActivity.activity.id,
                             QActivity.activity.title,
-                            QActivity.activity.organizer.stringValue(),
+                            QActivity.activity.organizer,
+                            QActivity.activity.organizerType.stringValue(),
                             QActivity.activity.startDate,
                             QActivity.activity.activityType,
                             GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),
@@ -340,7 +343,8 @@ class ActivityQueryRepositoryImpl(
                         QActivityItem(
                             QActivity.activity.id,
                             QActivity.activity.title,
-                            QActivity.activity.organizer.stringValue(),
+                            QActivity.activity.organizer,
+                            QActivity.activity.organizerType.stringValue(),
                             QActivity.activity.startDate,
                             QActivity.activity.activityType,
                             GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),

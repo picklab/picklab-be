@@ -9,7 +9,8 @@ import java.time.LocalDate
 data class ActivityItem(
     override val id: Long,
     override val title: String,
-    override val organization: String,
+    override val organization: String?,
+    override val organizerType: String,
     override val startDate: LocalDate,
     override val category: String,
     override val jobTags: List<String>,

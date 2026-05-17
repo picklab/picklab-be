@@ -39,10 +39,13 @@ abstract class Activity(
     @Column(name = "title", nullable = false, length = 50)
     @Comment("활동명")
     var title: String,
-    @Column(name = "organizer", nullable = false, length = 50)
-    @Enumerated(EnumType.STRING)
+    @Column(name = "organizer")
     @Comment("주최 기관/단체명")
-    var organizer: OrganizerType,
+    var organizer: String? = null,
+    @Column(name = "organizer_type", nullable = false, length = 50)
+    @Enumerated(EnumType.STRING)
+    @Comment("주최 기관 유형")
+    var organizerType: OrganizerType,
     @Column(name = "target_audience", nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
     @Comment("참여대상")

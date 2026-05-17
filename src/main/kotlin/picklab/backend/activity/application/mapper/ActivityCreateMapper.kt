@@ -21,6 +21,7 @@ fun ActivityCreateCommand.toEntity(activityGroup: ActivityGroup): Activity =
             ExternalActivity(
                 title = title,
                 organizer = organizer,
+                organizerType = organizerType,
                 targetAudience = targetAudience,
                 location = location,
                 recruitmentStartDate = recruitmentStartDate,
@@ -44,6 +45,7 @@ fun ActivityCreateCommand.toEntity(activityGroup: ActivityGroup): Activity =
             SeminarActivity(
                 title = title,
                 organizer = organizer,
+                organizerType = organizerType,
                 targetAudience = targetAudience,
                 location = location,
                 recruitmentStartDate = recruitmentStartDate,
@@ -66,6 +68,7 @@ fun ActivityCreateCommand.toEntity(activityGroup: ActivityGroup): Activity =
             EducationActivity(
                 title = title,
                 organizer = organizer,
+                organizerType = organizerType,
                 targetAudience = targetAudience,
                 location = location,
                 recruitmentStartDate = recruitmentStartDate,
@@ -91,6 +94,7 @@ fun ActivityCreateCommand.toEntity(activityGroup: ActivityGroup): Activity =
             CompetitionActivity(
                 title = title,
                 organizer = organizer,
+                organizerType = organizerType,
                 targetAudience = targetAudience,
                 recruitmentStartDate = recruitmentStartDate,
                 recruitmentEndDate = recruitmentEndDate,

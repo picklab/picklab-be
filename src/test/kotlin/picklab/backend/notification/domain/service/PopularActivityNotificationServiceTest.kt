@@ -225,7 +225,7 @@ class PopularActivityNotificationServiceTest : IntegrationTest() {
             activityRepository.save(
                 ExternalActivity(
                     title = title,
-                    organizer = OrganizerType.PUBLIC_ORGANIZATION,
+                    organizerType = OrganizerType.PUBLIC_ORGANIZATION,
                     targetAudience = ParticipantType.ALL,
                     location = LocationType.SEOUL_INCHEON,
                     recruitmentStartDate = LocalDate.now().minusDays(10),

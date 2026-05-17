@@ -68,8 +68,10 @@ sealed class ActivityCreateRequest(
     @field:Size(max = 50)
     @field:Schema(description = "활동명")
     open val title: String,
-    @field:Schema(description = "주최 기관/단체")
-    open val organizer: OrganizerType,
+    @field:Schema(description = "주최 기관/단체명")
+    open val organizer: String? = null,
+    @field:Schema(description = "주최 기관 유형")
+    open val organizerType: OrganizerType,
     @field:Schema(description = "참여 대상")
     open val targetAudience: ParticipantType,
     @field:Schema(description = "모집 시작일")
@@ -127,8 +129,10 @@ data class ExternalActivityCreateRequest(
     @field:Size(max = 50)
     @field:Schema(description = "활동명")
     override val title: String,
-    @field:Schema(description = "주최 기관/단체")
-    override val organizer: OrganizerType,
+    @field:Schema(description = "주최 기관/단체명")
+    override val organizer: String? = null,
+    @field:Schema(description = "주최 기관 유형")
+    override val organizerType: OrganizerType,
     @field:Schema(description = "참여 대상")
     override val targetAudience: ParticipantType,
     @field:Schema(description = "모집 시작일")
@@ -171,6 +175,7 @@ data class ExternalActivityCreateRequest(
         activityGroupId = activityGroupId,
         title = title,
         organizer = organizer,
+        organizerType = organizerType,
         targetAudience = targetAudience,
         recruitmentStartDate = recruitmentStartDate,
         recruitmentEndDate = recruitmentEndDate,
@@ -192,6 +197,7 @@ data class ExternalActivityCreateRequest(
             activityGroupId = activityGroupId,
             title = title,
             organizer = organizer,
+            organizerType = organizerType,
             targetAudience = targetAudience,
             recruitmentStartDate = recruitmentStartDate,
             recruitmentEndDate = recruitmentEndDate,
@@ -223,8 +229,10 @@ data class SeminarActivityCreateRequest(
     @field:Size(max = 50)
     @field:Schema(description = "활동명")
     override val title: String,
-    @field:Schema(description = "주최 기관/단체")
-    override val organizer: OrganizerType,
+    @field:Schema(description = "주최 기관/단체명")
+    override val organizer: String? = null,
+    @field:Schema(description = "주최 기관 유형")
+    override val organizerType: OrganizerType,
     @field:Schema(description = "참여 대상")
     override val targetAudience: ParticipantType,
     @field:Schema(description = "모집 시작일")
@@ -265,6 +273,7 @@ data class SeminarActivityCreateRequest(
         activityGroupId = activityGroupId,
         title = title,
         organizer = organizer,
+        organizerType = organizerType,
         targetAudience = targetAudience,
         recruitmentStartDate = recruitmentStartDate,
         recruitmentEndDate = recruitmentEndDate,
@@ -286,6 +295,7 @@ data class SeminarActivityCreateRequest(
             activityGroupId = activityGroupId,
             title = title,
             organizer = organizer,
+            organizerType = organizerType,
             targetAudience = targetAudience,
             recruitmentStartDate = recruitmentStartDate,
             recruitmentEndDate = recruitmentEndDate,
@@ -316,8 +326,10 @@ data class EducationActivityCreateRequest(
     @field:Size(max = 50)
     @field:Schema(description = "활동명")
     override val title: String,
-    @field:Schema(description = "주최 기관/단체")
-    override val organizer: OrganizerType,
+    @field:Schema(description = "주최 기관/단체명")
+    override val organizer: String? = null,
+    @field:Schema(description = "주최 기관 유형")
+    override val organizerType: OrganizerType,
     @field:Schema(description = "참여 대상")
     override val targetAudience: ParticipantType,
     @field:Schema(description = "모집 시작일")
@@ -365,6 +377,7 @@ data class EducationActivityCreateRequest(
         activityGroupId = activityGroupId,
         title = title,
         organizer = organizer,
+        organizerType = organizerType,
         targetAudience = targetAudience,
         recruitmentStartDate = recruitmentStartDate,
         recruitmentEndDate = recruitmentEndDate,
@@ -386,6 +399,7 @@ data class EducationActivityCreateRequest(
             activityGroupId = activityGroupId,
             title = title,
             organizer = organizer,
+            organizerType = organizerType,
             targetAudience = targetAudience,
             recruitmentStartDate = recruitmentStartDate,
             recruitmentEndDate = recruitmentEndDate,
@@ -419,8 +433,10 @@ data class CompetitionActivityCreateRequest(
     @field:Size(max = 50)
     @field:Schema(description = "활동명")
     override val title: String,
-    @field:Schema(description = "주최 기관/단체")
-    override val organizer: OrganizerType,
+    @field:Schema(description = "주최 기관/단체명")
+    override val organizer: String? = null,
+    @field:Schema(description = "주최 기관 유형")
+    override val organizerType: OrganizerType,
     @field:Schema(description = "참여 대상")
     override val targetAudience: ParticipantType,
     @field:Schema(description = "모집 시작일")
@@ -464,6 +480,7 @@ data class CompetitionActivityCreateRequest(
         activityGroupId = activityGroupId,
         title = title,
         organizer = organizer,
+        organizerType = organizerType,
         targetAudience = targetAudience,
         recruitmentStartDate = recruitmentStartDate,
         recruitmentEndDate = recruitmentEndDate,
@@ -485,6 +502,7 @@ data class CompetitionActivityCreateRequest(
             activityGroupId = activityGroupId,
             title = title,
             organizer = organizer,
+            organizerType = organizerType,
             targetAudience = targetAudience,
             recruitmentStartDate = recruitmentStartDate,
             recruitmentEndDate = recruitmentEndDate,
