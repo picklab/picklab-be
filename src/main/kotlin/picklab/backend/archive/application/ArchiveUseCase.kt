@@ -2,14 +2,17 @@ package picklab.backend.archive.application
 
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import picklab.backend.activity.domain.enums.ActivityType
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.archive.domain.entity.ArchiveReferenceUrl
 import picklab.backend.archive.domain.entity.ArchiveUploadFileUrl
+import picklab.backend.archive.domain.enums.ArchiveSortType
 import picklab.backend.archive.domain.service.ArchiveReferenceUrlService
 import picklab.backend.archive.domain.service.ArchiveService
 import picklab.backend.archive.domain.service.ArchiveUploadFileUrlService
 import picklab.backend.archive.entrypoint.request.ArchiveCreateRequest
 import picklab.backend.archive.entrypoint.request.ArchiveUpdateRequest
+import picklab.backend.archive.entrypoint.response.ArchiveActivityResponse
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.file.application.FileManagementService
 import picklab.backend.member.domain.MemberService
@@ -64,5 +67,17 @@ class ArchiveUseCase(
         )
 
         archiveService.save(archive)
+    }
+
+    @Transactional(readOnly = true)
+    fun getArchiveList(
+        activityType: ActivityType?,
+        sort: ArchiveSortType,
+        memberPrincipal: MemberPrincipal,
+    ): List<ArchiveActivityResponse> {
+        val member = memberService.findActiveMember(memberPrincipal.memberId)
+        return archiveService
+            .findCompletedArchives(member, activityType, sort)
+            .map { ArchiveActivityResponse.from(it) }
     }
 }

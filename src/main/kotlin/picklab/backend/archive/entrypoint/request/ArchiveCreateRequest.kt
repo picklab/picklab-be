@@ -47,7 +47,7 @@ class ArchiveCreateRequest(
             userEndDate = endDate,
             role = role,
             activityProgressStatus = ProgressStatus.IN_PROGRESSING,
-            writeStatus = WriteStatus.IN_PROGRESS,
+            writeStatus = WriteStatus.COMPLETED,
             customRole = customRole,
         )
 }
