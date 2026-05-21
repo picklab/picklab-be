@@ -58,6 +58,8 @@ enum class SuccessCode(
     GET_SATISFACTION_AVG_SCORES_SUCCESS(HttpStatus.OK, "활동별 만족도 통계 조회에 성공했습니다."),
 
     // Search 관련
+    SEARCH_SUCCESS(HttpStatus.OK, "검색에 성공했습니다."),
+    SEARCH_ACTIVITIES_SUCCESS(HttpStatus.OK, "검색 결과 조회에 성공했습니다."),
     SEARCH_AUTOCOMPLETE_SUCCESS(HttpStatus.OK, "자동완성 검색에 성공했습니다."),
     SEARCH_HISTORY_CREATED(HttpStatus.CREATED, "검색 기록을 생성했습니다."),
     SEARCH_HISTORY_RETRIEVED(HttpStatus.OK, "검색 기록 조회에 성공했습니다."),

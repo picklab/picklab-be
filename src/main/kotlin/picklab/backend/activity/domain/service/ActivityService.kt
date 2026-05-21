@@ -8,12 +8,14 @@ import picklab.backend.activity.application.ActivityQueryRepository
 import picklab.backend.activity.application.model.ActivitySearchCondition
 import picklab.backend.activity.application.model.ActivityView
 import picklab.backend.activity.domain.entity.Activity
+import picklab.backend.activity.domain.enums.ActivitySortType
 import picklab.backend.activity.domain.enums.ActivityType
 import picklab.backend.activity.domain.enums.EducationFormatType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.activity.domain.repository.ActivityRepository
 import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
+import picklab.backend.job.domain.enums.JobGroup
 import java.time.LocalDate
 
 @Service
@@ -201,4 +203,17 @@ class ActivityService(
      * 인기도는 조회수와 북마크 수를 합산하여 계산합니다.
      */
     fun getPopularActivities(pageable: PageRequest): Page<ActivityView> = activityQueryRepository.findPopularActivities(pageable)
+
+    @Transactional(readOnly = true)
+    fun searchActivitiesByKeyword(
+        keyword: String,
+        activityType: String?,
+        status: RecruitmentStatus?,
+        jobGroups: List<JobGroup>?,
+        sort: ActivitySortType,
+        pageable: PageRequest,
+    ): Page<ActivityView> = activityRepository.searchActivitiesByKeyword(keyword, activityType, status, jobGroups, sort, pageable)
+
+    @Transactional(readOnly = true)
+    fun countActivitiesByKeywordPerType(keyword: String): Map<String, Long> = activityRepository.countActivitiesByKeywordPerType(keyword)
 }

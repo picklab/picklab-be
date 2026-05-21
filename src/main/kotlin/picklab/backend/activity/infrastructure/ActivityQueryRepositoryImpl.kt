@@ -15,9 +15,11 @@ import picklab.backend.activity.domain.entity.QActivity
 import picklab.backend.activity.domain.entity.QActivityBookmark
 import picklab.backend.activity.domain.entity.QActivityJobCategory
 import picklab.backend.activity.domain.enums.ActivityBookmarkSortType
+import picklab.backend.activity.domain.enums.RecruitmentEndType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.job.domain.entity.QJobCategory
 import picklab.backend.member.domain.entity.QMemberActivityViewHistory
+import java.time.LocalDate
 
 @Repository
 class ActivityQueryRepositoryImpl(
@@ -42,7 +44,12 @@ class ActivityQueryRepositoryImpl(
                         .eq(QJobCategory.jobCategory.id),
                 ).where(
                     QActivity.activity.deletedAt.isNull
-                        .and(QJobCategory.jobCategory.id.`in`(jobIds)),
+                        .and(QJobCategory.jobCategory.id.`in`(jobIds))
+                        .and(
+                            QActivity.activity.recruitmentEndType
+                                .ne(RecruitmentEndType.FIXED)
+                                .or(QActivity.activity.recruitmentEndDate.goe(LocalDate.now())),
+                        ),
                 ).groupBy(QActivity.activity.id)
                 .orderBy(
                     QActivity.activity.viewCount
@@ -116,7 +123,12 @@ class ActivityQueryRepositoryImpl(
                         .eq(QJobCategory.jobCategory.id),
                 ).where(
                     QActivity.activity.deletedAt.isNull
-                        .and(QJobCategory.jobCategory.id.`in`(jobIds)),
+                        .and(QJobCategory.jobCategory.id.`in`(jobIds))
+                        .and(
+                            QActivity.activity.recruitmentEndType
+                                .ne(RecruitmentEndType.FIXED)
+                                .or(QActivity.activity.recruitmentEndDate.goe(LocalDate.now())),
+                        ),
                 ).fetchOne() ?: 0L
 
         return PageImpl(items, pageable, count)
@@ -127,6 +139,11 @@ class ActivityQueryRepositoryImpl(
             BooleanBuilder().apply {
                 and(QActivity.activity.status.eq(RecruitmentStatus.OPEN))
                 and(QActivity.activity.deletedAt.isNull)
+                and(
+                    QActivity.activity.recruitmentEndType
+                        .ne(RecruitmentEndType.FIXED)
+                        .or(QActivity.activity.recruitmentEndDate.goe(LocalDate.now())),
+                )
             }
 
         val orderBy =
@@ -224,19 +241,27 @@ class ActivityQueryRepositoryImpl(
 
         val orderBy =
             when (queryData.sortType) {
-                ActivityBookmarkSortType.RECENTLY_BOOKMARKED -> listOf(QActivityBookmark.activityBookmark.createdAt.desc())
-                ActivityBookmarkSortType.LATEST -> listOf(QActivity.activity.createdAt.desc())
-                ActivityBookmarkSortType.DEADLINE_ASC ->
+                ActivityBookmarkSortType.RECENTLY_BOOKMARKED -> {
+                    listOf(QActivityBookmark.activityBookmark.createdAt.desc())
+                }
+
+                ActivityBookmarkSortType.LATEST -> {
+                    listOf(QActivity.activity.createdAt.desc())
+                }
+
+                ActivityBookmarkSortType.DEADLINE_ASC -> {
                     listOf(
                         QActivity.activity.recruitmentEndDate.asc(),
                         QActivity.activity.createdAt.desc(),
                     )
+                }
 
-                ActivityBookmarkSortType.DEADLINE_DESC ->
+                ActivityBookmarkSortType.DEADLINE_DESC -> {
                     listOf(
                         QActivity.activity.recruitmentEndDate.desc(),
                         QActivity.activity.createdAt.desc(),
                     )
+                }
             }
 
         val items =

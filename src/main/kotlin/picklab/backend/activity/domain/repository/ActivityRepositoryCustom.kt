@@ -4,6 +4,9 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import picklab.backend.activity.application.model.ActivitySearchCondition
 import picklab.backend.activity.application.model.ActivityView
+import picklab.backend.activity.domain.enums.ActivitySortType
+import picklab.backend.activity.domain.enums.RecruitmentStatus
+import picklab.backend.job.domain.enums.JobGroup
 
 interface ActivityRepositoryCustom {
     fun getActivities(
@@ -21,4 +24,15 @@ interface ActivityRepositoryCustom {
         keyword: String,
         limit: Int,
     ): List<String>
+
+    fun searchActivitiesByKeyword(
+        keyword: String,
+        activityType: String?,
+        status: RecruitmentStatus?,
+        jobGroups: List<JobGroup>?,
+        sort: ActivitySortType,
+        pageable: PageRequest,
+    ): Page<ActivityView>
+
+    fun countActivitiesByKeywordPerType(keyword: String): Map<String, Long>
 }

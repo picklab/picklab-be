@@ -20,8 +20,10 @@ import picklab.backend.activity.domain.enums.EducationCostType
 import picklab.backend.activity.domain.enums.EducationFormatType
 import picklab.backend.activity.domain.enums.LocationType
 import picklab.backend.activity.domain.enums.RecruitmentEndType
+import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.activity.infrastructure.QActivityItem
 import picklab.backend.job.domain.entity.QJobCategory
+import picklab.backend.job.domain.enums.JobGroup
 import java.time.LocalDate
 
 @Repository
@@ -80,14 +82,18 @@ class ActivityRepositoryImpl(
 
         val orderBy =
             when (queryData.sort) {
-                ActivitySortType.LATEST -> listOf(QActivity.activity.createdAt.desc())
-                ActivitySortType.DEADLINE_ASC ->
+                ActivitySortType.LATEST -> {
+                    listOf(QActivity.activity.createdAt.desc())
+                }
+
+                ActivitySortType.DEADLINE_ASC -> {
                     listOf(
                         QActivity.activity.recruitmentEndDate.asc(),
                         QActivity.activity.createdAt.desc(),
                     )
+                }
 
-                ActivitySortType.DEADLINE_DESC ->
+                ActivitySortType.DEADLINE_DESC -> {
                     listOf(
                         Expressions
                             .numberTemplate(
@@ -98,6 +104,7 @@ class ActivityRepositoryImpl(
                             ).desc(),
                         QActivity.activity.createdAt.desc(),
                     )
+                }
             }
 
         val items =
@@ -165,6 +172,150 @@ class ActivityRepositoryImpl(
             ).orderBy(QActivity.activity.title.asc())
             .limit(limit.toLong())
             .fetch()
+
+    override fun searchActivitiesByKeyword(
+        keyword: String,
+        activityType: String?,
+        status: RecruitmentStatus?,
+        jobGroups: List<JobGroup>?,
+        sort: ActivitySortType,
+        pageable: PageRequest,
+    ): Page<ActivityView> {
+        val condition =
+            BooleanBuilder().apply {
+                and(QActivity.activity.deletedAt.isNull)
+                and(
+                    QActivity.activity.title
+                        .containsIgnoreCase(keyword)
+                        .or(QActivity.activity.organizer.containsIgnoreCase(keyword)),
+                )
+                activityType?.let { and(QActivity.activity.activityType.eq(it)) }
+                status?.let { and(QActivity.activity.status.eq(it)) }
+                jobGroups?.let { and(QJobCategory.jobCategory.jobGroup.`in`(it)) }
+            }
+
+        val orderBy =
+            when (sort) {
+                ActivitySortType.LATEST -> {
+                    listOf(QActivity.activity.createdAt.desc())
+                }
+
+                ActivitySortType.DEADLINE_ASC -> {
+                    listOf(
+                        QActivity.activity.recruitmentEndDate.asc(),
+                        QActivity.activity.createdAt.desc(),
+                    )
+                }
+
+                ActivitySortType.DEADLINE_DESC -> {
+                    listOf(
+                        Expressions
+                            .numberTemplate(
+                                Long::class.java,
+                                "DATEDIFF({0}, {1})",
+                                QActivity.activity.recruitmentEndDate,
+                                LocalDate.now(),
+                            ).desc(),
+                        QActivity.activity.createdAt.desc(),
+                    )
+                }
+            }
+
+        val activityIds =
+            jpaQueryFactory
+                .select(QActivity.activity.id)
+                .distinct()
+                .from(QActivity.activity)
+                .leftJoin(QActivityJobCategory.activityJobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.activity.id
+                        .eq(QActivity.activity.id),
+                ).leftJoin(QJobCategory.jobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.jobCategory.id
+                        .eq(QJobCategory.jobCategory.id),
+                ).where(condition)
+                .orderBy(*orderBy.toTypedArray())
+                .offset(pageable.offset)
+                .limit(pageable.pageSize.toLong())
+                .fetch()
+
+        if (activityIds.isEmpty()) {
+            return PageImpl(emptyList(), pageable, 0)
+        }
+
+        val itemsMap =
+            jpaQueryFactory
+                .selectFrom(QActivity.activity)
+                .leftJoin(QActivityJobCategory.activityJobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.activity.id
+                        .eq(QActivity.activity.id),
+                ).leftJoin(QJobCategory.jobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.jobCategory.id
+                        .eq(QJobCategory.jobCategory.id),
+                ).where(QActivity.activity.id.`in`(activityIds))
+                .transform(
+                    GroupBy.groupBy(QActivity.activity.id).`as`(
+                        QActivityItem(
+                            QActivity.activity.id,
+                            QActivity.activity.title,
+                            QActivity.activity.organizer,
+                            QActivity.activity.organizerType.stringValue(),
+                            QActivity.activity.startDate,
+                            QActivity.activity.activityType,
+                            GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),
+                            QActivity.activity.activityThumbnailUrl,
+                            QActivity.activity.viewCount,
+                            QActivity.activity.recruitmentEndDate,
+                            QActivity.activity.recruitmentEndType,
+                        ),
+                    ),
+                )
+
+        val items = activityIds.mapNotNull { itemsMap[it] }
+
+        val count =
+            jpaQueryFactory
+                .select(QActivity.activity.id.countDistinct())
+                .from(QActivity.activity)
+                .leftJoin(QActivityJobCategory.activityJobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.activity.id
+                        .eq(QActivity.activity.id),
+                ).leftJoin(QJobCategory.jobCategory)
+                .on(
+                    QActivityJobCategory.activityJobCategory.jobCategory.id
+                        .eq(QJobCategory.jobCategory.id),
+                ).where(condition)
+                .fetchOne() ?: 0L
+
+        return PageImpl(items, pageable, count)
+    }
+
+    override fun countActivitiesByKeywordPerType(keyword: String): Map<String, Long> {
+        val condition =
+            BooleanBuilder().apply {
+                and(QActivity.activity.deletedAt.isNull)
+                and(
+                    QActivity.activity.title
+                        .containsIgnoreCase(keyword)
+                        .or(QActivity.activity.organizer.containsIgnoreCase(keyword)),
+                )
+            }
+
+        return jpaQueryFactory
+            .select(QActivity.activity.activityType, QActivity.activity.id.count())
+            .from(QActivity.activity)
+            .where(condition)
+            .groupBy(QActivity.activity.activityType)
+            .fetch()
+            .associate { tuple ->
+                (tuple.get(QActivity.activity.activityType) ?: "") to
+                    (tuple.get(QActivity.activity.id.count()) ?: 0L)
+            }
+    }
 }
 
 inline fun <T> BooleanBuilder.andIfNotNullOrEmpty(
