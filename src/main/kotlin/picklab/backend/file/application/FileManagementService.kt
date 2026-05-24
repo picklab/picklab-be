@@ -29,6 +29,33 @@ class FileManagementService(
     }
 
     /**
+     * 수정 요청의 fileUrls에서 임시 URL은 영구저장소로 이동하고, 기존 영구 URL은 그대로 유지합니다.
+     * @return 최종 파일 URL 목록 (기존 영구 URL + 신규 이동된 URL)
+     */
+    fun processUpdatedFileUrls(
+        fileUrls: List<String>,
+        memberId: Long,
+        activityId: Long,
+        category: String,
+    ): List<String> {
+        if (fileUrls.isEmpty()) return emptyList()
+
+        val (tempUrls, permanentUrls) =
+            fileUrls.partition {
+                fileKeyGenerator.extractFileKeyFromUrl(it).startsWith("temp/")
+            }
+
+        val movedUrls =
+            if (tempUrls.isNotEmpty()) {
+                verifyAndMoveTempFilesToPermanent(tempUrls, memberId, activityId, category)
+            } else {
+                emptyList()
+            }
+
+        return permanentUrls + movedUrls
+    }
+
+    /**
      * 특정 멤버의 활동에 대한 임시 파일들을 일괄로 검증하고 영구저장소로 이동합니다.
      * @return 영구 저장소로 이동된 파일들의 public read URL 목록
      */

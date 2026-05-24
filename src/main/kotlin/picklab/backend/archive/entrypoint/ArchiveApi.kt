@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam
 import picklab.backend.activity.domain.enums.ActivityType
 import picklab.backend.archive.domain.enums.ArchiveSortType
 import picklab.backend.archive.entrypoint.request.ArchiveCreateRequest
-import picklab.backend.archive.entrypoint.request.ArchiveUpdateRequest
+import picklab.backend.archive.entrypoint.request.ArchiveRecordUpdateRequest
+import picklab.backend.archive.entrypoint.request.ArchiveStatusUpdateRequest
 import picklab.backend.archive.entrypoint.response.ArchiveActivityResponse
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.ResponseWrapper
@@ -35,19 +36,35 @@ interface ArchiveApi {
     ): ResponseEntity<ResponseWrapper<Unit>>
 
     @Operation(
-        summary = "아카이브 정보 수정",
-        description = "아카이브 정보를 수정 합니다",
+        summary = "아카이브 상태 수정",
+        description = "아카이브의 활동 진행 상태 및 합불 여부를 수정합니다",
     )
     @ApiResponses(
         value = [
-            ApiResponse(responseCode = "200", description = "아카이브 수정에 성공했습니다."),
+            ApiResponse(responseCode = "200", description = "아카이브 상태 수정에 성공했습니다."),
             ApiResponse(responseCode = "404", description = "아카이브 정보를 찾을 수 없습니다."),
         ],
     )
-    fun update(
+    fun updateStatus(
         @AuthenticationPrincipal member: MemberPrincipal,
         @PathVariable archiveId: Long,
-        @RequestBody request: ArchiveUpdateRequest,
+        @RequestBody request: ArchiveStatusUpdateRequest,
+    ): ResponseEntity<ResponseWrapper<Unit>>
+
+    @Operation(
+        summary = "아카이브 기록 내용 수정",
+        description = "아카이브의 활동 기록 내용(역할, 파일, 연관 URL 등)을 작성하거나 수정합니다",
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "아카이브 기록 내용 수정에 성공했습니다."),
+            ApiResponse(responseCode = "404", description = "아카이브 정보를 찾을 수 없습니다."),
+        ],
+    )
+    fun updateRecord(
+        @AuthenticationPrincipal member: MemberPrincipal,
+        @PathVariable archiveId: Long,
+        @RequestBody request: ArchiveRecordUpdateRequest,
     ): ResponseEntity<ResponseWrapper<Unit>>
 
     @Operation(

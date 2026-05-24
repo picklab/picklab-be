@@ -8,6 +8,8 @@ import java.time.LocalDate
 data class ArchiveActivityResponse(
     @field:Schema(description = "아카이브 ID")
     val id: Long,
+    @field:Schema(description = "원본 활동 ID")
+    val activityId: Long,
     @field:Schema(description = "활동 썸네일 이미지 URL")
     val activityThumbnailUrl: String?,
     @field:Schema(description = "활동 유형")
@@ -27,6 +29,7 @@ data class ArchiveActivityResponse(
         fun from(archive: Archive): ArchiveActivityResponse =
             ArchiveActivityResponse(
                 id = archive.id,
+                activityId = archive.activity.id,
                 activityThumbnailUrl = archive.activity.activityThumbnailUrl,
                 activityType = archive.activityType.name,
                 title = archive.activity.title,

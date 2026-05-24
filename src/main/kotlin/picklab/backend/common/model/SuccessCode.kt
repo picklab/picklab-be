@@ -38,7 +38,8 @@ enum class SuccessCode(
 
     // Archive 관련
     CREATE_ARCHIVE_SUCCESS(HttpStatus.OK, "아카이브 생성에 성공했습니다."),
-    UPDATE_ARCHIVE_SUCCESS(HttpStatus.OK, "아카이브 수정에 성공했습니다."),
+    UPDATE_ARCHIVE_SUCCESS(HttpStatus.OK, "아카이브 상태 수정에 성공했습니다."),
+    UPDATE_ARCHIVE_RECORD_SUCCESS(HttpStatus.OK, "아카이브 기록 내용 수정에 성공했습니다."),
     GET_ARCHIVE_LIST(HttpStatus.OK, "아카이브 목록 조회에 성공했습니다."),
 
     // Notification 관련

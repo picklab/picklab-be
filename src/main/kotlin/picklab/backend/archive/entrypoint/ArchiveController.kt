@@ -13,7 +13,8 @@ import picklab.backend.activity.domain.enums.ActivityType
 import picklab.backend.archive.application.ArchiveUseCase
 import picklab.backend.archive.domain.enums.ArchiveSortType
 import picklab.backend.archive.entrypoint.request.ArchiveCreateRequest
-import picklab.backend.archive.entrypoint.request.ArchiveUpdateRequest
+import picklab.backend.archive.entrypoint.request.ArchiveRecordUpdateRequest
+import picklab.backend.archive.entrypoint.request.ArchiveStatusUpdateRequest
 import picklab.backend.archive.entrypoint.response.ArchiveActivityResponse
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.ResponseWrapper
@@ -32,14 +33,24 @@ class ArchiveController(
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.CREATE_ARCHIVE_SUCCESS))
     }
 
-    @PatchMapping("/v1/archive/{archiveId}")
-    override fun update(
+    @PatchMapping("/v1/archive/{archiveId}/status")
+    override fun updateStatus(
         @AuthenticationPrincipal member: MemberPrincipal,
         @PathVariable archiveId: Long,
-        @RequestBody request: ArchiveUpdateRequest,
+        @RequestBody request: ArchiveStatusUpdateRequest,
     ): ResponseEntity<ResponseWrapper<Unit>> {
-        archiveUseCase.updateArchive(archiveId, request, member)
+        archiveUseCase.updateArchiveStatus(archiveId, request, member)
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.UPDATE_ARCHIVE_SUCCESS))
+    }
+
+    @PatchMapping("/v1/archive/{archiveId}/record")
+    override fun updateRecord(
+        @AuthenticationPrincipal member: MemberPrincipal,
+        @PathVariable archiveId: Long,
+        @RequestBody request: ArchiveRecordUpdateRequest,
+    ): ResponseEntity<ResponseWrapper<Unit>> {
+        archiveUseCase.updateArchiveRecord(archiveId, request, member)
+        return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.UPDATE_ARCHIVE_RECORD_SUCCESS))
     }
 
     @GetMapping("/v1/archive")
