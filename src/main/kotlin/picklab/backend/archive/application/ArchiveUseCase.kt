@@ -11,7 +11,8 @@ import picklab.backend.archive.domain.service.ArchiveReferenceUrlService
 import picklab.backend.archive.domain.service.ArchiveService
 import picklab.backend.archive.domain.service.ArchiveUploadFileUrlService
 import picklab.backend.archive.entrypoint.request.ArchiveCreateRequest
-import picklab.backend.archive.entrypoint.request.ArchiveUpdateRequest
+import picklab.backend.archive.entrypoint.request.ArchiveRecordUpdateRequest
+import picklab.backend.archive.entrypoint.request.ArchiveStatusUpdateRequest
 import picklab.backend.archive.entrypoint.response.ArchiveActivityResponse
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.file.application.FileManagementService
@@ -53,9 +54,9 @@ class ArchiveUseCase(
     }
 
     @Transactional
-    fun updateArchive(
+    fun updateArchiveStatus(
         archiveId: Long,
-        request: ArchiveUpdateRequest,
+        request: ArchiveStatusUpdateRequest,
         memberPrincipal: MemberPrincipal,
     ) {
         val member = memberService.findActiveMember(memberPrincipal.memberId)
@@ -67,6 +68,40 @@ class ArchiveUseCase(
         )
 
         archiveService.save(archive)
+    }
+
+    @Transactional
+    fun updateArchiveRecord(
+        archiveId: Long,
+        request: ArchiveRecordUpdateRequest,
+        memberPrincipal: MemberPrincipal,
+    ) {
+        val member = memberService.findActiveMember(memberPrincipal.memberId)
+        val archive = archiveService.mustFindByIdAndMember(archiveId, member)
+
+        val finalFileUrls =
+            fileManagementService.processUpdatedFileUrls(
+                fileUrls = request.fileUrls,
+                memberId = member.id,
+                activityId = archive.activity.id,
+                category = "archive",
+            )
+
+        archive.updateRecord(
+            activityRecord = request.activityRecord,
+            role = request.role,
+            detailRole = request.detailRole,
+            userStartDate = request.startDate,
+            userEndDate = request.endDate,
+            customRole = request.customRole,
+        )
+        archiveService.save(archive)
+
+        archiveReferenceUrlService.deleteByArchive(archive)
+        archiveUploadFileUrlService.deleteByArchive(archive)
+
+        archiveReferenceUrlService.saveAll(request.referenceUrls.map { url -> ArchiveReferenceUrl(archive, url) })
+        archiveUploadFileUrlService.saveAll(finalFileUrls.map { url -> ArchiveUploadFileUrl(archive, url) })
     }
 
     @Transactional(readOnly = true)

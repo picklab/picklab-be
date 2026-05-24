@@ -2,7 +2,10 @@ package picklab.backend.archive.domain.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
+import picklab.backend.archive.domain.entity.Archive
 import picklab.backend.archive.domain.entity.ArchiveUploadFileUrl
 
 @Repository
-interface ArchiveUploadFileUrlRepository : JpaRepository<ArchiveUploadFileUrl, Long>
+interface ArchiveUploadFileUrlRepository : JpaRepository<ArchiveUploadFileUrl, Long> {
+    fun deleteByArchive(archive: Archive)
+}

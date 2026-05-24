@@ -1,6 +1,7 @@
 package picklab.backend.archive.domain.service
 
 import org.springframework.stereotype.Service
+import picklab.backend.archive.domain.entity.Archive
 import picklab.backend.archive.domain.entity.ArchiveReferenceUrl
 import picklab.backend.archive.domain.repository.ArchiveReferenceUrlRepository
 
@@ -10,5 +11,9 @@ class ArchiveReferenceUrlService(
 ) {
     fun saveAll(referenceUrls: Collection<ArchiveReferenceUrl>) {
         archiveReferenceUrlRepository.saveAll(referenceUrls)
+    }
+
+    fun deleteByArchive(archive: Archive) {
+        archiveReferenceUrlRepository.deleteByArchive(archive)
     }
 }

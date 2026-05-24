@@ -77,4 +77,21 @@ class Archive(
         this.activityProgressStatus = activityProgressStatus
         this.passOrFailStatus = passOrFailStatus
     }
+
+    fun updateRecord(
+        activityRecord: String,
+        role: RoleType,
+        detailRole: DetailRoleType,
+        userStartDate: LocalDate,
+        userEndDate: LocalDate,
+        customRole: String?,
+    ) {
+        this.activityRecord = activityRecord
+        this.role = role
+        this.detailRole = detailRole
+        this.userStartDate = userStartDate
+        this.userEndDate = userEndDate
+        this.customRole = customRole
+        this.writeStatus = WriteStatus.COMPLETED
+    }
 }
