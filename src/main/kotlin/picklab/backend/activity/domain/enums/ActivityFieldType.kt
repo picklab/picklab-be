@@ -10,6 +10,7 @@ enum class ActivityFieldType(
     OVERSEAS_VOLUNTEER("해외봉사"),
     DOMESTIC_VOLUNTEER("국내봉사단"),
     LECTURE("강연"),
+    ETC("기타"),
     ;
 
     companion object {
