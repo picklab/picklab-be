@@ -2,10 +2,7 @@ package picklab.backend.archive.domain.service
 
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
-import picklab.backend.activity.domain.enums.ActivityType
 import picklab.backend.archive.domain.entity.Archive
-import picklab.backend.archive.domain.enums.ArchiveSortType
-import picklab.backend.archive.domain.enums.ProgressStatus
 import picklab.backend.archive.domain.repository.ArchiveRepository
 import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
@@ -23,28 +20,28 @@ class ArchiveService(
         member: Member,
     ): Archive =
         archiveRepository
-            .findByIdAndMember(archiveId, member) ?: throw BusinessException(ErrorCode.NOT_FOUND_ARCHIVE)
+            .findByIdAndParticipationMember(archiveId, member) ?: throw BusinessException(ErrorCode.NOT_FOUND_ARCHIVE)
+
+    fun findByParticipationId(participationId: Long): Archive? = archiveRepository.findByParticipationId(participationId)
 
     fun existsActiveByActivityIdAndMemberId(
         activityId: Long,
         memberId: Long,
-    ): Boolean = archiveRepository.existsByActivityIdAndMemberIdAndDeletedAtIsNull(activityId, memberId)
+    ): Boolean =
+        archiveRepository.existsByParticipationActivityIdAndParticipationMemberIdAndDeletedAtIsNull(
+            activityId,
+            memberId,
+        )
 
-    fun findCompletedArchives(
-        member: Member,
-        activityType: ActivityType?,
-        sort: ArchiveSortType,
-    ): List<Archive> {
-        val domainSort = sort.toSort()
-        return if (activityType != null) {
-            archiveRepository.findByMemberAndProgressStatusAndActivityType(
-                member,
-                ProgressStatus.COMPLETED,
-                activityType,
-                domainSort,
-            )
+    fun existsActiveByParticipationId(participationId: Long): Boolean =
+        archiveRepository.existsByParticipationIdAndDeletedAtIsNull(
+            participationId,
+        )
+
+    fun findAllByParticipationIds(participationIds: Collection<Long>): List<Archive> =
+        if (participationIds.isEmpty()) {
+            emptyList()
         } else {
-            archiveRepository.findByMemberAndProgressStatus(member, ProgressStatus.COMPLETED, domainSort)
+            archiveRepository.findAllByParticipationIdIn(participationIds)
         }
-    }
 }

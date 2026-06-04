@@ -58,6 +58,8 @@ enum class ErrorCode(
      * 아카이브 도메인 관련
      */
     NOT_FOUND_ARCHIVE(HttpStatus.NOT_FOUND, "아카이브 정보를 찾을 수 없습니다."),
+    ALREADY_EXISTS_ARCHIVE(HttpStatus.BAD_REQUEST, "이미 해당 활동 참여에 대한 아카이브가 존재합니다."),
+    CANNOT_CREATE_ARCHIVE(HttpStatus.BAD_REQUEST, "수료 완료한 활동 참여만 아카이브를 작성할 수 있습니다."),
 
     /**
      * 북마크 도메인 관련

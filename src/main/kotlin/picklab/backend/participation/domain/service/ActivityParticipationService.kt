@@ -2,8 +2,10 @@ package picklab.backend.participation.domain.service
 
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import picklab.backend.activity.domain.entity.Activity
+import picklab.backend.activity.domain.enums.ActivityType
 import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
 import picklab.backend.member.domain.entity.Member
@@ -72,6 +74,22 @@ class ActivityParticipationService(
         memberId: Long,
         progressStatus: ProgressStatus,
     ): Long = participationRepository.countByMemberIdAndProgressStatus(memberId, progressStatus)
+
+    fun findCompletedForArchive(
+        memberId: Long,
+        activityType: ActivityType?,
+        sort: Sort,
+    ): List<ActivityParticipation> =
+        if (activityType == null) {
+            participationRepository.findAllByMemberIdAndProgressStatus(memberId, ProgressStatus.COMPLETED, sort)
+        } else {
+            participationRepository.findAllByMemberIdAndProgressStatusAndActivityActivityType(
+                memberId,
+                ProgressStatus.COMPLETED,
+                activityType.discriminator,
+                sort,
+            )
+        }
 
     fun updateApplicationStatus(
         participation: ActivityParticipation,
