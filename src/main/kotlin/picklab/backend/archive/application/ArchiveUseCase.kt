@@ -3,7 +3,6 @@ package picklab.backend.archive.application
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import picklab.backend.activity.domain.enums.ActivityType
-import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.archive.domain.entity.ArchiveReferenceUrl
 import picklab.backend.archive.domain.entity.ArchiveUploadFileUrl
 import picklab.backend.archive.domain.enums.ArchiveSortType
@@ -12,17 +11,19 @@ import picklab.backend.archive.domain.service.ArchiveService
 import picklab.backend.archive.domain.service.ArchiveUploadFileUrlService
 import picklab.backend.archive.entrypoint.request.ArchiveCreateRequest
 import picklab.backend.archive.entrypoint.request.ArchiveRecordUpdateRequest
-import picklab.backend.archive.entrypoint.request.ArchiveStatusUpdateRequest
 import picklab.backend.archive.entrypoint.response.ArchiveActivityResponse
+import picklab.backend.common.model.BusinessException
+import picklab.backend.common.model.ErrorCode
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.file.application.FileManagementService
 import picklab.backend.member.domain.MemberService
+import picklab.backend.participation.domain.service.ActivityParticipationService
 
 @Component
 class ArchiveUseCase(
     private val memberService: MemberService,
     private val archiveService: ArchiveService,
-    private val activityService: ActivityService,
+    private val participationService: ActivityParticipationService,
     private val archiveReferenceUrlService: ArchiveReferenceUrlService,
     private val archiveUploadFileUrlService: ArchiveUploadFileUrlService,
     private val fileManagementService: FileManagementService,
@@ -33,17 +34,23 @@ class ArchiveUseCase(
         memberPrincipal: MemberPrincipal,
     ) {
         val member = memberService.findActiveMember(memberPrincipal.memberId)
-        val activity = activityService.mustFindById(request.activityId)
+        val participation = participationService.mustFindByIdAndMemberId(request.participationId, member.id)
+        if (!participation.canArchive()) {
+            throw BusinessException(ErrorCode.CANNOT_CREATE_ARCHIVE)
+        }
+        if (archiveService.existsActiveByParticipationId(participation.id)) {
+            throw BusinessException(ErrorCode.ALREADY_EXISTS_ARCHIVE)
+        }
 
         val permanentFileUrls =
             fileManagementService.verifyAndMoveTempFilesToPermanent(
                 fileUrls = request.fileUrls,
                 memberId = member.id,
-                activityId = request.activityId,
+                activityId = participation.activity.id,
                 category = "archive",
             )
 
-        val entity = request.toCreateEntity(member, activity)
+        val entity = request.toCreateEntity(participation)
         val archive = archiveService.save(entity)
 
         val referenceUrls = request.referenceUrls.map { url -> ArchiveReferenceUrl(archive, url) }
@@ -51,23 +58,6 @@ class ArchiveUseCase(
 
         archiveReferenceUrlService.saveAll(referenceUrls)
         archiveUploadFileUrlService.saveAll(uploadedFileUrls)
-    }
-
-    @Transactional
-    fun updateArchiveStatus(
-        archiveId: Long,
-        request: ArchiveStatusUpdateRequest,
-        memberPrincipal: MemberPrincipal,
-    ) {
-        val member = memberService.findActiveMember(memberPrincipal.memberId)
-        val archive = archiveService.mustFindByIdAndMember(archiveId, member)
-
-        archive.update(
-            activityProgressStatus = request.activityProgressStatus,
-            passOrFailStatus = request.passOrFailStatus,
-        )
-
-        archiveService.save(archive)
     }
 
     @Transactional
@@ -83,7 +73,7 @@ class ArchiveUseCase(
             fileManagementService.processUpdatedFileUrls(
                 fileUrls = request.fileUrls,
                 memberId = member.id,
-                activityId = archive.activity.id,
+                activityId = archive.participation.activity.id,
                 category = "archive",
             )
 
@@ -111,8 +101,22 @@ class ArchiveUseCase(
         memberPrincipal: MemberPrincipal,
     ): List<ArchiveActivityResponse> {
         val member = memberService.findActiveMember(memberPrincipal.memberId)
-        return archiveService
-            .findCompletedArchives(member, activityType, sort)
-            .map { ArchiveActivityResponse.from(it) }
+        val participations =
+            participationService.findCompletedForArchive(
+                memberId = member.id,
+                activityType = activityType,
+                sort = sort.toSort(),
+            )
+        val archivesByParticipationId =
+            archiveService
+                .findAllByParticipationIds(participations.map { it.id })
+                .associateBy { it.participation.id }
+
+        return participations.map { participation ->
+            ArchiveActivityResponse.from(
+                participation = participation,
+                archive = archivesByParticipationId[participation.id],
+            )
+        }
     }
 }

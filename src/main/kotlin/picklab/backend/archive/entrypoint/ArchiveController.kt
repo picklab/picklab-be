@@ -14,7 +14,6 @@ import picklab.backend.archive.application.ArchiveUseCase
 import picklab.backend.archive.domain.enums.ArchiveSortType
 import picklab.backend.archive.entrypoint.request.ArchiveCreateRequest
 import picklab.backend.archive.entrypoint.request.ArchiveRecordUpdateRequest
-import picklab.backend.archive.entrypoint.request.ArchiveStatusUpdateRequest
 import picklab.backend.archive.entrypoint.response.ArchiveActivityResponse
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.ResponseWrapper
@@ -31,16 +30,6 @@ class ArchiveController(
     ): ResponseEntity<ResponseWrapper<Unit>> {
         archiveUseCase.createArchive(request, member)
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.CREATE_ARCHIVE_SUCCESS))
-    }
-
-    @PatchMapping("/v1/archive/{archiveId}/status")
-    override fun updateStatus(
-        @AuthenticationPrincipal member: MemberPrincipal,
-        @PathVariable archiveId: Long,
-        @RequestBody request: ArchiveStatusUpdateRequest,
-    ): ResponseEntity<ResponseWrapper<Unit>> {
-        archiveUseCase.updateArchiveStatus(archiveId, request, member)
-        return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.UPDATE_ARCHIVE_SUCCESS))
     }
 
     @PatchMapping("/v1/archive/{archiveId}/record")

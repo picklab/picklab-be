@@ -2,6 +2,7 @@ package picklab.backend.participation.domain.repository
 
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.data.jpa.repository.JpaRepository
 import picklab.backend.participation.domain.entity.ActivityParticipation
 import picklab.backend.participation.domain.enums.ApplicationStatus
@@ -35,4 +36,17 @@ interface ActivityParticipationRepository : JpaRepository<ActivityParticipation,
         memberId: Long,
         progressStatus: ProgressStatus,
     ): Long
+
+    fun findAllByMemberIdAndProgressStatus(
+        memberId: Long,
+        progressStatus: ProgressStatus,
+        sort: Sort,
+    ): List<ActivityParticipation>
+
+    fun findAllByMemberIdAndProgressStatusAndActivityActivityType(
+        memberId: Long,
+        progressStatus: ProgressStatus,
+        activityType: String,
+        sort: Sort,
+    ): List<ActivityParticipation>
 }
