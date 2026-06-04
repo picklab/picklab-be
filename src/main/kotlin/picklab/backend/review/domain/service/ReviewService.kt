@@ -19,6 +19,11 @@ class ReviewService(
         memberId: Long,
     ): Boolean = reviewRepository.existsByActivityIdAndMemberId(activityId, memberId)
 
+    fun existsActiveByActivityIdAndMemberId(
+        activityId: Long,
+        memberId: Long,
+    ): Boolean = reviewRepository.existsByActivityIdAndMemberIdAndDeletedAtIsNull(activityId, memberId)
+
     fun mustFindById(id: Long): Review =
         reviewRepository
             .findById(id)

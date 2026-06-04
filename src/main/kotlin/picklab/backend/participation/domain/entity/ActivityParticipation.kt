@@ -28,7 +28,7 @@ class ActivityParticipation(
     var applicationStatus: ApplicationStatus,
     @Column(name = "progress_status", length = 50, nullable = false)
     @Enumerated(EnumType.STRING)
-    @Comment("진행 상태 (진행 중 / 수료 완료 / 중도 포기)")
+    @Comment("진행 상태 (미선택 / 진행 중 / 수료 완료 / 중도 포기)")
     var progressStatus: ProgressStatus,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -37,6 +37,17 @@ class ActivityParticipation(
     @JoinColumn(name = "activity_id", nullable = false)
     val activity: Activity,
 ) : SoftDeleteEntity() {
+    fun updateApplicationStatus(applicationStatus: ApplicationStatus) {
+        this.applicationStatus = applicationStatus
+        if (applicationStatus != ApplicationStatus.ACCEPTED) {
+            this.progressStatus = ProgressStatus.NOT_SELECTED
+        }
+    }
+
+    fun updateProgressStatus(progressStatus: ProgressStatus) {
+        this.progressStatus = progressStatus
+    }
+
     fun canWriteReview(): Boolean =
         progressStatus == ProgressStatus.COMPLETED ||
             progressStatus == ProgressStatus.DROPPED

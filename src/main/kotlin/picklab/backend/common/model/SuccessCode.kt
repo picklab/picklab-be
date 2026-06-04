@@ -36,6 +36,13 @@ enum class SuccessCode(
     GET_BOOKMARKS(HttpStatus.OK, "북마크 목록 조회에 성공했습니다."),
     INCREASE_VIEW_COUNT(HttpStatus.OK, "조회 수 증가에 성공했습니다."),
 
+    // Activity Participation 관련
+    CREATE_ACTIVITY_PARTICIPATION(HttpStatus.CREATED, "활동을 지원 완료로 표시했습니다."),
+    DELETE_ACTIVITY_PARTICIPATION(HttpStatus.OK, "활동 지원 완료 표시를 취소했습니다."),
+    UPDATE_ACTIVITY_PARTICIPATION(HttpStatus.OK, "활동 결과를 수정했습니다."),
+    GET_ACTIVITY_PARTICIPATIONS(HttpStatus.OK, "활동 결과 목록 조회에 성공했습니다."),
+    GET_ACTIVITY_PARTICIPATION_SUMMARY(HttpStatus.OK, "활동 결과 현황 조회에 성공했습니다."),
+
     // Archive 관련
     CREATE_ARCHIVE_SUCCESS(HttpStatus.OK, "아카이브 생성에 성공했습니다."),
     UPDATE_ARCHIVE_SUCCESS(HttpStatus.OK, "아카이브 상태 수정에 성공했습니다."),

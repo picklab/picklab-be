@@ -12,6 +12,7 @@ import picklab.backend.member.domain.entity.Member
 import picklab.backend.participation.domain.enums.ApplicationStatus
 import picklab.backend.participation.domain.enums.ProgressStatus
 import java.time.LocalDate
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -59,6 +60,23 @@ class ActivityParticipationTest {
             .getDeclaredField("id")
             .apply { isAccessible = true }
             .set(mockActivity, 1L)
+    }
+
+    @Test
+    @DisplayName("미선택 상태는 리뷰 및 아카이브 작성이 불가능하다")
+    fun cannotWriteNotSelected() {
+        // given
+        val participation =
+            ActivityParticipation(
+                applicationStatus = ApplicationStatus.APPLIED,
+                progressStatus = ProgressStatus.NOT_SELECTED,
+                member = mockMember,
+                activity = mockActivity,
+            )
+
+        // when & then
+        assertFalse(participation.canWriteReview())
+        assertFalse(participation.canArchive())
     }
 
     @Test
@@ -110,5 +128,25 @@ class ActivityParticipationTest {
         // when & then
         assertTrue(participation.canWriteReview())
         assertFalse(participation.canArchive())
+    }
+
+    @Test
+    @DisplayName("불합격으로 변경하면 진행 상태는 미선택으로 초기화된다")
+    fun resetProgressStatusWhenRejected() {
+        // given
+        val participation =
+            ActivityParticipation(
+                applicationStatus = ApplicationStatus.ACCEPTED,
+                progressStatus = ProgressStatus.COMPLETED,
+                member = mockMember,
+                activity = mockActivity,
+            )
+
+        // when
+        participation.updateApplicationStatus(ApplicationStatus.REJECTED)
+
+        // then
+        assertEquals(ApplicationStatus.REJECTED, participation.applicationStatus)
+        assertEquals(ProgressStatus.NOT_SELECTED, participation.progressStatus)
     }
 }

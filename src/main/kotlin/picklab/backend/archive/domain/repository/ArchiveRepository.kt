@@ -17,6 +17,11 @@ interface ArchiveRepository : JpaRepository<Archive, Long> {
         member: Member,
     ): Archive?
 
+    fun existsByActivityIdAndMemberIdAndDeletedAtIsNull(
+        activityId: Long,
+        memberId: Long,
+    ): Boolean
+
     @Query("SELECT a FROM Archive a JOIN FETCH a.activity WHERE a.member = :member AND a.activityProgressStatus = :status")
     fun findByMemberAndProgressStatus(
         @Param("member") member: Member,

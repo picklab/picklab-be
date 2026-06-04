@@ -50,6 +50,9 @@ enum class ErrorCode(
      * 활동 참여 도메인 관련
      */
     NOT_FOUND_ACTIVITY_PARTICIPATION(HttpStatus.NOT_FOUND, "해당 활동에 대한 참여 이력이 존재하지 않습니다."),
+    ALREADY_EXISTS_ACTIVITY_PARTICIPATION(HttpStatus.BAD_REQUEST, "이미 해당 활동을 지원 완료로 표시했습니다."),
+    CANNOT_CANCEL_ACTIVITY_PARTICIPATION(HttpStatus.BAD_REQUEST, "리뷰 또는 아카이브가 있는 활동 참여는 취소할 수 없습니다."),
+    CANNOT_UPDATE_ACTIVITY_PROGRESS_STATUS(HttpStatus.BAD_REQUEST, "최종 합격 상태에서만 수료 여부를 수정할 수 있습니다."),
 
     /**
      * 아카이브 도메인 관련
