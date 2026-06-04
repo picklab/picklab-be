@@ -25,6 +25,11 @@ class ArchiveService(
         archiveRepository
             .findByIdAndMember(archiveId, member) ?: throw BusinessException(ErrorCode.NOT_FOUND_ARCHIVE)
 
+    fun existsActiveByActivityIdAndMemberId(
+        activityId: Long,
+        memberId: Long,
+    ): Boolean = archiveRepository.existsByActivityIdAndMemberIdAndDeletedAtIsNull(activityId, memberId)
+
     fun findCompletedArchives(
         member: Member,
         activityType: ActivityType?,

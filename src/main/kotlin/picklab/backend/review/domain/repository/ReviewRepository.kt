@@ -8,4 +8,9 @@ interface ReviewRepository : JpaRepository<Review, Long> {
         activityId: Long,
         memberId: Long,
     ): Boolean
+
+    fun existsByActivityIdAndMemberIdAndDeletedAtIsNull(
+        activityId: Long,
+        memberId: Long,
+    ): Boolean
 }
