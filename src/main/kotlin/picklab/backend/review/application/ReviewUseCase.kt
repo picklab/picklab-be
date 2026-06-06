@@ -14,14 +14,15 @@ import picklab.backend.participation.domain.service.ActivityParticipationService
 import picklab.backend.review.application.mapper.toDetailView
 import picklab.backend.review.application.mapper.toEntity
 import picklab.backend.review.application.model.ActivityReviewListQueryRequest
+import picklab.backend.review.application.model.ActivityReviewWithHelpful
 import picklab.backend.review.application.model.MyReviewListQueryRequest
 import picklab.backend.review.application.model.ReviewCreateCommand
 import picklab.backend.review.application.model.ReviewUpdateCommand
-import picklab.backend.review.application.query.model.ActivityReviewListView
 import picklab.backend.review.application.query.model.MyReviewDetailView
 import picklab.backend.review.application.query.model.MyReviewListView
 import picklab.backend.review.application.service.ReviewOverviewQueryService
 import picklab.backend.review.domain.policy.ReviewApprovalDecider
+import picklab.backend.review.domain.service.ReviewHelpfulService
 import picklab.backend.review.domain.service.ReviewService
 
 @Component
@@ -32,6 +33,7 @@ class ReviewUseCase(
     private val activityParticipationService: ActivityParticipationService,
     private val reviewOverviewQueryService: ReviewOverviewQueryService,
     private val jobService: JobService,
+    private val reviewHelpfulService: ReviewHelpfulService,
 ) {
     fun createReview(command: ReviewCreateCommand) {
         val member = memberService.findActiveMember(command.memberId)
@@ -75,13 +77,14 @@ class ReviewUseCase(
         return reviewOverviewQueryService.findMyReviews(member.id, pageable)
     }
 
+    @Transactional(readOnly = true)
     fun getReviewsByActivity(
         request: ActivityReviewListQueryRequest,
         activityId: Long,
         memberId: Long?,
         page: Int,
         size: Int,
-    ): Page<ActivityReviewListView> {
+    ): Page<ActivityReviewWithHelpful> {
         memberId?.let { memberService.findActiveMember(it) }
         val activity = activityService.mustFindById(activityId)
         val pageable =
@@ -90,8 +93,40 @@ class ReviewUseCase(
                 size,
                 Sort.by("createdAt").descending(),
             )
-        return reviewOverviewQueryService
-            .findActivityReviews(request, activity.id, pageable)
+        val reviews =
+            reviewOverviewQueryService
+                .findActivityReviews(request, activity.id, pageable)
+        val reviewIds = reviews.content.map { it.id }
+        val helpfulCounts = reviewHelpfulService.countByReviewIds(reviewIds)
+        val helpfulReviewIds = reviewHelpfulService.findHelpfulReviewIds(memberId, reviewIds)
+
+        return reviews.map { review ->
+            ActivityReviewWithHelpful(
+                review = review,
+                helpfulCount = helpfulCounts[review.id] ?: 0L,
+                isHelpful = review.id in helpfulReviewIds,
+            )
+        }
+    }
+
+    @Transactional
+    fun markReviewHelpful(
+        memberId: Long,
+        reviewId: Long,
+    ) {
+        val member = memberService.findActiveMember(memberId)
+        val review = reviewService.mustFindById(reviewId)
+        reviewHelpfulService.markHelpful(member.id, review.id)
+    }
+
+    @Transactional
+    fun unmarkReviewHelpful(
+        memberId: Long,
+        reviewId: Long,
+    ) {
+        val member = memberService.findActiveMember(memberId)
+        val review = reviewService.mustFindById(reviewId)
+        reviewHelpfulService.unmarkHelpful(member.id, review.id)
     }
 
     @Transactional

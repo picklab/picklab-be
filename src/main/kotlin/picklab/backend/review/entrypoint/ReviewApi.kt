@@ -94,6 +94,24 @@ interface ReviewApi {
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityReviewResponse>>>
 
     @Operation(
+        summary = "리뷰 도움돼요 표시",
+        description = "로그인한 사용자가 리뷰에 도움돼요를 표시합니다. 이미 표시한 경우에도 성공합니다.",
+    )
+    fun markReviewHelpful(
+        @Parameter(description = "리뷰 ID값") @PathVariable id: Long,
+        member: MemberPrincipal,
+    ): ResponseEntity<ResponseWrapper<Unit>>
+
+    @Operation(
+        summary = "리뷰 도움돼요 취소",
+        description = "로그인한 사용자가 리뷰의 도움돼요 표시를 취소합니다. 표시하지 않은 경우에도 성공합니다.",
+    )
+    fun unmarkReviewHelpful(
+        @Parameter(description = "리뷰 ID값") @PathVariable id: Long,
+        member: MemberPrincipal,
+    ): ResponseEntity<ResponseWrapper<Unit>>
+
+    @Operation(
         summary = "리뷰 수정",
         description = "본인이 작성한 리뷰를 수정합니다.",
     )

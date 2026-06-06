@@ -79,6 +79,24 @@ class ReviewController(
             .let { ResponseWrapper.success(SuccessCode.GET_REVIEWS, it) }
             .let { ResponseEntity.ok(it) }
 
+    @PostMapping("/v1/reviews/{id}/helpful")
+    override fun markReviewHelpful(
+        @PathVariable id: Long,
+        @AuthenticationPrincipal member: MemberPrincipal,
+    ): ResponseEntity<ResponseWrapper<Unit>> {
+        reviewUseCase.markReviewHelpful(member.memberId, id)
+        return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.MARK_REVIEW_HELPFUL_SUCCESS))
+    }
+
+    @DeleteMapping("/v1/reviews/{id}/helpful")
+    override fun unmarkReviewHelpful(
+        @PathVariable id: Long,
+        @AuthenticationPrincipal member: MemberPrincipal,
+    ): ResponseEntity<ResponseWrapper<Unit>> {
+        reviewUseCase.unmarkReviewHelpful(member.memberId, id)
+        return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.UNMARK_REVIEW_HELPFUL_SUCCESS))
+    }
+
     @PutMapping("/v1/reviews/{id}")
     override fun updateReview(
         @PathVariable id: Long,

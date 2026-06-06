@@ -1,7 +1,7 @@
 package picklab.backend.review.entrypoint.mapper
 
 import picklab.backend.common.model.MemberPrincipal
-import picklab.backend.review.application.query.model.ActivityReviewListView
+import picklab.backend.review.application.model.ActivityReviewWithHelpful
 import picklab.backend.review.application.query.model.MyReviewListView
 import picklab.backend.review.entrypoint.response.ActivityReviewResponse
 import picklab.backend.review.entrypoint.response.MyReviewsResponse
@@ -17,22 +17,25 @@ fun MyReviewListView.toResponse(): MyReviewsResponse =
         approvalStatus = approvalStatus,
     )
 
-fun ActivityReviewListView.toResponse(member: MemberPrincipal?): ActivityReviewResponse {
+fun ActivityReviewWithHelpful.toResponse(member: MemberPrincipal?): ActivityReviewResponse {
     val isLoggedIn = member != null
+    val review = this.review
 
     return ActivityReviewResponse(
-        id = id,
-        overallScore = overallScore,
-        infoScore = infoScore,
-        difficultyScore = difficultyScore,
-        benefitScore = benefitScore,
-        jobGroup = jobGroup,
-        jobDetail = jobDetail,
-        participationDate = participationDate,
-        progressStatus = progressStatus,
-        summary = summary.takeIf { isLoggedIn },
-        strength = strength.takeIf { isLoggedIn },
-        weakness = weakness.takeIf { isLoggedIn },
-        tips = tips.takeIf { isLoggedIn },
+        id = review.id,
+        overallScore = review.overallScore,
+        infoScore = review.infoScore,
+        difficultyScore = review.difficultyScore,
+        benefitScore = review.benefitScore,
+        jobGroup = review.jobGroup,
+        jobDetail = review.jobDetail,
+        participationDate = review.participationDate,
+        progressStatus = review.progressStatus,
+        helpfulCount = helpfulCount,
+        isHelpful = isHelpful,
+        summary = review.summary.takeIf { isLoggedIn },
+        strength = review.strength.takeIf { isLoggedIn },
+        weakness = review.weakness.takeIf { isLoggedIn },
+        tips = review.tips.takeIf { isLoggedIn },
     )
 }

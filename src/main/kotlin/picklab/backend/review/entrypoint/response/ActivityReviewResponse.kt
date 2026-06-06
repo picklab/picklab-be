@@ -26,6 +26,10 @@ data class ActivityReviewResponse(
     val participationDate: LocalDateTime,
     @field:Schema(description = "진행 상태 (진행 중 / 수료 완료 / 중도 포기)", example = "수료 완료")
     val progressStatus: ProgressStatus,
+    @field:Schema(description = "도움돼요 개수", example = "12")
+    val helpfulCount: Long,
+    @field:Schema(description = "현재 요청 사용자의 도움돼요 표시 여부 (비로그인 시 false)", example = "false")
+    val isHelpful: Boolean,
     // 로그인 사용자만 노출되는 필드
     @field:Schema(description = "한줄평")
     val summary: String? = null,

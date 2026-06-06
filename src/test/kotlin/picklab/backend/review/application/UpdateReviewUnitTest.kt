@@ -21,6 +21,7 @@ import picklab.backend.participation.domain.service.ActivityParticipationService
 import picklab.backend.review.application.model.ReviewUpdateCommand
 import picklab.backend.review.application.service.ReviewOverviewQueryService
 import picklab.backend.review.domain.entity.Review
+import picklab.backend.review.domain.service.ReviewHelpfulService
 import picklab.backend.review.domain.service.ReviewService
 import kotlin.test.Test
 
@@ -43,6 +44,9 @@ class UpdateReviewUnitTest {
 
     @MockK
     lateinit var jobService: JobService
+
+    @MockK
+    lateinit var reviewHelpfulService: ReviewHelpfulService
 
     @InjectMockKs
     lateinit var reviewUseCase: ReviewUseCase
