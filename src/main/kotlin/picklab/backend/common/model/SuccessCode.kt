@@ -62,6 +62,8 @@ enum class SuccessCode(
     CREATE_REVIEW_SUCCESS(HttpStatus.OK, "리뷰 생성에 성공했습니다."),
     UPDATE_REVIEW_SUCCESS(HttpStatus.OK, "리뷰 수정에 성공했습니다."),
     DELETE_REVIEW_SUCCESS(HttpStatus.OK, "리뷰 삭제에 성공했습니다."),
+    MARK_REVIEW_HELPFUL_SUCCESS(HttpStatus.OK, "리뷰에 도움돼요를 표시했습니다."),
+    UNMARK_REVIEW_HELPFUL_SUCCESS(HttpStatus.OK, "리뷰 도움돼요를 취소했습니다."),
     GET_JOB_RELEVANCE_AVG_SCORES_SUCCESS(HttpStatus.OK, "직무 관련도 평균 점수 조회에 성공했습니다."),
     GET_SATISFACTION_AVG_SCORES_SUCCESS(HttpStatus.OK, "활동별 만족도 통계 조회에 성공했습니다."),
 
