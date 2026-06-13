@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.RequestBody
@@ -12,6 +13,7 @@ import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.member.entrypoint.request.AdditionalInfoRequest
 import picklab.backend.member.entrypoint.request.MemberWithdrawalRequest
+import picklab.backend.member.entrypoint.request.NicknameAvailabilityRequest
 import picklab.backend.member.entrypoint.request.SendEmailRequest
 import picklab.backend.member.entrypoint.request.ToggleMemberNotificationRequest
 import picklab.backend.member.entrypoint.request.UpdateEmailAgreementRequest
@@ -22,6 +24,7 @@ import picklab.backend.member.entrypoint.request.UpdateProfileImageRequest
 import picklab.backend.member.entrypoint.request.VerifyEmailCodeRequest
 import picklab.backend.member.entrypoint.response.GetMemberMeResponse
 import picklab.backend.member.entrypoint.response.GetSocialLoginsResponse
+import picklab.backend.member.entrypoint.response.NicknameAvailabilityResponse
 
 @Tag(name = "회원 API", description = "회원 관련 작업을 하는 API")
 interface MemberApi {
@@ -41,6 +44,21 @@ interface MemberApi {
         @AuthenticationPrincipal member: MemberPrincipal,
         @Valid @RequestBody request: AdditionalInfoRequest,
     ): ResponseEntity<ResponseWrapper<Unit>>
+
+    @Operation(
+        summary = "닉네임 사용 가능 여부 조회",
+        description = "회원가입에 사용할 닉네임의 중복 여부를 확인합니다.",
+    )
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "닉네임 사용 가능 여부 조회에 성공했습니다."),
+            ApiResponse(responseCode = "400", description = "닉네임 형식이 올바르지 않습니다."),
+            ApiResponse(responseCode = "401", description = "인증되지 않은 사용자입니다."),
+        ],
+    )
+    fun checkNicknameAvailability(
+        @Valid @ParameterObject request: NicknameAvailabilityRequest,
+    ): ResponseEntity<ResponseWrapper<NicknameAvailabilityResponse>>
 
     @Operation(
         summary = "사용자 정보 수정",

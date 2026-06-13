@@ -130,6 +130,8 @@ class MemberUseCase(
 
     fun getSocialLogins(memberId: Long) = memberService.getSocialLogins(memberId)
 
+    fun isNicknameAvailable(nickname: String): Boolean = !memberService.existByNickname(nickname)
+
     @Transactional(readOnly = true)
     fun getMemberMe(memberId: Long): MemberMeResult {
         val member = memberService.findActiveMember(memberId)
