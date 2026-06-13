@@ -3,6 +3,9 @@ package picklab.backend.participation.entrypoint
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
+import jakarta.validation.constraints.Max
+import jakarta.validation.constraints.Min
 import org.springframework.http.ResponseEntity
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.PageResponse
@@ -42,7 +45,7 @@ interface ActivityParticipationApi {
     fun updateApplicationStatus(
         member: MemberPrincipal,
         participationId: Long,
-        request: UpdateApplicationStatusRequest,
+        @Valid request: UpdateApplicationStatusRequest,
     ): ResponseEntity<ResponseWrapper<Unit>>
 
     @Operation(
@@ -52,7 +55,7 @@ interface ActivityParticipationApi {
     fun updateProgressStatus(
         member: MemberPrincipal,
         participationId: Long,
-        request: UpdateProgressStatusRequest,
+        @Valid request: UpdateProgressStatusRequest,
     ): ResponseEntity<ResponseWrapper<Unit>>
 
     @Operation(
@@ -62,8 +65,8 @@ interface ActivityParticipationApi {
     fun getResults(
         member: MemberPrincipal,
         applicationStatus: List<ApplicationStatus>?,
-        page: Int,
-        size: Int,
+        @Min(1) page: Int,
+        @Min(1) @Max(100) size: Int,
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityParticipationResultResponse>>>
 
     @Operation(

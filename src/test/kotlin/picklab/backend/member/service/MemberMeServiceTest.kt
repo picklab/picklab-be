@@ -12,8 +12,12 @@ import picklab.backend.job.domain.enums.JobGroup
 import picklab.backend.member.application.MemberUseCase
 import picklab.backend.member.domain.entity.InterestedJobCategory
 import picklab.backend.member.domain.entity.Member
+import picklab.backend.member.domain.entity.MemberAgreement
+import picklab.backend.member.domain.entity.NotificationPreference
 import picklab.backend.member.domain.repository.InterestedJobCategoryRepository
+import picklab.backend.member.domain.repository.MemberAgreementRepository
 import picklab.backend.member.domain.repository.MemberRepository
+import picklab.backend.member.domain.repository.NotificationPreferenceRepository
 import picklab.backend.template.IntegrationTest
 import java.time.LocalDate
 
@@ -26,6 +30,12 @@ class MemberMeServiceTest : IntegrationTest() {
 
     @Autowired
     lateinit var interestedJobCategoryRepository: InterestedJobCategoryRepository
+
+    @Autowired
+    lateinit var memberAgreementRepository: MemberAgreementRepository
+
+    @Autowired
+    lateinit var notificationPreferenceRepository: NotificationPreferenceRepository
 
     @Autowired
     lateinit var jobCategoryRepository: JobCategoryRepository
@@ -50,6 +60,21 @@ class MemberMeServiceTest : IntegrationTest() {
                     company = "Picklab",
                 ),
             )
+
+        memberAgreementRepository.save(
+            MemberAgreement(
+                member = member,
+                emailAgreement = true,
+                privacyAgreement = true,
+            ),
+        )
+        notificationPreferenceRepository.save(
+            NotificationPreference(
+                member = member,
+                notifyPopularActivity = true,
+                notifyBookmarkedActivity = false,
+            ),
+        )
 
         val backend =
             jobCategoryRepository.save(
@@ -83,5 +108,12 @@ class MemberMeServiceTest : IntegrationTest() {
         assertThat(result.jobFields).containsExactly(JobGroup.DEVELOPMENT)
         assertThat(result.employmentStatus).isEqualTo("재직 중")
         assertThat(result.company).isEqualTo("Picklab")
+        assertThat(result.emailAgreement).isTrue()
+        assertThat(result.notifyPopularActivity).isTrue()
+        assertThat(result.notifyBookmarkedActivity).isFalse()
+
+        memberAgreementRepository.deleteAll()
+
+        assertThat(memberUseCase.getMemberMe(member.id).emailAgreement).isFalse()
     }
 }

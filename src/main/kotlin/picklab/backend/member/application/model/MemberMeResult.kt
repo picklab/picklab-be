@@ -13,4 +13,7 @@ data class MemberMeResult(
     val jobFields: List<JobGroup>,
     val employmentStatus: String,
     val company: String,
+    val emailAgreement: Boolean,
+    val notifyPopularActivity: Boolean,
+    val notifyBookmarkedActivity: Boolean,
 )

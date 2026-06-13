@@ -3,6 +3,7 @@ package picklab.backend.member.entrypoint.mapper
 import picklab.backend.member.application.model.MemberMeResult
 import picklab.backend.member.entrypoint.response.EmploymentInfoResponse
 import picklab.backend.member.entrypoint.response.GetMemberMeResponse
+import picklab.backend.member.entrypoint.response.NotificationPreferencesResponse
 
 fun MemberMeResult.toResponse(): GetMemberMeResponse =
     GetMemberMeResponse(
@@ -16,5 +17,11 @@ fun MemberMeResult.toResponse(): GetMemberMeResponse =
             EmploymentInfoResponse(
                 employmentStatus = this.employmentStatus,
                 company = this.company,
+            ),
+        emailAgreement = this.emailAgreement,
+        notificationPreferences =
+            NotificationPreferencesResponse(
+                popular = this.notifyPopularActivity,
+                bookmarked = this.notifyBookmarkedActivity,
             ),
     )

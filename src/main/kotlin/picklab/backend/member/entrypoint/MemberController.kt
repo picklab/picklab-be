@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -19,6 +20,7 @@ import picklab.backend.member.application.MemberUseCase
 import picklab.backend.member.entrypoint.mapper.toResponse
 import picklab.backend.member.entrypoint.request.AdditionalInfoRequest
 import picklab.backend.member.entrypoint.request.MemberWithdrawalRequest
+import picklab.backend.member.entrypoint.request.NicknameAvailabilityRequest
 import picklab.backend.member.entrypoint.request.SendEmailRequest
 import picklab.backend.member.entrypoint.request.ToggleMemberNotificationRequest
 import picklab.backend.member.entrypoint.request.UpdateEmailAgreementRequest
@@ -29,6 +31,7 @@ import picklab.backend.member.entrypoint.request.UpdateProfileImageRequest
 import picklab.backend.member.entrypoint.request.VerifyEmailCodeRequest
 import picklab.backend.member.entrypoint.response.GetMemberMeResponse
 import picklab.backend.member.entrypoint.response.GetSocialLoginsResponse
+import picklab.backend.member.entrypoint.response.NicknameAvailabilityResponse
 
 @RestController
 @RequestMapping("/v1/members")
@@ -49,6 +52,15 @@ class MemberController(
             .status(HttpStatus.OK)
             .body(ResponseWrapper.success(SuccessCode.SIGNUP_SUCCESS, Unit))
     }
+
+    @GetMapping("/nickname-availability")
+    override fun checkNicknameAvailability(
+        @Valid @ModelAttribute request: NicknameAvailabilityRequest,
+    ): ResponseEntity<ResponseWrapper<NicknameAvailabilityResponse>> =
+        NicknameAvailabilityResponse(
+            available = memberUseCase.isNicknameAvailable(request.nickname),
+        ).let { ResponseWrapper.success(SuccessCode.CHECK_NICKNAME_AVAILABILITY, it) }
+            .let { ResponseEntity.ok(it) }
 
     @PutMapping("/info")
     override fun updateMemberInfo(

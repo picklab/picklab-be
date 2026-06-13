@@ -39,6 +39,9 @@ class MemberMeControllerTest {
                 jobFields = listOf(JobGroup.DEVELOPMENT),
                 employmentStatus = "재직 중",
                 company = "Picklab",
+                emailAgreement = true,
+                notifyPopularActivity = true,
+                notifyBookmarkedActivity = false,
             ),
         )
 
@@ -57,5 +60,8 @@ class MemberMeControllerTest {
             .andExpect { jsonPath("$.data.job_fields[0]") { value("DEVELOPMENT") } }
             .andExpect { jsonPath("$.data.employment.employment_status") { value("재직 중") } }
             .andExpect { jsonPath("$.data.employment.company") { value("Picklab") } }
+            .andExpect { jsonPath("$.data.email_agreement") { value(true) } }
+            .andExpect { jsonPath("$.data.notification_preferences.popular") { value(true) } }
+            .andExpect { jsonPath("$.data.notification_preferences.bookmarked") { value(false) } }
     }
 }

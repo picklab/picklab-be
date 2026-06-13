@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
@@ -166,6 +167,46 @@ class MemberControllerTest {
                     .andReturn()
 
             assertTrue(result.resolvedException is MethodArgumentNotValidException)
+        }
+    }
+
+    @Nested
+    @WithMockUser
+    @DisplayName("닉네임 사용 가능 여부 조회")
+    inner class CheckNicknameAvailability {
+        @Test
+        @DisplayName("[성공] 사용 가능한 닉네임이면 true를 반환한다.")
+        fun available() {
+            given(memberUseCase.isNicknameAvailable("newNickname")).willReturn(true)
+
+            mockMvc
+                .get("/v1/members/nickname-availability") {
+                    param("nickname", "newNickname")
+                }.andExpect { status { isOk() } }
+                .andExpect { jsonPath("$.code") { value(SuccessCode.CHECK_NICKNAME_AVAILABILITY.status.value()) } }
+                .andExpect { jsonPath("$.message") { value(SuccessCode.CHECK_NICKNAME_AVAILABILITY.message) } }
+                .andExpect { jsonPath("$.data.available") { value(true) } }
+        }
+
+        @Test
+        @DisplayName("[성공] 중복된 닉네임이면 false를 반환한다.")
+        fun unavailable() {
+            given(memberUseCase.isNicknameAvailable("usedNickname")).willReturn(false)
+
+            mockMvc
+                .get("/v1/members/nickname-availability") {
+                    param("nickname", "usedNickname")
+                }.andExpect { status { isOk() } }
+                .andExpect { jsonPath("$.data.available") { value(false) } }
+        }
+
+        @Test
+        @DisplayName("[실패] 닉네임 형식이 올바르지 않으면 400을 반환한다.")
+        fun invalidNickname() {
+            mockMvc
+                .get("/v1/members/nickname-availability") {
+                    param("nickname", "invalid nickname")
+                }.andExpect { status { isBadRequest() } }
         }
     }
 
