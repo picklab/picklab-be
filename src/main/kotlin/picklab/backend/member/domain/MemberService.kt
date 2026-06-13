@@ -239,6 +239,12 @@ class MemberService(
     fun findInterestedJobCategories(memberId: Long): List<InterestedJobCategory> =
         interestedJobCategoryRepository.findAllByMemberIdWithJobCategory(memberId)
 
+    @Transactional(readOnly = true)
+    fun findEmailAgreement(memberId: Long): Boolean = memberAgreementRepository.findByMemberId(memberId)?.emailAgreement ?: false
+
+    fun findNotificationPreference(memberId: Long): NotificationPreference =
+        notificationPreferenceService.getNotificationPreference(memberId)
+
     @Transactional
     fun withdrawMember(memberId: Long) {
         val member = findActiveMember(memberId)

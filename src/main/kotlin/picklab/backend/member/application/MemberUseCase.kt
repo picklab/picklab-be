@@ -134,7 +134,13 @@ class MemberUseCase(
     fun getMemberMe(memberId: Long): MemberMeResult {
         val member = memberService.findActiveMember(memberId)
         val interestedJobCategories = memberService.findInterestedJobCategories(memberId)
-        return member.toMemberMeResult(interestedJobCategories)
+        val emailAgreement = memberService.findEmailAgreement(memberId)
+        val notificationPreference = memberService.findNotificationPreference(memberId)
+        return member.toMemberMeResult(
+            interestedJobCategories = interestedJobCategories,
+            emailAgreement = emailAgreement,
+            notificationPreference = notificationPreference,
+        )
     }
 
     fun withdrawMember(memberId: Long) {
