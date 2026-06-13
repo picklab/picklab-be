@@ -1,8 +1,5 @@
 package picklab.backend.participation.entrypoint
 
-import jakarta.validation.Valid
-import jakarta.validation.constraints.Max
-import jakarta.validation.constraints.Min
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -53,7 +50,7 @@ class ActivityParticipationController(
     override fun updateApplicationStatus(
         @AuthenticationPrincipal member: MemberPrincipal,
         @PathVariable participationId: Long,
-        @Valid @RequestBody request: UpdateApplicationStatusRequest,
+        @RequestBody request: UpdateApplicationStatusRequest,
     ): ResponseEntity<ResponseWrapper<Unit>> {
         activityParticipationUseCase.updateApplicationStatus(
             memberId = member.memberId,
@@ -67,7 +64,7 @@ class ActivityParticipationController(
     override fun updateProgressStatus(
         @AuthenticationPrincipal member: MemberPrincipal,
         @PathVariable participationId: Long,
-        @Valid @RequestBody request: UpdateProgressStatusRequest,
+        @RequestBody request: UpdateProgressStatusRequest,
     ): ResponseEntity<ResponseWrapper<Unit>> {
         activityParticipationUseCase.updateProgressStatus(
             memberId = member.memberId,
@@ -81,8 +78,8 @@ class ActivityParticipationController(
     override fun getResults(
         @AuthenticationPrincipal member: MemberPrincipal,
         @RequestParam(required = false) applicationStatus: List<ApplicationStatus>?,
-        @RequestParam(defaultValue = "1") @Min(1) page: Int,
-        @RequestParam(defaultValue = "10") @Min(1) @Max(100) size: Int,
+        @RequestParam(defaultValue = "1") page: Int,
+        @RequestParam(defaultValue = "10") size: Int,
     ): ResponseEntity<ResponseWrapper<PageResponse<ActivityParticipationResultResponse>>> {
         val response =
             activityParticipationUseCase.getResults(

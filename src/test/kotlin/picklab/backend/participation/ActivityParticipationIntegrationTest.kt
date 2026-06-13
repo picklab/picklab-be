@@ -180,6 +180,47 @@ class ActivityParticipationIntegrationTest : IntegrationTest() {
         }
 
         @Test
+        @DisplayName("[성공] 활동 결과 목록을 조회한다")
+        fun getResults() {
+            val participation =
+                participationRepository.save(
+                    ActivityParticipation(
+                        applicationStatus = ApplicationStatus.APPLIED,
+                        progressStatus = ProgressStatus.NOT_SELECTED,
+                        member = member,
+                        activity = activity,
+                    ),
+                )
+
+            mockMvc
+                .get("/v1/activity-participations/results") {
+                    param("page", "1")
+                    param("size", "10")
+                }.andExpect { status { isOk() } }
+                .andExpect { jsonPath("$.data.items[0].participation_id") { value(participation.id) } }
+                .andExpect { jsonPath("$.data.items[0].activity_id") { value(activity.id) } }
+                .andExpect { jsonPath("$.data.items[0].title") { value("테스트 대외활동") } }
+                .andExpect { jsonPath("$.data.page") { value(1) } }
+                .andExpect { jsonPath("$.data.size") { value(10) } }
+                .andExpect { jsonPath("$.data.total_elements") { value(1) } }
+
+            mockMvc
+                .get("/v1/activity-participations/results")
+                .andExpect { status { isOk() } }
+
+            mockMvc
+                .get("/v1/activity-participations/results") {
+                    param("size", "1")
+                }.andExpect { status { isOk() } }
+                .andExpect { jsonPath("$.data.size") { value(1) } }
+
+            mockMvc
+                .get("/v1/activity-participations/results") {
+                    param("page", "0")
+                }.andExpect { status { isBadRequest() } }
+        }
+
+        @Test
         @DisplayName("[실패] 최종 합격 상태가 아니면 수료 여부를 수정할 수 없다")
         fun cannotUpdateProgressStatusWithoutAccepted() {
             val participation =
