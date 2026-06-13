@@ -6,6 +6,8 @@ import picklab.backend.job.domain.enums.JobGroup
 
 @Schema(description = "내 리뷰 단건 조회 응답")
 data class MyReviewResponse(
+    @field:Schema(description = "활동 ID")
+    val activityId: Long,
     @field:Schema(description = "직무")
     val jobGroup: JobGroup,
     @field:Schema(description = "상세 직무 (null = 전체)")

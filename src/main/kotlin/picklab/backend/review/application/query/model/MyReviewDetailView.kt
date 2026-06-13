@@ -4,6 +4,7 @@ import picklab.backend.job.domain.enums.JobDetail
 import picklab.backend.job.domain.enums.JobGroup
 
 data class MyReviewDetailView(
+    val activityId: Long,
     val jobGroup: JobGroup,
     val jobDetail: JobDetail?,
     val overallScore: Int,

@@ -5,6 +5,7 @@ import picklab.backend.review.entrypoint.response.MyReviewResponse
 
 fun MyReviewDetailView.toResponse(): MyReviewResponse =
     MyReviewResponse(
+        activityId = this.activityId,
         jobGroup = this.jobGroup,
         jobDetail = this.jobDetail,
         overallScore = this.overallScore,

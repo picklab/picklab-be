@@ -12,6 +12,7 @@ import picklab.backend.review.domain.entity.Review
  */
 fun Review.toDetailView(): MyReviewDetailView =
     MyReviewDetailView(
+        activityId = this.activity.id,
         jobGroup = this.jobCategory.jobGroup,
         jobDetail = this.jobCategory.jobDetail,
         overallScore = this.overallScore,
