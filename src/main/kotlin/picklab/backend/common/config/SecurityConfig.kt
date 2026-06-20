@@ -32,7 +32,9 @@ class SecurityConfig(
             "/swagger",
             "/v1/auth/login/*",
             "/v1/activities",
+            "/v1/search",
             "/v1/search/autocomplete",
+            "/v1/search/popular-keywords",
             "/v1/activities/*/reviews/statistics/**",
         )
 

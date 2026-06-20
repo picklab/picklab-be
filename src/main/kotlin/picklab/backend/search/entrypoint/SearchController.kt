@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.context.request.RequestContextHolder
+import org.springframework.web.context.request.ServletRequestAttributes
 import picklab.backend.activity.application.model.ActivityItemWithBookmark
 import picklab.backend.activity.domain.enums.ActivitySortType
 import picklab.backend.activity.domain.enums.RecruitmentStatus
@@ -24,6 +26,7 @@ import picklab.backend.job.domain.enums.JobGroup
 import picklab.backend.search.application.SearchUseCase
 import picklab.backend.search.entrypoint.request.CreateSearchHistoryRequest
 import picklab.backend.search.entrypoint.response.AutocompleteResponse
+import picklab.backend.search.entrypoint.response.PopularSearchKeywordsResponse
 import picklab.backend.search.entrypoint.response.RecentKeywordsResponse
 import picklab.backend.search.entrypoint.response.SearchHistoryResponse
 import picklab.backend.search.entrypoint.response.SearchResultResponse
@@ -32,6 +35,7 @@ import picklab.backend.search.entrypoint.response.SearchResultResponse
 @RequestMapping("/v1/search")
 class SearchController(
     private val searchUseCase: SearchUseCase,
+    private val searcherKeyResolver: SearcherKeyResolver,
 ) : SearchApi {
     @GetMapping("")
     override fun search(
@@ -39,8 +43,21 @@ class SearchController(
     ): ResponseEntity<ResponseWrapper<SearchResultResponse>> {
         val authentication = SecurityContextHolder.getContext().authentication
         val memberId: Long? = (authentication?.principal as? MemberPrincipal)?.memberId
-        val response = searchUseCase.search(keyword, memberId)
+        val response =
+            searchUseCase.search(
+                keyword = keyword,
+                memberId = memberId,
+                searcherKey = searcherKeyResolver.resolve(memberId, currentRequest()),
+            )
         return ResponseEntity.ok(ResponseWrapper.success(SuccessCode.SEARCH_SUCCESS, response))
+    }
+
+    @GetMapping("/popular-keywords")
+    override fun getPopularKeywords(): ResponseEntity<ResponseWrapper<PopularSearchKeywordsResponse>> {
+        val response = PopularSearchKeywordsResponse.from(searchUseCase.getPopularKeywords())
+        return ResponseEntity.ok(
+            ResponseWrapper.success(SuccessCode.POPULAR_SEARCH_KEYWORDS_RETRIEVED, response),
+        )
     }
 
     @GetMapping("/activities")
@@ -138,4 +155,6 @@ class SearchController(
             ResponseWrapper.success(SuccessCode.SEARCH_HISTORY_ALL_DELETED),
         )
     }
+
+    private fun currentRequest() = (RequestContextHolder.currentRequestAttributes() as ServletRequestAttributes).request
 }

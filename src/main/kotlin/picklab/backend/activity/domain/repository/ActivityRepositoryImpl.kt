@@ -194,6 +194,13 @@ class ActivityRepositoryImpl(
                 jobGroups?.let { and(QJobCategory.jobCategory.jobGroup.`in`(it)) }
             }
 
+        val daysUntilDeadline =
+            Expressions.numberTemplate(
+                Long::class.java,
+                "DATEDIFF({0}, {1})",
+                QActivity.activity.recruitmentEndDate,
+                LocalDate.now(),
+            )
         val orderBy =
             when (sort) {
                 ActivitySortType.LATEST -> {
@@ -209,36 +216,54 @@ class ActivityRepositoryImpl(
 
                 ActivitySortType.DEADLINE_DESC -> {
                     listOf(
-                        Expressions
-                            .numberTemplate(
-                                Long::class.java,
-                                "DATEDIFF({0}, {1})",
-                                QActivity.activity.recruitmentEndDate,
-                                LocalDate.now(),
-                            ).desc(),
+                        daysUntilDeadline.desc(),
                         QActivity.activity.createdAt.desc(),
                     )
                 }
             }
 
         val activityIds =
-            jpaQueryFactory
-                .select(QActivity.activity.id)
-                .distinct()
-                .from(QActivity.activity)
-                .leftJoin(QActivityJobCategory.activityJobCategory)
-                .on(
-                    QActivityJobCategory.activityJobCategory.activity.id
-                        .eq(QActivity.activity.id),
-                ).leftJoin(QJobCategory.jobCategory)
-                .on(
-                    QActivityJobCategory.activityJobCategory.jobCategory.id
-                        .eq(QJobCategory.jobCategory.id),
-                ).where(condition)
-                .orderBy(*orderBy.toTypedArray())
-                .offset(pageable.offset)
-                .limit(pageable.pageSize.toLong())
-                .fetch()
+            when (sort) {
+                ActivitySortType.DEADLINE_DESC ->
+                    jpaQueryFactory
+                        .select(QActivity.activity, daysUntilDeadline)
+                        .distinct()
+                        .from(QActivity.activity)
+                        .leftJoin(QActivityJobCategory.activityJobCategory)
+                        .on(
+                            QActivityJobCategory.activityJobCategory.activity.id
+                                .eq(QActivity.activity.id),
+                        ).leftJoin(QJobCategory.jobCategory)
+                        .on(
+                            QActivityJobCategory.activityJobCategory.jobCategory.id
+                                .eq(QJobCategory.jobCategory.id),
+                        ).where(condition)
+                        .orderBy(*orderBy.toTypedArray())
+                        .offset(pageable.offset)
+                        .limit(pageable.pageSize.toLong())
+                        .fetch()
+                        .mapNotNull { it.get(QActivity.activity)?.id }
+
+                else ->
+                    jpaQueryFactory
+                        .select(QActivity.activity)
+                        .distinct()
+                        .from(QActivity.activity)
+                        .leftJoin(QActivityJobCategory.activityJobCategory)
+                        .on(
+                            QActivityJobCategory.activityJobCategory.activity.id
+                                .eq(QActivity.activity.id),
+                        ).leftJoin(QJobCategory.jobCategory)
+                        .on(
+                            QActivityJobCategory.activityJobCategory.jobCategory.id
+                                .eq(QJobCategory.jobCategory.id),
+                        ).where(condition)
+                        .orderBy(*orderBy.toTypedArray())
+                        .offset(pageable.offset)
+                        .limit(pageable.pageSize.toLong())
+                        .fetch()
+                        .map { it.id }
+            }
 
         if (activityIds.isEmpty()) {
             return PageImpl(emptyList(), pageable, 0)

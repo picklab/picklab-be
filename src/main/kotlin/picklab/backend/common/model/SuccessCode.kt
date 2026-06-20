@@ -75,6 +75,7 @@ enum class SuccessCode(
     SEARCH_HISTORY_CREATED(HttpStatus.CREATED, "검색 기록을 생성했습니다."),
     SEARCH_HISTORY_RETRIEVED(HttpStatus.OK, "검색 기록 조회에 성공했습니다."),
     RECENT_KEYWORDS_RETRIEVED(HttpStatus.OK, "최근 검색어 조회에 성공했습니다."),
+    POPULAR_SEARCH_KEYWORDS_RETRIEVED(HttpStatus.OK, "인기 검색어 조회에 성공했습니다."),
     SEARCH_HISTORY_DELETED(HttpStatus.OK, "검색 기록을 삭제했습니다."),
     SEARCH_HISTORY_ALL_DELETED(HttpStatus.OK, "모든 검색 기록을 삭제했습니다."),
 
