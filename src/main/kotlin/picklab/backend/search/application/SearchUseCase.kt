@@ -13,7 +13,9 @@ import picklab.backend.activity.domain.service.ActivityBookmarkService
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.job.domain.enums.JobGroup
 import picklab.backend.member.domain.MemberService
+import picklab.backend.search.domain.model.PopularSearchKeywords
 import picklab.backend.search.domain.service.MemberSearchHistoryService
+import picklab.backend.search.domain.service.PopularSearchKeywordService
 import picklab.backend.search.entrypoint.response.AutocompleteResponse
 import picklab.backend.search.entrypoint.response.RecentKeywordItem
 import picklab.backend.search.entrypoint.response.RecentKeywordsResponse
@@ -27,6 +29,7 @@ class SearchUseCase(
     private val activityBookmarkService: ActivityBookmarkService,
     private val memberService: MemberService,
     private val memberSearchHistoryService: MemberSearchHistoryService,
+    private val popularSearchKeywordService: PopularSearchKeywordService,
 ) {
     /**
      * 활동명 자동완성 검색
@@ -46,6 +49,7 @@ class SearchUseCase(
     fun search(
         keyword: String,
         memberId: Long?,
+        searcherKey: String,
     ): SearchResultResponse {
         val trimmed = keyword.trim()
         val countPerType = activityService.countActivitiesByKeywordPerType(trimmed)
@@ -79,12 +83,20 @@ class SearchUseCase(
                 )
             }
 
+        popularSearchKeywordService.recordSearch(
+            keyword = trimmed,
+            searcherKey = searcherKey,
+            totalCount = totalCount,
+        )
+
         return SearchResultResponse(
             keyword = trimmed,
             totalCount = totalCount,
             groups = groups,
         )
     }
+
+    fun getPopularKeywords(): PopularSearchKeywords = popularSearchKeywordService.getPopularKeywords()
 
     /**
      * 카테고리별 검색 결과 페이지네이션 (카테고리 탭)

@@ -27,6 +27,8 @@ spring:
             enable: true
 
 app:
+  search:
+    guest-key-salt: ${SEARCH_GUEST_KEY_SALT:picklab-search-guest-key}
   notification:
     cleanup:
       enabled: true # 알림 정리 배치 작업 활성화 여부

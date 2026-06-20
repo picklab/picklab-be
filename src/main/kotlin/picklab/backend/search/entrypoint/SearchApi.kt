@@ -14,6 +14,7 @@ import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.job.domain.enums.JobGroup
 import picklab.backend.search.entrypoint.request.CreateSearchHistoryRequest
 import picklab.backend.search.entrypoint.response.AutocompleteResponse
+import picklab.backend.search.entrypoint.response.PopularSearchKeywordsResponse
 import picklab.backend.search.entrypoint.response.RecentKeywordsResponse
 import picklab.backend.search.entrypoint.response.SearchHistoryResponse
 import picklab.backend.search.entrypoint.response.SearchResultResponse
@@ -82,6 +83,12 @@ interface SearchApi {
         @Parameter(description = "반환할 최대 결과 수", example = "10")
         limit: Int = 10,
     ): ResponseEntity<ResponseWrapper<AutocompleteResponse>>
+
+    @Operation(
+        summary = "인기 검색어 조회",
+        description = "직전 1시간 기준 인기 검색어 1~10위와 순위 변동을 조회합니다.",
+    )
+    fun getPopularKeywords(): ResponseEntity<ResponseWrapper<PopularSearchKeywordsResponse>>
 
     @Operation(summary = "검색 기록 생성", description = "새로운 검색 기록을 생성합니다.")
     fun createSearchHistory(
