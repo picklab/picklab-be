@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Repository
 import picklab.backend.activity.application.ActivityQueryRepository
 import picklab.backend.activity.application.model.ActivityView
+import picklab.backend.activity.application.model.BookmarkedActivityView
 import picklab.backend.activity.application.model.GetMyBookmarkListCondition
 import picklab.backend.activity.domain.entity.QActivity
 import picklab.backend.activity.domain.entity.QActivityBookmark
@@ -217,7 +218,7 @@ class ActivityQueryRepositoryImpl(
         memberId: Long,
         queryData: GetMyBookmarkListCondition,
         pageable: PageRequest,
-    ): Page<ActivityView> {
+    ): Page<BookmarkedActivityView> {
         val condition =
             BooleanBuilder().apply {
                 and(
@@ -283,21 +284,23 @@ class ActivityQueryRepositoryImpl(
                 .limit(pageable.pageSize.toLong())
                 .transform(
                     GroupBy.groupBy(QActivity.activity.id).list(
-                        QActivityItem(
+                        QBookmarkedActivityItemView(
                             QActivity.activity.id,
                             QActivity.activity.title,
                             QActivity.activity.organizer,
                             QActivity.activity.organizerType.stringValue(),
                             QActivity.activity.startDate,
+                            QActivity.activity.recruitmentStartDate,
                             QActivity.activity.activityType,
                             GroupBy.list(QJobCategory.jobCategory.jobDetail.stringValue()),
                             QActivity.activity.activityThumbnailUrl,
                             QActivity.activity.viewCount,
                             QActivity.activity.recruitmentEndDate,
                             QActivity.activity.recruitmentEndType,
+                            QActivityBookmark.activityBookmark.createdAt,
                         ),
                     ),
-                ).map { it as ActivityView }
+                ).map { it as BookmarkedActivityView }
 
         val count =
             jpaQueryFactory
