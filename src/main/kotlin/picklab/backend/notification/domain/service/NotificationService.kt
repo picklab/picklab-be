@@ -154,6 +154,19 @@ class NotificationService(
      */
     fun markAllAsRead(memberId: Long): Int = notificationRepository.markAllAsReadByMemberId(memberId)
 
+    fun deleteByMember(
+        notificationId: Long,
+        memberId: Long,
+    ) {
+        val notification =
+            notificationRepository.findByIdAndMemberId(notificationId, memberId)
+                ?: throw BusinessException(ErrorCode.NOTIFICATION_NOT_FOUND)
+
+        notification.read()
+        notification.delete()
+        notificationRepository.save(notification)
+    }
+
     fun findAllByMember(member: Member): List<Notification> = notificationRepository.findAllByMember(member)
 
     fun saveAll(entities: List<Notification>): List<Notification> = notificationRepository.saveAll(entities)

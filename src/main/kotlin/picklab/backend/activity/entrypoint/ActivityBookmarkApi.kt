@@ -8,7 +8,7 @@ import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PathVariable
-import picklab.backend.activity.application.model.ActivityItemWithBookmark
+import picklab.backend.activity.application.model.BookmarkedActivityItem
 import picklab.backend.activity.entrypoint.request.GetMyBookmarkListRequest
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.PageResponse
@@ -54,5 +54,5 @@ interface ActivityBookmarkApi {
     fun getBookmarks(
         @AuthenticationPrincipal member: MemberPrincipal,
         @Valid @ParameterObject request: GetMyBookmarkListRequest,
-    ): ResponseEntity<ResponseWrapper<PageResponse<ActivityItemWithBookmark>>>
+    ): ResponseEntity<ResponseWrapper<PageResponse<BookmarkedActivityItem>>>
 }

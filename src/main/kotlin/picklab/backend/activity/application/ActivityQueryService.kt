@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import picklab.backend.activity.application.model.ActivityView
+import picklab.backend.activity.application.model.BookmarkedActivityView
 import picklab.backend.activity.application.model.GetMyBookmarkListCondition
 
 @Service
@@ -19,7 +20,7 @@ class ActivityQueryService(
         memberId: Long,
         queryData: GetMyBookmarkListCondition,
         pageable: PageRequest,
-    ): Page<ActivityView> = activityQueryRepository.findActivityItemByMemberBookmarked(memberId, queryData, pageable)
+    ): Page<BookmarkedActivityView> = activityQueryRepository.findActivityItemByMemberBookmarked(memberId, queryData, pageable)
 
     fun getRecentlyViewedActivities(
         memberId: Long,

@@ -82,4 +82,13 @@ class NotificationController(
         notificationUseCase.deleteAllByMember(memberPrincipal.memberId)
         return ResponseWrapper.success(SuccessCode.DELETE_ALL_MEMBER_NOTIFICATION)
     }
+
+    @DeleteMapping("/notifications/{notificationId}")
+    override fun deleteByMember(
+        @PathVariable notificationId: Long,
+        @AuthenticationPrincipal memberPrincipal: MemberPrincipal,
+    ): ResponseWrapper<Unit> {
+        notificationUseCase.deleteByMember(notificationId, memberPrincipal.memberId)
+        return ResponseWrapper.success(SuccessCode.DELETE_NOTIFICATION_SUCCESS)
+    }
 }

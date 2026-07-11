@@ -3,6 +3,7 @@ package picklab.backend.activity.application
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import picklab.backend.activity.application.model.ActivityView
+import picklab.backend.activity.application.model.BookmarkedActivityView
 import picklab.backend.activity.application.model.GetMyBookmarkListCondition
 
 interface ActivityQueryRepository {
@@ -17,7 +18,7 @@ interface ActivityQueryRepository {
         memberId: Long,
         queryData: GetMyBookmarkListCondition,
         pageable: PageRequest,
-    ): Page<ActivityView>
+    ): Page<BookmarkedActivityView>
 
     fun findRecentlyViewedActivities(
         memberId: Long,

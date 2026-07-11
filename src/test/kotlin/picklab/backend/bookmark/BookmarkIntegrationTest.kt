@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.web.servlet.delete
+import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.activity.domain.entity.ActivityBookmark
@@ -171,6 +172,44 @@ class BookmarkIntegrationTest : IntegrationTest() {
                     }.andExpect { status { isNotFound() } }
                     .andExpect { jsonPath("$.code") { value(ErrorCode.NOT_FOUND_ACTIVITY_BOOKMARK.status.value()) } }
                     .andExpect { jsonPath("$.message") { value(ErrorCode.NOT_FOUND_ACTIVITY_BOOKMARK.message) } }
+            }
+        }
+
+        @Nested
+        @DisplayName("북마크 목록 조회 테스트")
+        inner class GetBookmarkListTests {
+            @Test
+            @DisplayName("[성공] 북마크 목록에 지원 시작일, 지원 마감일, 북마크한 날짜가 포함된다")
+            fun getBookmarkListWithDateFieldsSuccess() {
+                // given
+                val bookmark =
+                    activityBookmarkRepository.saveAndFlush(
+                        ActivityBookmark(
+                            member = member,
+                            activity = activity,
+                        ),
+                    )
+
+                // when & then
+                mockMvc
+                    .get("/v1/bookmarks")
+                    .andExpect { status { isOk() } }
+                    .andExpect { jsonPath("$.code") { value(SuccessCode.GET_BOOKMARKS.status.value()) } }
+                    .andExpect { jsonPath("$.message") { value(SuccessCode.GET_BOOKMARKS.message) } }
+                    .andExpect { jsonPath("$.data.items[0].id") { value(activity.id) } }
+                    .andExpect {
+                        jsonPath("$.data.items[0].recruitment_start_date") {
+                            value(activity.recruitmentStartDate.toString())
+                        }
+                    }.andExpect {
+                        jsonPath("$.data.items[0].recruitment_end_date") {
+                            value(activity.recruitmentEndDate.toString())
+                        }
+                    }.andExpect {
+                        jsonPath("$.data.items[0].bookmarked_at") {
+                            value(bookmark.createdAt.toLocalDate().toString())
+                        }
+                    }
             }
         }
     }
