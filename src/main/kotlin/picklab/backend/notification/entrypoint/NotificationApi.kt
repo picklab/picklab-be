@@ -72,4 +72,14 @@ interface NotificationApi {
     )
     @ApiResponse(responseCode = "200", description = "모든 알림 삭제 처리 성공")
     fun deleteAllByMember(memberPrincipal: MemberPrincipal): ResponseWrapper<Unit>
+
+    @Operation(
+        summary = "알림 삭제 처리",
+        description = "현재 로그인한 사용자의 특정 알림을 삭제 처리합니다.",
+    )
+    @ApiResponse(responseCode = "200", description = "알림 삭제 처리 성공")
+    fun deleteByMember(
+        @Parameter(description = "알림 ID") notificationId: Long,
+        memberPrincipal: MemberPrincipal,
+    ): ResponseWrapper<Unit>
 }

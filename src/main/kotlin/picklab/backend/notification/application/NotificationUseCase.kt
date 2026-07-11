@@ -57,6 +57,14 @@ class NotificationUseCase(
     fun markAllAsRead(memberId: Long): Int = notificationService.markAllAsRead(memberId)
 
     @Transactional
+    fun deleteByMember(
+        notificationId: Long,
+        memberId: Long,
+    ) {
+        notificationService.deleteByMember(notificationId, memberId)
+    }
+
+    @Transactional
     fun deleteAllByMember(memberId: Long) {
         val member = memberService.findActiveMember(memberId)
         val notifications = notificationService.findAllByMember(member)
