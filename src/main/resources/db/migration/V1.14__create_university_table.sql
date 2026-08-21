@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS university
+(
+    id              BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT '대학교 ID',
+    name            VARCHAR(100) NOT NULL COMMENT '대학교명',
+    is_active       BOOLEAN      NOT NULL DEFAULT TRUE COMMENT '검색 노출 여부',
+    created_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+    updated_at      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    CONSTRAINT uk_university_name UNIQUE (name)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='대학교 테이블';
