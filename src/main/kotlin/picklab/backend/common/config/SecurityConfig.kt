@@ -35,6 +35,7 @@ class SecurityConfig(
             "/v1/search",
             "/v1/search/autocomplete",
             "/v1/search/popular-keywords",
+            "/v1/universities",
             "/v1/activities/*/reviews/statistics/**",
         )
 

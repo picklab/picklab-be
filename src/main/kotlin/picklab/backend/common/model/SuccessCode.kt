@@ -8,6 +8,7 @@ enum class SuccessCode(
 ) {
     SOCIAL_LOGIN_SUCCESS(HttpStatus.OK, "소셜 로그인에 성공했습니다."),
     JOB_DETAILS_RETRIEVED(HttpStatus.OK, "직무 상세 목록 조회에 성공했습니다."),
+    UNIVERSITIES_RETRIEVED(HttpStatus.OK, "대학교 목록 조회에 성공했습니다."),
     SIGNUP_SUCCESS(HttpStatus.OK, "회원 가입에 성공했습니다."),
     ACCESS_TOKEN_REFRESHED(HttpStatus.OK, "액세스 토큰 재발급에 성공했습니다."),
 
