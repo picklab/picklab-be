@@ -94,4 +94,5 @@ enum class ErrorCode(
     FILE_SIZE_EXCEEDED(HttpStatus.BAD_REQUEST, "파일 크기가 최대 허용 크기를 초과했습니다."),
     NEED_ACTIVITY_ID(HttpStatus.BAD_REQUEST, "아카이브,리뷰 카테고리는 활동 ID가 필요합니다."),
     FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "파일을 찾을 수 없습니다."),
+    INVALID_REVIEW_EVIDENCE_KEY(HttpStatus.BAD_REQUEST, "해당 사용자와 활동의 리뷰 인증 자료 키가 아닙니다."),
 }

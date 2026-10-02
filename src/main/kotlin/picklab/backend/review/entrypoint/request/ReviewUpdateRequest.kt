@@ -41,8 +41,11 @@ data class ReviewUpdateRequest(
     @field:Min(1)
     @field:Max(5)
     val jobRelevanceScore: Int,
-    @field:Schema(description = "리뷰 인증 자료 URL")
-    val url: String? = null,
+    @field:Schema(
+        description = "인증 자료 객체 키. 유지 시 기존 키, 교체 시 업로드한 임시 키를 전달합니다. null 또는 빈 값은 인증 자료 제거입니다.",
+        example = "temp/review/1/10/abcd1234_20261002_120000.jpg",
+    )
+    val objectKey: String? = null,
     @field:Schema(description = "직무 정보")
     val jobCategory: ReviewJobCategoryDto,
 ) {
@@ -63,7 +66,7 @@ data class ReviewUpdateRequest(
             weakness = this.weakness,
             tips = this.tips,
             jobRelevanceScore = this.jobRelevanceScore,
-            url = this.url,
+            objectKey = this.objectKey,
             jobGroup = this.jobCategory.jobGroup,
             jobDetail = this.jobCategory.jobDetail,
         )

@@ -18,11 +18,8 @@ interface FileUploadApi {
     @Operation(
         summary = "PUT Presigned URL 발급",
         description = """
-            임시 객체 키와 10분간 유효한 PUT 업로드 URL을 발급합니다.
-            파일 확장자에 맞는 Content-Type으로 파일 자체를 PUT 본문에 전송합니다. multipart/form-data는 사용하지 않습니다.
-            REVIEW는 activityId가 필수이며, PUT 성공 후 응답의 objectKey를 리뷰 등록·수정 API에 전달합니다.
-            URL에서 키를 추출하거나 쿼리를 제거할 필요가 없습니다.
-            PROFILE·ARCHIVE의 기존 URL 기반 등록·수정 방식은 유지합니다.
+            파일 업로드용 Presigned URL과 임시 객체 키를 발급합니다.
+            URL은 10분간 유효하며, 파일 확장자에 맞는 Content-Type으로 파일 본문을 PUT 전송합니다.
             """,
     )
     @ApiResponses(

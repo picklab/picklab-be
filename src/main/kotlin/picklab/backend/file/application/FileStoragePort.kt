@@ -22,6 +22,11 @@ interface FileStoragePort {
     fun moveTempFileToPermanent(key: String): String
 
     /**
+     * 임시 파일을 영구저장소로 이동하고 접근 URL 대신 영구 객체 키를 반환합니다.
+     */
+    fun moveTempFileToPermanentKey(key: String): String
+
+    /**
      * Storage에 저장된 파일을 삭제합니다.
      */
     fun deleteFile(key: String)

@@ -9,6 +9,7 @@ import picklab.backend.review.domain.enums.ReviewApprovalStatus
 
 fun ReviewCreateCommand.toEntity(
     approvalStatus: ReviewApprovalStatus,
+    objectKey: String?,
     member: Member,
     activity: Activity,
     jobCategory: JobCategory,
@@ -23,7 +24,7 @@ fun ReviewCreateCommand.toEntity(
         weakness = this.weakness,
         tips = this.tips,
         jobRelevanceScore = this.jobRelevanceScore,
-        url = this.url,
+        objectKey = objectKey,
         reviewApprovalStatus = approvalStatus,
         member = member,
         activity = activity,

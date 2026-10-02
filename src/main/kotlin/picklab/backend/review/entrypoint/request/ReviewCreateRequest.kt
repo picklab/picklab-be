@@ -41,8 +41,11 @@ class ReviewCreateRequest(
     @field:Min(1)
     @field:Max(5)
     val jobRelevanceScore: Int,
-    @field:Schema(description = "리뷰 인증 자료 URL")
-    val url: String? = null,
+    @field:Schema(
+        description = "업로드가 완료된 REVIEW 인증 자료의 임시 객체 키 (선택)",
+        example = "temp/review/1/10/abcd1234_20261002_120000.jpg",
+    )
+    val objectKey: String? = null,
     @field:Schema(description = "직무 정보")
     val jobCategory: ReviewJobCategoryDto,
 ) {
@@ -59,7 +62,7 @@ class ReviewCreateRequest(
             weakness = this.weakness,
             tips = this.tips,
             jobRelevanceScore = this.jobRelevanceScore,
-            url = this.url,
+            objectKey = this.objectKey,
             jobGroup = this.jobCategory.jobGroup,
             jobDetail = this.jobCategory.jobDetail,
         )
