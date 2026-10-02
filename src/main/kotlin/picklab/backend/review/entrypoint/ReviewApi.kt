@@ -24,11 +24,17 @@ import picklab.backend.review.entrypoint.response.MyReviewsResponse
 interface ReviewApi {
     @Operation(
         summary = "리뷰 등록",
-        description = "해당 공고에 대한 리뷰를 등록 합니다",
+        description = """
+            해당 활동에 대한 리뷰를 등록합니다.
+            인증 자료는 REVIEW 카테고리로 업로드한 파일의 objectKey를 전달합니다.
+            인증 자료가 있으면 PENDING, 없으면 REJECTED로 저장됩니다.
+            """,
     )
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "리뷰 등록에 성공했습니다."),
+            ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
+            ApiResponse(responseCode = "404", description = "요청한 정보 또는 인증 자료 파일을 찾을 수 없습니다."),
         ],
     )
     fun create(
@@ -71,7 +77,7 @@ interface ReviewApi {
     @Operation(
         summary = "특정 활동에 대한 리뷰 리스트 조회",
         description = """
-            특정 활동에 대한 리뷰 리스트를 조회합니다.
+            특정 활동의 승인된 리뷰(APPROVED) 리스트를 조회합니다.
             
             요청 파라미터:
             - page: 페이지 번호 (1부터 시작, 기본값 1)
@@ -113,13 +119,17 @@ interface ReviewApi {
 
     @Operation(
         summary = "리뷰 수정",
-        description = "본인이 작성한 리뷰를 수정합니다.",
+        description = """
+            본인이 작성한 리뷰를 수정합니다.
+            활동 변경 후 인증 자료를 연결하려면 해당 활동으로 새로 업로드합니다.
+            인증 자료 교체 시 PENDING, 제거 시 REJECTED로 변경됩니다. 기존 키와 활동을 유지하면 승인 상태도 유지됩니다.
+            """,
     )
     @ApiResponses(
         value = [
             ApiResponse(responseCode = "200", description = "리뷰 수정에 성공했습니다."),
             ApiResponse(responseCode = "403", description = "해당 리뷰를 수정할 권한이 없습니다."),
-            ApiResponse(responseCode = "404", description = "리뷰 정보를 찾을 수 없습니다."),
+            ApiResponse(responseCode = "404", description = "리뷰 또는 업로드된 인증 자료 파일을 찾을 수 없습니다."),
             ApiResponse(responseCode = "400", description = "잘못된 요청입니다."),
         ],
     )

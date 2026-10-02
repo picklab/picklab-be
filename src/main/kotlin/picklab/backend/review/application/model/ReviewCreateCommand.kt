@@ -15,7 +15,7 @@ data class ReviewCreateCommand(
     val weakness: String,
     val tips: String?,
     val jobRelevanceScore: Int,
-    val url: String?,
+    val objectKey: String?,
     val jobGroup: JobGroup,
     val jobDetail: JobDetail?,
 )

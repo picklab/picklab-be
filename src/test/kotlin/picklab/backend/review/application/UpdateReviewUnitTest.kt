@@ -19,6 +19,7 @@ import picklab.backend.member.domain.MemberService
 import picklab.backend.member.domain.entity.Member
 import picklab.backend.participation.domain.service.ActivityParticipationService
 import picklab.backend.review.application.model.ReviewUpdateCommand
+import picklab.backend.review.application.service.ReviewEvidenceService
 import picklab.backend.review.application.service.ReviewOverviewQueryService
 import picklab.backend.review.domain.entity.Review
 import picklab.backend.review.domain.service.ReviewHelpfulService
@@ -47,6 +48,9 @@ class UpdateReviewUnitTest {
 
     @MockK
     lateinit var reviewHelpfulService: ReviewHelpfulService
+
+    @MockK
+    lateinit var reviewEvidenceService: ReviewEvidenceService
 
     @InjectMockKs
     lateinit var reviewUseCase: ReviewUseCase
@@ -86,7 +90,7 @@ class UpdateReviewUnitTest {
                 jobRelevanceScore = 3,
                 jobGroup = JobGroup.DEVELOPMENT,
                 jobDetail = null,
-                url = "http://some.url",
+                objectKey = "temp/review/2/999/abcd1234_20261002_120000.jpg",
             )
 
         // when

@@ -17,5 +17,5 @@ fun MyReviewDetailView.toResponse(): MyReviewResponse =
         strength = this.strength,
         weakness = this.weakness,
         tips = this.tips,
-        url = this.url,
+        objectKey = this.objectKey,
     )

@@ -49,9 +49,9 @@ class Review(
     @Column(name = "job_relevance_score", nullable = false)
     @Comment("직무 연관성 점수")
     var jobRelevanceScore: Int,
-    @Column(name = "url")
-    @Comment("인증 자료 URL")
-    var url: String? = null,
+    @Column(name = "object_key")
+    @Comment("인증 자료 객체 키")
+    var objectKey: String? = null,
     @Column(name = "approval_status")
     @Enumerated(EnumType.STRING)
     @Comment("승인 여부 상태(미승인 / 승인 / 승인 중)")
@@ -76,7 +76,7 @@ class Review(
         weakness: String,
         tips: String?,
         jobRelevanceScore: Int,
-        url: String?,
+        objectKey: String?,
         approvalStatus: ReviewApprovalStatus,
         activity: Activity,
         jobCategory: JobCategory,
@@ -90,7 +90,7 @@ class Review(
         this.weakness = weakness
         this.tips = tips
         this.jobRelevanceScore = jobRelevanceScore
-        this.url = url
+        this.objectKey = objectKey
         this.reviewApprovalStatus = approvalStatus
         this.activity = activity
         this.jobCategory = jobCategory

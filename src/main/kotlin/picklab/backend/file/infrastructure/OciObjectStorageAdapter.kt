@@ -6,13 +6,14 @@ import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
 import picklab.backend.common.util.logger
 import picklab.backend.file.application.FileStoragePort
+import software.amazon.awssdk.core.exception.SdkClientException
 import software.amazon.awssdk.services.s3.S3Client
 import software.amazon.awssdk.services.s3.model.CopyObjectRequest
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request
-import software.amazon.awssdk.services.s3.model.NoSuchKeyException
 import software.amazon.awssdk.services.s3.model.PutObjectRequest
+import software.amazon.awssdk.services.s3.model.S3Exception
 import software.amazon.awssdk.services.s3.presigner.S3Presigner
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest
 import java.time.Duration
@@ -64,12 +65,19 @@ class OciObjectStorageAdapter(
                     .build()
 
             s3client.headObject(headObjectRequest)
-        } catch (e: NoSuchKeyException) {
-            throw BusinessException(ErrorCode.FILE_NOT_FOUND)
+        } catch (e: S3Exception) {
+            if (e.statusCode() == 404) {
+                throw BusinessException(ErrorCode.FILE_NOT_FOUND)
+            }
+            throw BusinessException(ErrorCode.INTERNAL_SERVER_ERROR)
+        } catch (e: SdkClientException) {
+            throw BusinessException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
     }
 
-    override fun moveTempFileToPermanent(key: String): String {
+    override fun moveTempFileToPermanent(key: String): String = "$endPoint/$bucketName/${moveTempFileToPermanentKey(key)}"
+
+    override fun moveTempFileToPermanentKey(key: String): String {
         val permanentKey = key.removePrefix("temp/")
 
         try {
@@ -87,7 +95,7 @@ class OciObjectStorageAdapter(
 
             deleteFile(key)
 
-            return "$endPoint/$bucketName/$permanentKey"
+            return permanentKey
         } catch (e: Exception) {
             throw BusinessException(ErrorCode.INTERNAL_SERVER_ERROR)
         }

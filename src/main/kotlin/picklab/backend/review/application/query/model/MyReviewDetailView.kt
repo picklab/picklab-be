@@ -16,5 +16,5 @@ data class MyReviewDetailView(
     val strength: String,
     val weakness: String,
     val tips: String?,
-    val url: String?,
+    val objectKey: String?,
 )

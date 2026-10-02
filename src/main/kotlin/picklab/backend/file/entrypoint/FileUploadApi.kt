@@ -13,11 +13,14 @@ import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.file.entrypoint.request.CreatePresignedUrlRequest
 import picklab.backend.file.entrypoint.response.CreatePresignedurlResponse
 
-@Tag(name = "파일 관련 API", description = "Ncloud Object Storage를 이용한 파일 업로드 API")
+@Tag(name = "파일 관련 API", description = "OCI Object Storage를 이용한 파일 업로드 API")
 interface FileUploadApi {
     @Operation(
-        summary = "Presigend URL 발급",
-        description = "Ncloud Object Storage에 파일 업로드를 위한 Presigned URL을 발급합니다.",
+        summary = "PUT Presigned URL 발급",
+        description = """
+            파일 업로드용 Presigned URL과 임시 객체 키를 발급합니다.
+            URL은 10분간 유효하며, 파일 확장자에 맞는 Content-Type으로 파일 본문을 PUT 전송합니다.
+            """,
     )
     @ApiResponses(
         value = [

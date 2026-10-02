@@ -30,6 +30,9 @@ data class MyReviewResponse(
     val weakness: String,
     @field:Schema(description = "꿀팁")
     val tips: String?,
-    @field:Schema(description = "인증자료 URL")
-    val url: String?,
+    @field:Schema(
+        description = "인증 자료의 영구 객체 키. 인증 자료 유지 시 수정 요청에 그대로 전달합니다.",
+        example = "review/1/10/abcd1234_20261002_120000.jpg",
+    )
+    val objectKey: String?,
 )

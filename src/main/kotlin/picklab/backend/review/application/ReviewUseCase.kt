@@ -20,6 +20,7 @@ import picklab.backend.review.application.model.ReviewCreateCommand
 import picklab.backend.review.application.model.ReviewUpdateCommand
 import picklab.backend.review.application.query.model.MyReviewDetailView
 import picklab.backend.review.application.query.model.MyReviewListView
+import picklab.backend.review.application.service.ReviewEvidenceService
 import picklab.backend.review.application.service.ReviewOverviewQueryService
 import picklab.backend.review.domain.policy.ReviewApprovalDecider
 import picklab.backend.review.domain.service.ReviewHelpfulService
@@ -34,7 +35,9 @@ class ReviewUseCase(
     private val reviewOverviewQueryService: ReviewOverviewQueryService,
     private val jobService: JobService,
     private val reviewHelpfulService: ReviewHelpfulService,
+    private val reviewEvidenceService: ReviewEvidenceService,
 ) {
+    @Transactional
     fun createReview(command: ReviewCreateCommand) {
         val member = memberService.findActiveMember(command.memberId)
         val activity = activityService.mustFindById(command.activityId)
@@ -48,8 +51,9 @@ class ReviewUseCase(
         val jobCategory =
             jobService.getJobCategoryByGroupAndDetail(command.jobGroup, command.jobDetail)
                 ?: throw BusinessException(ErrorCode.JOB_CATEGORY_NOT_FOUND)
-        val approvalStatus = ReviewApprovalDecider.decideOnCreate(command.url)
-        reviewService.save(command.toEntity(approvalStatus, member, activity, jobCategory))
+        val objectKey = reviewEvidenceService.confirmUpload(command.objectKey, member.id, activity.id)
+        val approvalStatus = ReviewApprovalDecider.decideOnCreate(objectKey)
+        reviewService.save(command.toEntity(approvalStatus, objectKey, member, activity, jobCategory))
     }
 
     @Transactional(readOnly = true)
@@ -143,10 +147,18 @@ class ReviewUseCase(
         val jobCategory =
             jobService.getJobCategoryByGroupAndDetail(command.jobGroup, command.jobDetail)
                 ?: throw BusinessException(ErrorCode.JOB_CATEGORY_NOT_FOUND)
+        val objectKey =
+            reviewEvidenceService.confirmUpdate(
+                command.objectKey,
+                review.objectKey,
+                member.id,
+                review.activity.id,
+                activity.id,
+            )
         val updatedApprovalStatus =
             ReviewApprovalDecider.decideOnUpdate(
-                review.url,
-                command.url,
+                review.objectKey,
+                objectKey,
                 review.activity.id,
                 activity.id,
                 review.reviewApprovalStatus,
@@ -162,7 +174,7 @@ class ReviewUseCase(
             weakness = command.weakness,
             tips = command.tips,
             jobRelevanceScore = command.jobRelevanceScore,
-            url = command.url,
+            objectKey = objectKey,
             approvalStatus = updatedApprovalStatus,
             activity,
             jobCategory = jobCategory,
