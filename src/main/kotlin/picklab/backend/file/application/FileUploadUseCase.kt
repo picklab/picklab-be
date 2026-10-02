@@ -31,6 +31,7 @@ class FileUploadUseCase(
 
         return CreatePresignedurlResponse(
             presignedUrl = presignedUrl,
+            objectKey = fileKey,
         )
     }
 }
