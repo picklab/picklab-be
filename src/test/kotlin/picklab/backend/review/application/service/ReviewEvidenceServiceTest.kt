@@ -76,7 +76,7 @@ class ReviewEvidenceServiceTest {
 
     @Test
     fun `현재 리뷰의 영구 키를 유지하면 다시 이동하지 않는다`() {
-        assertEquals(permanentKey, service.confirmUpdate(permanentKey, permanentKey, 1, 10, 10))
+        assertEquals(permanentKey, service.confirmUpdate(permanentKey, permanentKey, 1, 10))
         verify(exactly = 0) { storage.verifyTempFileExists(any()) }
         verify(exactly = 0) { storage.moveTempFileToPermanentKey(any()) }
     }
@@ -87,17 +87,18 @@ class ReviewEvidenceServiceTest {
 
         val error =
             assertFailsWith<BusinessException> {
-                service.confirmUpdate(anotherKey, permanentKey, 1, 10, 10)
+                service.confirmUpdate(anotherKey, permanentKey, 1, 10)
             }
 
         assertEquals(ErrorCode.INVALID_REVIEW_EVIDENCE_KEY, error.errorCode)
     }
 
     @Test
-    fun `활동이 바뀌면 이전 활동의 영구 키를 유지할 수 없다`() {
+    fun `다른 활동의 임시 키는 인증 자료로 연결할 수 없다`() {
+        val anotherActivityKey = "temp/review/1/11/abcd1234_20261002_120000.jpg"
         val error =
             assertFailsWith<BusinessException> {
-                service.confirmUpdate(permanentKey, permanentKey, 1, 10, 11)
+                service.confirmUpdate(anotherActivityKey, permanentKey, 1, 10)
             }
 
         assertEquals(ErrorCode.INVALID_REVIEW_EVIDENCE_KEY, error.errorCode)
@@ -108,7 +109,7 @@ class ReviewEvidenceServiceTest {
         every { storage.verifyTempFileExists(tempKey) } just runs
         every { storage.moveTempFileToPermanentKey(tempKey) } returns permanentKey
 
-        assertEquals(permanentKey, service.confirmUpdate(tempKey, null, 1, 10, 10))
+        assertEquals(permanentKey, service.confirmUpdate(tempKey, null, 1, 10))
         verify(exactly = 1) { storage.verifyTempFileExists(tempKey) }
         verify(exactly = 1) { storage.moveTempFileToPermanentKey(tempKey) }
     }
@@ -117,7 +118,7 @@ class ReviewEvidenceServiceTest {
     fun `인증 자료가 없거나 제거되면 저장소를 호출하지 않는다`() {
         assertNull(service.confirmUpload(null, 1, 10))
         assertNull(service.confirmUpload(" ", 1, 10))
-        assertNull(service.confirmUpdate(null, permanentKey, 1, 10, 10))
+        assertNull(service.confirmUpdate(null, permanentKey, 1, 10))
         verify(exactly = 0) { storage.verifyTempFileExists(any()) }
         verify(exactly = 0) { storage.moveTempFileToPermanentKey(any()) }
     }

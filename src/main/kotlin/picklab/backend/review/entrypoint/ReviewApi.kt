@@ -120,9 +120,8 @@ interface ReviewApi {
     @Operation(
         summary = "리뷰 수정",
         description = """
-            본인이 작성한 리뷰를 수정합니다.
-            활동 변경 후 인증 자료를 연결하려면 해당 활동으로 새로 업로드합니다.
-            인증 자료 교체 시 PENDING, 제거 시 REJECTED로 변경됩니다. 기존 키와 활동을 유지하면 승인 상태도 유지됩니다.
+            본인이 작성한 리뷰의 내용과 인증 자료를 수정합니다.
+            인증 자료 교체 시 PENDING, 제거 시 REJECTED로 변경됩니다. 기존 키를 유지하면 승인 상태도 유지됩니다.
             """,
     )
     @ApiResponses(

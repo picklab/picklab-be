@@ -7,91 +7,59 @@ import kotlin.test.assertEquals
 
 class ReviewApprovalDeciderUnitTest {
     @Test
-    @DisplayName("url이 없으면 승인 상태는 미승인(REJECTED)되어야 한다")
-    fun urlIsNullOrBlankReturnsRejected() {
+    @DisplayName("인증 자료 키가 없으면 승인 상태는 미승인(REJECTED)이어야 한다")
+    fun objectKeyIsNullOrBlankReturnsRejected() {
         // given
-        val originalUrl = "http://old-url.com"
-        val originalActivityId = 1L
-        val updatedActivityId = 1L
+        val originalObjectKey = "review/1/10/abcd1234_20261002_120000.jpg"
         val originalStatus = ReviewApprovalStatus.APPROVED
 
         // when
-        val result =
-            ReviewApprovalDecider.decideOnUpdate(
-                originalUrl,
-                null,
-                originalActivityId,
-                updatedActivityId,
-                originalStatus,
-            )
+        listOf(null, "", " ").forEach { newObjectKey ->
+            val result =
+                ReviewApprovalDecider.decideOnUpdate(
+                    originalObjectKey,
+                    newObjectKey,
+                    originalStatus,
+                )
 
-        // then
-        assertEquals(ReviewApprovalStatus.REJECTED, result)
+            // then
+            assertEquals(ReviewApprovalStatus.REJECTED, result)
+        }
     }
 
     @Test
-    @DisplayName("url과 activity가 변경되지 않으면 기존 승인 상태를 유지한다")
-    fun urlAndActivityUnchangedReturnsOriginalStatus() {
+    @DisplayName("인증 자료 키가 변경되지 않으면 기존 승인 상태를 유지한다")
+    fun objectKeyUnchangedReturnsOriginalStatus() {
         // given
-        val originalUrl = "http://old-url.com"
-        val originalActivityId = 1L
-        val updatedActivityId = 1L
-        val originalStatus = ReviewApprovalStatus.APPROVED
+        val originalObjectKey = "review/1/10/abcd1234_20261002_120000.jpg"
 
         // when
-        val result =
-            ReviewApprovalDecider.decideOnUpdate(
-                originalUrl,
-                originalUrl,
-                originalActivityId,
-                updatedActivityId,
-                originalStatus,
-            )
+        ReviewApprovalStatus.entries.forEach { originalStatus ->
+            val result =
+                ReviewApprovalDecider.decideOnUpdate(
+                    originalObjectKey,
+                    originalObjectKey,
+                    originalStatus,
+                )
 
-        // then
-        assertEquals(originalStatus, result)
+            // then
+            assertEquals(originalStatus, result)
+        }
     }
 
     @Test
-    @DisplayName("url이 변경되면 상태는 승인 중(PENDING)이 되어야 한다")
-    fun urlChangedReturnsPending() {
+    @DisplayName("인증 자료 키가 변경되면 상태는 승인 중(PENDING)이어야 한다")
+    fun objectKeyChangedReturnsPending() {
         // given
-        val originalUrl = "http://old-url.com"
-        val newUrl = "http://new-url.com"
-        val originalActivityId = 1L
-        val updatedActivityId = 1L
+        val originalObjectKey = "review/1/10/abcd1234_20261002_120000.jpg"
+        val newObjectKey = "review/1/10/ffff1234_20261024_120000.jpg"
         val originalStatus = ReviewApprovalStatus.APPROVED
 
         // when
         val result =
             ReviewApprovalDecider.decideOnUpdate(
-                originalUrl,
-                newUrl,
-                originalActivityId,
-                updatedActivityId,
-                originalStatus,
-            )
-
-        // then
-        assertEquals(ReviewApprovalStatus.PENDING, result)
-    }
-
-    @Test
-    @DisplayName("activity가 변경되면 상태는 PENDING이 되어야 한다")
-    fun activityChangedReturnsPending() {
-        // given
-        val originalUrl = "http://example.com"
-        val originalActivityId = 1L
-        val updatedActivityId = 2L
-        val originalStatus = ReviewApprovalStatus.APPROVED
-
-        // when
-        val result =
-            ReviewApprovalDecider.decideOnUpdate(
-                originalUrl,
-                originalUrl,
-                originalActivityId,
-                updatedActivityId,
+                originalObjectKey,
+                newObjectKey,
                 originalStatus,
             )
 

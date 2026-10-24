@@ -28,6 +28,7 @@ import picklab.backend.review.domain.service.ReviewService
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNull
+import kotlin.test.assertSame
 
 class ReviewEvidenceUseCaseTest {
     private val reviewService = mockk<ReviewService>()
@@ -109,7 +110,7 @@ class ReviewEvidenceUseCaseTest {
     }
 
     @Test
-    fun `기존 파일과 활동을 유지한 내용 수정은 APPROVED를 유지한다`() {
+    fun `내용을 수정해도 기존 활동과 APPROVED를 유지한다`() {
         val review = existingReview()
         every { reviewService.mustFindById(99) } returns review
 
@@ -117,7 +118,9 @@ class ReviewEvidenceUseCaseTest {
 
         assertEquals(permanentKey, review.objectKey)
         assertEquals("수정한 한줄평", review.summary)
+        assertSame(activity, review.activity)
         assertEquals(ReviewApprovalStatus.APPROVED, review.reviewApprovalStatus)
+        verify(exactly = 0) { activityService.mustFindById(any()) }
         verify(exactly = 0) { storage.verifyTempFileExists(any()) }
         verify(exactly = 0) { storage.moveTempFileToPermanentKey(any()) }
     }
@@ -156,6 +159,23 @@ class ReviewEvidenceUseCaseTest {
 
         assertNull(review.objectKey)
         assertEquals(ReviewApprovalStatus.REJECTED, review.reviewApprovalStatus)
+    }
+
+    @Test
+    fun `다른 활동의 임시 키를 보내면 활동과 기존 리뷰를 변경하지 않는다`() {
+        val review = existingReview()
+        every { reviewService.mustFindById(99) } returns review
+        val anotherActivityKey = "temp/review/1/20/abcd1234_20261002_120000.jpg"
+
+        val error = assertFailsWith<BusinessException> { useCase.updateReview(updateCommand(anotherActivityKey)) }
+
+        assertEquals(ErrorCode.INVALID_REVIEW_EVIDENCE_KEY, error.errorCode)
+        assertSame(activity, review.activity)
+        assertEquals(permanentKey, review.objectKey)
+        assertEquals("기존 한줄평", review.summary)
+        assertEquals(ReviewApprovalStatus.APPROVED, review.reviewApprovalStatus)
+        verify(exactly = 0) { storage.verifyTempFileExists(any()) }
+        verify(exactly = 0) { storage.moveTempFileToPermanentKey(any()) }
     }
 
     private fun stubUpload() {
@@ -201,7 +221,6 @@ class ReviewEvidenceUseCaseTest {
     private fun updateCommand(key: String?): ReviewUpdateCommand =
         ReviewUpdateCommand(
             id = 99,
-            activityId = 10,
             memberId = 1,
             overallScore = 4,
             infoScore = 4,

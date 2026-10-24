@@ -9,7 +9,6 @@ import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.extension.ExtendWith
-import picklab.backend.activity.domain.entity.Activity
 import picklab.backend.activity.domain.service.ActivityService
 import picklab.backend.common.model.BusinessException
 import picklab.backend.common.model.ErrorCode
@@ -70,14 +69,11 @@ class UpdateReviewUnitTest {
             mockk<Review> {
                 every { member.id } returns 1L
             }
-        val dummyActivity = mockk<Activity>()
         every { memberService.findActiveMember(loggedInMemberId) } returns mockMember
         every { reviewService.mustFindById(reviewId) } returns mockReview
-        every { activityService.mustFindById(any()) } returns dummyActivity
         val command =
             ReviewUpdateCommand(
                 id = reviewId,
-                activityId = 999L,
                 memberId = loggedInMemberId,
                 overallScore = 3,
                 infoScore = 3,

@@ -5,7 +5,6 @@ import picklab.backend.job.domain.enums.JobGroup
 
 data class ReviewUpdateCommand(
     val id: Long,
-    val activityId: Long,
     val memberId: Long,
     val overallScore: Int,
     val infoScore: Int,

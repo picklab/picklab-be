@@ -7,8 +7,6 @@ import jakarta.validation.constraints.Size
 import picklab.backend.review.application.model.ReviewUpdateCommand
 
 data class ReviewUpdateRequest(
-    @field:Schema(description = "활동 ID")
-    val activityId: Long,
     @field:Schema(description = "총 평점 (1 ~ 5점)")
     @field:Min(1)
     @field:Max(5)
@@ -55,7 +53,6 @@ data class ReviewUpdateRequest(
     ): ReviewUpdateCommand =
         ReviewUpdateCommand(
             id = id,
-            activityId = this.activityId,
             memberId = memberId,
             overallScore = this.overallScore,
             infoScore = this.infoScore,
