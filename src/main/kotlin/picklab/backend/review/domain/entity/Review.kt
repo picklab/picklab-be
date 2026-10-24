@@ -61,7 +61,7 @@ class Review(
     val member: Member,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "activity_id", nullable = false)
-    var activity: Activity,
+    val activity: Activity,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_category_id", nullable = false)
     var jobCategory: JobCategory,
@@ -78,7 +78,6 @@ class Review(
         jobRelevanceScore: Int,
         objectKey: String?,
         approvalStatus: ReviewApprovalStatus,
-        activity: Activity,
         jobCategory: JobCategory,
     ) {
         this.overallScore = overallScore
@@ -92,7 +91,6 @@ class Review(
         this.jobRelevanceScore = jobRelevanceScore
         this.objectKey = objectKey
         this.reviewApprovalStatus = approvalStatus
-        this.activity = activity
         this.jobCategory = jobCategory
     }
 }

@@ -25,12 +25,11 @@ class ReviewEvidenceService(
         objectKey: String?,
         originalObjectKey: String?,
         memberId: Long,
-        originalActivityId: Long,
         activityId: Long,
     ): String? {
         if (objectKey.isNullOrBlank()) return null
 
-        if (objectKey == originalObjectKey && !objectKey.startsWith("temp/") && activityId == originalActivityId) {
+        if (objectKey == originalObjectKey && !objectKey.startsWith("temp/")) {
             validateKey(objectKey, "review/$memberId/$activityId/")
             return objectKey
         }

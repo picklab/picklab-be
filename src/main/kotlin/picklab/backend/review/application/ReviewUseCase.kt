@@ -137,7 +137,6 @@ class ReviewUseCase(
     fun updateReview(command: ReviewUpdateCommand) {
         val member = memberService.findActiveMember(command.memberId)
         val review = reviewService.mustFindById(command.id)
-        val activity = activityService.mustFindById(command.activityId)
         if (member.id != review.member.id) {
             throw BusinessException(ErrorCode.CANNOT_UPDATE_REVIEW)
         }
@@ -153,14 +152,11 @@ class ReviewUseCase(
                 review.objectKey,
                 member.id,
                 review.activity.id,
-                activity.id,
             )
         val updatedApprovalStatus =
             ReviewApprovalDecider.decideOnUpdate(
                 review.objectKey,
                 objectKey,
-                review.activity.id,
-                activity.id,
                 review.reviewApprovalStatus,
             )
 
@@ -176,7 +172,6 @@ class ReviewUseCase(
             jobRelevanceScore = command.jobRelevanceScore,
             objectKey = objectKey,
             approvalStatus = updatedApprovalStatus,
-            activity,
             jobCategory = jobCategory,
         )
     }
