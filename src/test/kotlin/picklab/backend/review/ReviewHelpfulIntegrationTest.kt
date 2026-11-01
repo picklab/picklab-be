@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.web.servlet.delete
 import org.springframework.test.web.servlet.get
@@ -18,6 +19,8 @@ import picklab.backend.activity.domain.enums.RecruitmentStatus
 import picklab.backend.activity.domain.repository.ActivityRepository
 import picklab.backend.activitygroup.domain.entity.ActivityGroup
 import picklab.backend.activitygroup.domain.repository.ActivityGroupRepository
+import picklab.backend.common.model.BusinessException
+import picklab.backend.common.model.ErrorCode
 import picklab.backend.common.model.SuccessCode
 import picklab.backend.helper.WithMockUser
 import picklab.backend.job.domain.JobCategoryRepository
@@ -29,6 +32,10 @@ import picklab.backend.participation.domain.entity.ActivityParticipation
 import picklab.backend.participation.domain.enums.ApplicationStatus
 import picklab.backend.participation.domain.enums.ProgressStatus
 import picklab.backend.participation.domain.repository.ActivityParticipationRepository
+import picklab.backend.review.application.ReviewUseCase
+import picklab.backend.review.application.model.ActivityReviewListQueryRequest
+import picklab.backend.review.application.model.MyReviewListQueryRequest
+import picklab.backend.review.application.model.ReviewUpdateCommand
 import picklab.backend.review.domain.entity.Review
 import picklab.backend.review.domain.entity.ReviewHelpful
 import picklab.backend.review.domain.enums.ReviewApprovalStatus
@@ -59,6 +66,9 @@ class ReviewHelpfulIntegrationTest : IntegrationTest() {
 
     @Autowired
     lateinit var reviewHelpfulRepository: ReviewHelpfulRepository
+
+    @Autowired
+    lateinit var reviewUseCase: ReviewUseCase
 
     lateinit var member: Member
     lateinit var activity: Activity
@@ -207,5 +217,93 @@ class ReviewHelpfulIntegrationTest : IntegrationTest() {
         }
 
         assertThat(reviewHelpfulRepository.count()).isZero()
+    }
+
+    @Test
+    fun withdrawnAuthorsReviewsRemainVisibleWithCountsAndFilters() {
+        reviewHelpfulRepository.save(ReviewHelpful(member, review))
+        member.withdraw()
+        memberRepository.save(member)
+        assertThat(memberRepository.findByIdIgnoreDelete(member.id)!!.deletedAt).isNotNull()
+
+        mockMvc
+            .get("/v1/activities/${activity.id}/reviews") {
+                param("status", "COMPLETED")
+                param("rating", "5")
+            }.andExpect {
+                status { isOk() }
+                jsonPath("$.data.total_elements") { value(1) }
+                jsonPath("$.data.items[0].id") { value(review.id) }
+                jsonPath("$.data.items[0].helpful_count") { value(1) }
+                jsonPath("$.data.items[0].is_helpful") { value(false) }
+            }
+        mockMvc
+            .get("/v1/activities/${activity.id}/reviews") { param("status", "DROPPED") }
+            .andExpect {
+                status { isOk() }
+                jsonPath("$.data.total_elements") { value(0) }
+            }
+    }
+
+    @Test
+    fun newMemberDoesNotInheritReviewOwnershipOrHelpfulSelection() {
+        reviewHelpfulRepository.save(ReviewHelpful(member, review))
+        member.withdraw()
+        memberRepository.save(member)
+        val rejoined = memberRepository.save(Member(name = "재가입회원", email = member.email))
+
+        assertThat(reviewUseCase.getMyReviews(MyReviewListQueryRequest(1, 10, rejoined.id)).content).isEmpty()
+        assertThat(assertThrows<BusinessException> { reviewUseCase.getMyReview(review.id, rejoined.id) }.errorCode)
+            .isEqualTo(ErrorCode.CANNOT_READ_REVIEW)
+        assertThat(assertThrows<BusinessException> { reviewUseCase.deleteReview(rejoined.id, review.id) }.errorCode)
+            .isEqualTo(ErrorCode.CANNOT_DELETE_REVIEW)
+        val update =
+            ReviewUpdateCommand(
+                id = review.id,
+                memberId = rejoined.id,
+                overallScore = 3,
+                infoScore = 3,
+                difficultyScore = 3,
+                benefitScore = 3,
+                summary = "수정시도",
+                strength = "장점",
+                weakness = "단점",
+                tips = null,
+                jobRelevanceScore = 3,
+                objectKey = null,
+                jobGroup = JobGroup.DEVELOPMENT,
+                jobDetail = null,
+            )
+        assertThat(assertThrows<BusinessException> { reviewUseCase.updateReview(update) }.errorCode)
+            .isEqualTo(ErrorCode.CANNOT_UPDATE_REVIEW)
+
+        val request = ActivityReviewListQueryRequest(null, null, null, null)
+        val before = reviewUseCase.getReviewsByActivity(request, activity.id, rejoined.id, 1, 10).content.single()
+        assertThat(before.helpfulCount).isEqualTo(1)
+        assertThat(before.isHelpful).isFalse()
+        reviewUseCase.markReviewHelpful(rejoined.id, review.id)
+        val after = reviewUseCase.getReviewsByActivity(request, activity.id, rejoined.id, 1, 10).content.single()
+        assertThat(after.helpfulCount).isEqualTo(2)
+        assertThat(after.isHelpful).isTrue()
+    }
+
+    @Test
+    fun deletedAndUnapprovedReviewsRemainHiddenAfterWithdrawal() {
+        member.withdraw()
+        memberRepository.save(member)
+        review.reviewApprovalStatus = ReviewApprovalStatus.PENDING
+        reviewRepository.save(review)
+        mockMvc.get("/v1/activities/${activity.id}/reviews").andExpect {
+            status { isOk() }
+            jsonPath("$.data.total_elements") { value(0) }
+        }
+
+        review.reviewApprovalStatus = ReviewApprovalStatus.APPROVED
+        review.delete()
+        reviewRepository.save(review)
+        mockMvc.get("/v1/activities/${activity.id}/reviews").andExpect {
+            status { isOk() }
+            jsonPath("$.data.total_elements") { value(0) }
+        }
     }
 }
