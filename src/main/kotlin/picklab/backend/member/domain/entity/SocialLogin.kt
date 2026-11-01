@@ -8,12 +8,16 @@ import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import jakarta.persistence.UniqueConstraint
 import org.hibernate.annotations.Comment
 import picklab.backend.common.model.BaseEntity
 import picklab.backend.member.domain.enums.SocialType
 
 @Entity
-@Table(name = "social_login")
+@Table(
+    name = "social_login",
+    uniqueConstraints = [UniqueConstraint(name = "uk_social_login_type_id", columnNames = ["social_type", "social_id"])],
+)
 class SocialLogin(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)

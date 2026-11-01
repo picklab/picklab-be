@@ -5,10 +5,12 @@ import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.context.annotation.Import
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
 import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
+import picklab.backend.auth.infrastructure.AuthCookieCreator
 import picklab.backend.common.model.SuccessCode
 import picklab.backend.helper.WithMockUser
 import picklab.backend.job.domain.enums.JobDetail
@@ -18,6 +20,7 @@ import picklab.backend.member.application.model.MemberMeResult
 import java.time.LocalDate
 
 @WebMvcTest(MemberController::class)
+@Import(AuthCookieCreator::class)
 class MemberMeControllerTest {
     @Autowired
     lateinit var mockMvc: MockMvc

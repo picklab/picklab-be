@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf
@@ -19,11 +20,13 @@ import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
 import org.springframework.test.web.servlet.put
 import org.springframework.web.bind.MethodArgumentNotValidException
+import picklab.backend.auth.infrastructure.AuthCookieCreator
 import picklab.backend.common.model.SuccessCode
 import picklab.backend.helper.WithMockUser
 import picklab.backend.member.application.MemberUseCase
 
 @WebMvcTest(MemberController::class)
+@Import(AuthCookieCreator::class)
 class MemberControllerTest {
     @Autowired
     lateinit var mockMvc: MockMvc

@@ -12,11 +12,12 @@ interface NotificationPreferenceRepository : JpaRepository<NotificationPreferenc
     /**
      * 여러 사용자의 알림 설정을 한 번에 조회합니다 (성능 최적화용)
      */
+    @Query("SELECT np FROM NotificationPreference np JOIN np.member m WHERE m.id IN :memberIds AND m.deletedAt IS NULL")
     fun findAllByMemberIdIn(memberIds: List<Long>): List<NotificationPreference>
 
     /**
      * 인기 공고 알림이 활성화된 사용자들을 페이징으로 조회합니다
      */
-    @Query("SELECT np.member.id FROM NotificationPreference np WHERE np.notifyPopularActivity = true")
+    @Query("SELECT m.id FROM NotificationPreference np JOIN np.member m WHERE np.notifyPopularActivity = true AND m.deletedAt IS NULL")
     fun findMemberIdsWithPopularNotificationEnabled(pageable: Pageable): Page<Long>
 }

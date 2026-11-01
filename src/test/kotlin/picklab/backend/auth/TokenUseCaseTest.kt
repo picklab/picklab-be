@@ -49,7 +49,7 @@ class TokenUseCaseTest {
         every { refreshTokenProvider.validateToken(validRefreshToken) } returns true
         every { refreshTokenProvider.getTokenType(validRefreshToken) } returns "refresh"
         every { refreshTokenProvider.getSubject(validRefreshToken) } returns memberId.toString()
-        every { memberService.findActiveMember(memberId) } returns mockMember
+        every { memberService.findActiveMemberForUpdate(memberId) } returns mockMember
         every { accessTokenProvider.generateToken(memberId) } returns newAccessToken
 
         // when
@@ -60,7 +60,7 @@ class TokenUseCaseTest {
         assertThat(result.refreshToken).isEqualTo(validRefreshToken)
         verify(exactly = 1) { refreshTokenProvider.validateToken(validRefreshToken) }
         verify(exactly = 1) { refreshTokenProvider.getTokenType(validRefreshToken) }
-        verify(exactly = 1) { memberService.findActiveMember(memberId) }
+        verify(exactly = 1) { memberService.findActiveMemberForUpdate(memberId) }
         verify(exactly = 1) { accessTokenProvider.generateToken(memberId) }
     }
 
@@ -80,7 +80,7 @@ class TokenUseCaseTest {
         // then
         assertThat(exception.errorCode).isEqualTo(ErrorCode.INVALID_TOKEN)
         verify(exactly = 1) { refreshTokenProvider.validateToken(invalidToken) }
-        verify(exactly = 0) { memberService.findActiveMember(any()) }
+        verify(exactly = 0) { memberService.findActiveMemberForUpdate(any()) }
     }
 
     @Test
@@ -101,7 +101,7 @@ class TokenUseCaseTest {
         assertThat(exception.errorCode).isEqualTo(ErrorCode.INVALID_TOKEN)
         verify(exactly = 1) { refreshTokenProvider.validateToken(accessToken) }
         verify(exactly = 1) { refreshTokenProvider.getTokenType(accessToken) }
-        verify(exactly = 0) { memberService.findActiveMember(any()) }
+        verify(exactly = 0) { memberService.findActiveMemberForUpdate(any()) }
     }
 
     @Test
@@ -120,7 +120,7 @@ class TokenUseCaseTest {
         every { refreshTokenProvider.validateToken(requestToken) } returns true
         every { refreshTokenProvider.getTokenType(requestToken) } returns "refresh"
         every { refreshTokenProvider.getSubject(requestToken) } returns memberId.toString()
-        every { memberService.findActiveMember(memberId) } returns mockMember
+        every { memberService.findActiveMemberForUpdate(memberId) } returns mockMember
 
         // when
         val exception =
@@ -131,7 +131,7 @@ class TokenUseCaseTest {
         // then
         assertThat(exception.errorCode).isEqualTo(ErrorCode.INVALID_TOKEN)
         verify(exactly = 1) { refreshTokenProvider.validateToken(requestToken) }
-        verify(exactly = 1) { memberService.findActiveMember(memberId) }
+        verify(exactly = 1) { memberService.findActiveMemberForUpdate(memberId) }
         verify(exactly = 0) { accessTokenProvider.generateToken(any()) }
     }
 }

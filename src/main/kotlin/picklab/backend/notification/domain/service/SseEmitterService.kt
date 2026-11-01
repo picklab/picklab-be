@@ -99,4 +99,8 @@ class SseEmitterService {
      * 특정 사용자가 연결되어 있는지 확인합니다
      */
     fun isUserConnected(memberId: Long): Boolean = emitters.containsKey(memberId)
+
+    fun disconnect(memberId: Long) {
+        emitters.remove(memberId)?.complete()
+    }
 }

@@ -1,5 +1,6 @@
 package picklab.backend.member.domain
 
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import picklab.backend.auth.domain.OAuthUserInfo
@@ -35,6 +36,7 @@ class MemberService(
     private val memberAgreementRepository: MemberAgreementRepository,
     private val memberWithdrawalRepository: MemberWithdrawalRepository,
     private val notificationPreferenceService: NotificationPreferenceService,
+    private val eventPublisher: ApplicationEventPublisher,
 ) {
     @Transactional
     fun loginOrSignup(
@@ -79,7 +81,7 @@ class MemberService(
         memberId: Long,
         refreshToken: String,
     ) {
-        val member = findActiveMember(memberId)
+        val member = findActiveMemberForUpdate(memberId)
 
         member.updateRefreshToken(refreshToken)
         memberRepository.save(member)
@@ -247,10 +249,13 @@ class MemberService(
 
     @Transactional
     fun withdrawMember(memberId: Long) {
-        val member = findActiveMember(memberId)
+        val member = findActiveMemberForUpdate(memberId)
 
+        socialLoginRepository.deleteAllByMemberId(memberId)
+        member.socialLogins.clear()
         member.withdraw()
         memberRepository.save(member)
+        eventPublisher.publishEvent(MemberWithdrawnEvent(member.id, member.deletedAt!!))
     }
 
     @Transactional
@@ -281,6 +286,11 @@ class MemberService(
     fun findActiveMember(memberId: Long): Member =
         memberRepository
             .findByIdAndDeletedAtIsNull(memberId)
+            .orElseThrow { BusinessException(ErrorCode.INVALID_MEMBER) }
+
+    fun findActiveMemberForUpdate(memberId: Long): Member =
+        memberRepository
+            .findActiveMemberForUpdate(memberId)
             .orElseThrow { BusinessException(ErrorCode.INVALID_MEMBER) }
 
     private fun existActiveMember(memberId: Long) {

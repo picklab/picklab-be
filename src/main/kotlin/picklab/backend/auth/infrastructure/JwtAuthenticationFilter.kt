@@ -17,6 +17,7 @@ import picklab.backend.common.util.logger
 
 class JwtAuthenticationFilter(
     val accessTokenProvider: JwtTokenProvider,
+    private val blocklist: WithdrawnMemberTokenBlocklist,
 ) : OncePerRequestFilter() {
     val log = logger()
 
@@ -65,6 +66,9 @@ class JwtAuthenticationFilter(
 
     private fun getUserDetails(accessToken: String): MemberPrincipal {
         val userId = accessTokenProvider.getSubject(accessToken).toLong()
+        if (blocklist.isBlocked(userId)) {
+            throw AuthException(ErrorCode.INVALID_MEMBER)
+        }
 
         return MemberPrincipal(userId)
     }
