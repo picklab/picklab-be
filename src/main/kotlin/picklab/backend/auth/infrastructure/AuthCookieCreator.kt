@@ -6,6 +6,18 @@ import picklab.backend.auth.domain.AuthToken
 
 @Component
 class AuthCookieCreator {
+    fun clearCookies(): List<ResponseCookie> =
+        listOf("accessToken", "refreshToken").map { name ->
+            ResponseCookie
+                .from(name, "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Lax")
+                .build()
+        }
+
     fun createCookies(tokens: AuthToken): List<ResponseCookie> =
         listOf(
             ResponseCookie

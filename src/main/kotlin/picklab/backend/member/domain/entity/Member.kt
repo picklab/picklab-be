@@ -129,5 +129,6 @@ class Member(
 
     fun withdraw() {
         this.deletedAt = LocalDateTime.now()
+        this.refreshToken = ""
     }
 }

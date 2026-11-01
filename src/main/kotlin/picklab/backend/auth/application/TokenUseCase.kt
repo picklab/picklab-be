@@ -1,6 +1,7 @@
 package picklab.backend.auth.application
 
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import picklab.backend.auth.domain.AuthToken
 import picklab.backend.auth.infrastructure.AccessTokenProvider
 import picklab.backend.auth.infrastructure.RefreshTokenProvider
@@ -14,6 +15,7 @@ class TokenUseCase(
     private val memberService: MemberService,
     private val accessTokenProvider: AccessTokenProvider,
 ) {
+    @Transactional
     fun refreshAccessToken(refreshToken: String): AuthToken {
         if (!refreshTokenProvider.validateToken(refreshToken)) {
             throw BusinessException(ErrorCode.INVALID_TOKEN)
@@ -24,7 +26,7 @@ class TokenUseCase(
         }
 
         val memberId = refreshTokenProvider.getSubject(refreshToken).toLong()
-        val member = memberService.findActiveMember(memberId)
+        val member = memberService.findActiveMemberForUpdate(memberId)
         if (member.refreshToken != refreshToken) {
             throw BusinessException(ErrorCode.INVALID_TOKEN)
         }

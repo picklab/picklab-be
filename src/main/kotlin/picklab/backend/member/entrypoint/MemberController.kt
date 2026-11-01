@@ -1,6 +1,7 @@
 package picklab.backend.member.entrypoint
 
 import jakarta.validation.Valid
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import picklab.backend.auth.infrastructure.AuthCookieCreator
 import picklab.backend.common.model.MemberPrincipal
 import picklab.backend.common.model.ResponseWrapper
 import picklab.backend.common.model.SuccessCode
@@ -37,6 +39,7 @@ import picklab.backend.member.entrypoint.response.NicknameAvailabilityResponse
 @RequestMapping("/v1/members")
 class MemberController(
     private val memberUseCase: MemberUseCase,
+    private val authCookieCreator: AuthCookieCreator,
 ) : MemberApi {
     @PostMapping("/signup/additional-info")
     override fun additionalInfo(
@@ -195,7 +198,9 @@ class MemberController(
 
         return ResponseEntity
             .status(HttpStatus.OK)
-            .body(ResponseWrapper.success(SuccessCode.MEMBER_WITHDRAW, Unit))
+            .headers { headers ->
+                authCookieCreator.clearCookies().forEach { headers.add(HttpHeaders.SET_COOKIE, it.toString()) }
+            }.body(ResponseWrapper.success(SuccessCode.MEMBER_WITHDRAW, Unit))
     }
 
     @PostMapping("/withdrawal-survey")
