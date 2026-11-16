@@ -37,6 +37,9 @@ class MemberMeControllerTest {
                 name = "hong",
                 nickname = "picklab_member",
                 educationLevel = "대학교(4년)",
+                school = "픽랩대학교",
+                graduationStatus = "졸업",
+                profileImage = "https://example.com/profile.jpg",
                 birthDate = LocalDate.of(1998, 3, 1),
                 selectedInterestedJobs = listOf(JobDetail.BACKEND, JobDetail.DEVOPS),
                 jobFields = listOf(JobGroup.DEVELOPMENT),
@@ -57,6 +60,9 @@ class MemberMeControllerTest {
             .andExpect { jsonPath("$.data.name") { value("hong") } }
             .andExpect { jsonPath("$.data.nickname") { value("picklab_member") } }
             .andExpect { jsonPath("$.data.education_level") { value("대학교(4년)") } }
+            .andExpect { jsonPath("$.data.school") { value("픽랩대학교") } }
+            .andExpect { jsonPath("$.data.graduation_status") { value("졸업") } }
+            .andExpect { jsonPath("$.data.profile_image") { value("https://example.com/profile.jpg") } }
             .andExpect { jsonPath("$.data.birth_date") { value("1998-03-01") } }
             .andExpect { jsonPath("$.data.selected_interested_jobs[0]") { value("BACKEND") } }
             .andExpect { jsonPath("$.data.selected_interested_jobs[1]") { value("DEVOPS") } }
