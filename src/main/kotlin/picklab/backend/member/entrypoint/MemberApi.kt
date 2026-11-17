@@ -97,7 +97,11 @@ interface MemberApi {
 
     @Operation(
         summary = "사용자 프로필 이미지 수정",
-        description = "사용자의 프로필 이미지를 수정한다.",
+        description = """
+            PROFILE 카테고리로 발급받은 presigned_url에 파일을 PUT으로 업로드한 뒤,
+            이 요청의 profile_image에 함께 발급받은 object_key를 전달합니다.
+            저장된 이미지 URL은 GET /v1/members/me의 profile_image에서 조회할 수 있습니다.
+            """,
     )
     @ApiResponses(
         value = [

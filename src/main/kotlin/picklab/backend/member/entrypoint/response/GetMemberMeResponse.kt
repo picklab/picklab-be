@@ -12,6 +12,12 @@ data class GetMemberMeResponse(
     val nickname: String,
     @field:Schema(description = "최종 학력")
     val educationLevel: String,
+    @field:Schema(description = "학교")
+    val school: String,
+    @field:Schema(description = "학업 상태")
+    val graduationStatus: String,
+    @field:Schema(description = "저장된 프로필 이미지 URL")
+    val profileImage: String,
     @field:Schema(description = "생년월일")
     val birthDate: LocalDate?,
     @field:Schema(description = "선택한 관심 직무")
